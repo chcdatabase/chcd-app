@@ -1,0 +1,84 @@
+@import "mixins";
+
+.leaflet-container {
+  display: block;
+  position: absolute;
+  top: 80px;
+  width: 100%;
+  bottom: 0;
+  z-index: 1;
+}
+.leaflet-control-attribution {
+  display: none;
+}
+
+.marker-cluster-custom {
+  background: $gray;
+  border-radius: 50%;
+  color: $white;
+  text-align: center;
+  &.small {
+    border: 5px solid $yellow;
+    border-radius: 50%;
+    height: 20px;
+    width: 20px;
+    line-height: 22px;
+  }
+  &.medium {
+    border: 5px solid $orange;
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    line-height: 32px;
+  }
+  &.large {
+    border: 5px solid $dark-pink;
+    border-radius: 50%;
+    height: 60px;
+    width: 60px;
+    line-height: 42px;
+  }
+}
+
+.custom-icon {
+  height: 15px;
+  width: 15px;
+  background: $gray;
+  border-radius: 50%;
+}
+
+.map_popup {
+  & .leaflet-popup-content-wrapper {
+  background: $dark-gray;
+  border-radius: 7px;
+  color: $white;
+  }
+  & .leaflet-popup-content {
+    margin: 12px;
+    font-family: $sans-serif;
+  }
+  & .leaflet-popup-tip {
+    background: $dark-gray;
+  }
+  & .highlight {
+    color: $orange;
+  }
+  & .pop_head {
+    font-family: $header;
+    font-weight: bold;
+    color: $red;
+  }
+}
+
+@include media-breakpoint-down(lg) {
+
+  .leaflet-container {
+      display: block;
+      position: absolute;
+      top: 80px;
+      width: 100%;
+      bottom: 0;
+      z-index: 1;
+  }
+
+}

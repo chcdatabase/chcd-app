@@ -1,0 +1,161 @@
+@import "mixins";
+
+.nav_bar {
+    background: $light-gray;
+    font-family: $header;
+    height: 80px;
+    padding: .75rem;
+    color: $pink;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    margin: 0 !important;
+    box-shadow: 0px 0px 8px -3px $gray;
+}
+
+.nav_container {
+    display: flex;
+    height: 60px;
+    &_logo {
+      justify-content: left;
+    };
+    &_menu {
+    justify-content: right;
+  };
+}
+
+.nav-logo, .nav-logo a {
+    background: $en-logo;
+    background-repeat: no-repeat;
+    background-size: contain;
+    color: $gray;
+    justify-self: start;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 3rem;
+    display: flex;
+    align-items: center;
+    height: 60px;
+    opacity: 1;
+}
+
+.nav-icon {
+    margin-right: 1rem;
+    height: 7vh;
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+    text-align: center;
+    justify-content: flex-start;
+}
+
+.nav-item {
+    height: 60px;
+    &:hover {
+      color: $orange;
+    }
+}
+
+.nav_bar_link {
+    color: $gray;
+    display: flex;
+    text-transform: uppercase;
+    align-items: center;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    height: 100%;
+    font-size: $medium;
+    &:hover {
+      color: $orange;
+    }
+}
+
+.menu-icon {
+    display: none;
+}
+
+@include media-breakpoint-down(lg) {
+
+    .NavItems {
+      position: relative;
+    }
+
+    .nav-icon {
+        display:none;
+    }
+
+    .nav-menu {
+      display: none;
+      width: 0px;
+      position: absolute;
+      transition: all 0.6s ease;
+    }
+
+    .nav-menu.active {
+      display: flex;
+      flex-direction: column;
+      background: $pink;
+      width: 100%;
+      position: absolute;
+      top: 80px;
+      left: 0;
+      opacity: 1;
+      z-index: 998;
+      padding: 0px;
+      margin: 0px;
+      height: calc(100vh - 80px);
+      height: -o-calc(100vh - 80px);
+      height: -webkit-calc(100vh - 80px);
+      height: -moz-calc(100vh - 80px);
+    }
+
+    .nav_bar_link {
+      text-align: center;
+      color: $white;
+      padding: 2rem;
+      width: 100%;
+      display: table;
+      &:hover {
+        color: $gray;
+        transition: all 0.3s ease;
+      }
+    }
+
+    .nav-item {
+      width: 100%;
+      height: 80px;
+    }
+
+    .menu-icon {
+      display: block;
+      position: absolute;
+      color: $gray;
+      top: -10px;
+      right: 0;
+      transform: translate(-100%, 60%);
+      font-size: 1.8rem;
+      cursor: pointer;
+      opacity: 1;
+      transition: all 0.3s ease;
+      &:hover {
+        opacity: .25;
+      }
+    }
+
+    .fa-times {
+      color: $gray;
+      font-size: 2rem;
+    }
+
+    .nav-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 120px;
+    }
+}

@@ -1,0 +1,44 @@
+$danger: #f77e7e;
+$secondary: #f2905c;
+$warning: #f7c55f;
+$info: #bc0943;
+
+.btn-danger {
+  color: #fff !important;
+}
+
+@import "../../../node_modules/bootstrap/scss/bootstrap";
+@import "../../../node_modules/react-leaflet-markercluster/dist/styles.min.css";
+
+//THEME COLORS
+$white: #ffffff;
+$light-gray: #eeeeee;
+$mid-gray: #a5a5a5;
+$gray: #666666;
+$dark-gray: #444444;
+$red: #f77e7e;
+$yellow: #f7c55f;
+$orange: #f2905c;
+$pink: #e8859b;
+$dark-pink: #bc0943;
+$yellow: #efc65d;
+
+
+
+//FONT SIZES
+$xx-small: 0.65rem;
+$x-small: 0.75rem;
+$small: 1rem;
+$medium: 1.25rem;
+$large: 1.5rem;
+$x-large: 2rem;
+
+//LOGO
+$en-logo: url("../../Assets/logos/logo_en.png");
+$chcd-icon: url("../../Assets/icons/chcd.png");
+$chcd-icon-white: url("../../Assets/icons/chcd-white.png");
+
+//FONTS
+$sans-serif: 'Lato', sans-serif;
+$serif: 'Arvo', serif;
+$header: 'Baloo Tamma 2', cursive;

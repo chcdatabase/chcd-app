@@ -1,0 +1,61 @@
+@import "mixins";
+
+.d3-component {
+  background-color: $gray;
+}
+
+.node_label {
+  fill: $white;
+  font-size: .4em;
+  font-family: $sans-serif;
+}
+
+.graph_container {
+  background: $gray;
+  position: absolute;
+  overflow: hidden;
+  width: 100%;
+  z-index: 800;
+  height: calc(100vh - 80px);
+  height: -o-calc(100vh - 80px);
+  height: -webkit-calc(100vh - 80px);
+  height: -moz-calc(100vh - 80px);
+  &::-webkit-scrollbar {
+    width: 15px;
+  }
+  &::-webkit-scrollbar-track {
+    border-radius: 15px;
+    box-shadow: inset 0 0 10px 10px $gray;
+    border: solid 4px transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 15px;
+    box-shadow: inset 0 0 10px 10px $mid-gray;
+    border: solid 4px transparent;
+  }
+  &::-webkit-scrollbar-corner {
+    background: $gray;
+  }
+}
+
+.graph_float {
+  position: absolute;
+  left: 350px;
+  width: calc(100% - 350px);
+  height: calc(100vh - 80px);
+  height: -o-calc(100vh - 80px);
+  height: -webkit-calc(100vh - 80px);
+  height: -moz-calc(100vh - 80px);
+}
+
+@include media-breakpoint-down(lg) {
+  .graph_float {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 80px);
+    height: -o-calc(100vh - 80px);
+    height: -webkit-calc(100vh - 80px);
+    height: -moz-calc(100vh - 80px);
+  }
+}

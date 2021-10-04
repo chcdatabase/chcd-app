@@ -1,0 +1,225 @@
+@import "mixins";
+
+.hide {
+  display: none;
+}
+
+.filter_header {
+  background: $red;;
+  margin: 0px -10px 10px -10px;
+  color: $white;
+  font-family: $header;
+  padding: 20px;
+  font-size: $medium;
+}
+
+.filter_container {
+  display: block;
+  font-family: $sans-serif;
+  position: absolute;
+  padding: 10px;
+  margin: 0px;
+  background: $white;
+  width: 300px;
+  left:0px;
+  z-index: 900;
+  height: calc(100vh - 80px);
+  height: -o-calc(100vh - 80px);
+  height: -webkit-calc(100vh - 80px);
+  height: -moz-calc(100vh - 80px);
+  box-shadow: 0px 0px 8px -3px $gray;
+}
+.filter_scroll_area {
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 280px;
+  height: calc(100vh - 260px);
+  height: -o-calc(100vh - 260px);
+  height: -webkit-calc(100vh - 260px);
+  height: -moz-calc(100vh - 260px);
+  &::-webkit-scrollbar {
+    width: 15px;
+  }
+  &::-webkit-scrollbar-track {
+    border-radius: 15px;
+    box-shadow: inset 0 0 10px 10px $light-gray;
+    border: solid 4px transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 15px;
+    box-shadow: inset 0 0 10px 10px $mid-gray;
+    border: solid 4px transparent;
+  }
+}
+
+.filter_container2 {
+  display: block;
+  font-family: $sans-serif;
+  position: absolute;
+  padding: 10px;
+  margin: 0px;
+  background: $white;
+  width: 300px;
+  left:-300px;
+  z-index: 900;
+  height: calc(100vh - 80px);
+  height: -o-calc(100vh - 80px);
+  height: -webkit-calc(100vh - 80px);
+  height: -moz-calc(100vh - 80px);
+}
+
+.filter_button_container {
+  top: 0;
+  position: absolute;
+  left:300px;
+  height: calc(100vh - 80px);
+  height: -o-calc(100vh - 80px);
+  height: -webkit-calc(100vh - 80px);
+  height: -moz-calc(100vh - 80px);
+}
+
+.filter_button {
+  position: absolute;
+  display: block;
+  top: 10px;
+  z-index: 900;
+  width: 1rem;
+  padding-left: 5px;
+  padding-top: 20px;
+  width: 25px;
+  height: 70px;
+  background: $red;
+  color: $white;
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 5px;
+  transition: all 0.3s ease;
+  &:hover {
+    color: $gray;
+  }
+}
+
+
+.filter_label {
+  font-family: $header;
+  text-transform: uppercase;
+  font-size: $x-small;
+  font-weight: bold;
+}
+
+.filter-checkbox-list {
+  max-height: 7.25em;
+  overflow: auto;
+  font-size: 0.85em;
+  background: #efefef;
+  padding: .25em;
+  & .form-check {
+    min-height: 1em;
+  }
+  &::-webkit-scrollbar {
+    width: 15px;
+  }
+  &::-webkit-scrollbar-track {
+    border-radius: 15px;
+    box-shadow: inset 0 0 10px 10px $light-gray;
+    border: solid 4px transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 15px;
+    box-shadow: inset 0 0 10px 10px $mid-gray;
+    border: solid 4px transparent;
+  }
+}
+
+.filter-buttons {
+  bottom: -10px;
+    left: -10px;
+    position: sticky;
+    width: 100%;
+    display: block;
+    background: white;
+    padding: .5em;
+}
+.results-container {
+  height: calc(100vh - 200px);
+  height: -o-calc(100vh - 200px);
+  height: -webkit-calc(100vh - 200px);
+  height: -moz-calc(100vh - 200px);
+}
+
+@include media-breakpoint-down(lg) {
+  .filter_container {
+    display: block;
+    font-family: $sans-serif;
+    position: absolute;
+    padding: 10px;
+    background: $white;
+    width: calc(100% - 50px);
+    top: 80px;
+    left: calc(-100% + 50px);
+    z-index: 900;
+    height: calc(100vh - 80px);
+    height: -o-calc(100vh - 80px);
+    height: -webkit-calc(80vh - 80px);
+    height: -moz-calc(100vh - 80px);
+    box-shadow: 0px;
+  }
+
+  .filter_scroll_area {
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  .filter_container2 {
+    display: block;
+    font-family: "Lato", sans-serif;
+    position: absolute;
+    padding: 10px;
+    background: #ffffff;
+    width: calc(100% - 50px);
+    top: 80px;
+    left: 0px;
+    z-index: 900;
+    height: calc(100vh - 80px);
+    height: -o-calc(100vh - 80px);
+    height: -moz-calc(100vh - 80px);
+    box-shadow: 0px 0px 50px 0px #666666;
+  }
+
+  .filter_button_container {
+    top: 20px;
+    height: 0px;
+    left: calc(100% - 10px);
+  }
+
+  .filter_header {
+    margin: 10px -10px 10px -10px;
+  }
+
+  .filter_button {
+    top: 0px;
+    right: -30px;
+  }
+
+  .filter_button_search {
+    display: block;
+    position: absolute;
+    top: 0px;
+    right: -30px;
+    z-index: 900;
+    width: 1rem;
+    padding-left: 5px;
+    padding-top: 20px;
+    width: 25px;
+    height: 70px;
+    background: $red;
+    color: $white;
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+    transition: all 0.3s ease;
+    &:hover {
+      color: $gray;
+    }
+  }
+
+}

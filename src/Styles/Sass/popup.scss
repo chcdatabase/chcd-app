@@ -1,0 +1,104 @@
+@import "mixins";
+
+.popupcontainer {
+  background-color: $light-gray;
+  display: block;
+  overflow: auto;
+  color: $gray;
+  position: relative;
+  left: 350px;
+  padding: 20px;
+  top: 20px;
+  z-index: 1000;
+  height: calc(100vh - 120px);
+  width: calc(100% - 370px);
+  box-shadow: 0px 2px 10px grey;
+  &.hide {
+    display: none;
+  }
+  &::-webkit-scrollbar {
+    width: 15px;
+  }
+  &::-webkit-scrollbar-track {
+    border-radius: 15px;
+    box-shadow: inset 0 0 10px 10px $light-gray;
+    border: solid 4px transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 15px;
+    box-shadow: inset 0 0 10px 10px $mid-gray;
+    border: solid 4px transparent;
+  }
+}
+
+.popup_close {
+  width: 25px;
+  height: 25px;
+  color: $gray;
+  display: block;
+  position: absolute;
+  right: 25px;
+  &:hover {
+    color: $red;
+  }
+}
+
+.popup_card_header {
+    font-family: $header;
+    text-transform: uppercase;
+    font-size: $x-small;
+    font-weight: bold;
+    line-height: 1rem;
+    &.sources {
+      font-size: $xx-small;
+      line-height: .5rem;
+    }
+}
+
+.card_sources {
+  font-size: $xx-small;
+  line-height: .5rem;
+  color: $mid-gray !important;
+}
+
+.popup_section_head {
+  color: $orange;
+}
+.popup_title {
+  color: $dark-pink;
+  font-family: $header;
+  font-size: $x-large;
+  font-weight: bold;
+}
+
+.addinfo {
+  display: block;
+  &.hide {
+    display: none;
+  }
+}
+.breadcrumb_link {
+  color: $red;
+  &:hover {
+    color: $dark-pink;
+    cursor: pointer;
+  }
+}
+.breadcrumb {
+  font-size: $x-small;
+  height: 1em;
+}
+
+@include media-breakpoint-down(lg) {
+  .popupcontainer {
+    left: 30px;
+    top: 20px;
+    z-index: 1000;
+    height: calc(100vh - 120px);
+    width: calc(100% - 60px);
+    box-shadow: 0px 2px 10px grey;
+    &.hide {
+      display: none;
+    }
+  }
+}
