@@ -6,6 +6,8 @@ import { Row, Col, Spinner, InputGroup, FormControl, Button } from 'react-bootst
 import { FaSearch } from 'react-icons/fa';
 import Pagination from "react-js-pagination";
 
+import translate from "../../Assets/indexes/translate.json"
+
 
 
 // FUNCTIONAL COMPONENT ////////////////////////////////////////////////////////
@@ -41,8 +43,8 @@ function SearchResults(props) {
     <Row classname="d-flex align-items-start"><Col>
       <InputGroup className="mt-4">
         <FormControl
-          placeholder="Search..."
-          aria-label="Search"
+          placeholder={translate[0]["search"][props.language]}
+          aria-label={translate[0]["search"][props.language]}
           aria-describedby="basic-search"
           value={props.search}
           name="search"

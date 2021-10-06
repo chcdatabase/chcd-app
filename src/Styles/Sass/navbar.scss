@@ -78,6 +78,37 @@
     display: none;
 }
 
+.lang-switch-button .btn-secondary {
+  background: none !important;
+  color: #f2905c;
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  padding: 0.4rem 0.4rem 0rem 0.4rem;
+  margin-bottom: 0.4rem;
+  min-height: 28px;
+  min-width: 50px;
+  &:hover {
+    color: $mid-gray;
+    border: 2px solid $mid-gray;
+    padding: 0.4rem 0.4rem 0rem 0.4rem;
+    margin-bottom: 0.4rem;
+    min-height: 28px;
+    min-width: 50px;
+    }
+}
+
+.lang-switch-button .dropdown-toggle::after {
+    display:none !important;
+}
+
+.lang-switch-button .dropdown-menu.show {
+  min-width: 50px;
+  transform: translate(-8px, 29px) !important;
+}
+.dropdown-item:hover {
+  background: $orange;
+}
+
 @include media-breakpoint-down(lg) {
 
     .NavItems {

@@ -1,3 +1,9 @@
+//LANGUAGE SWITCHER
+export function langSwitch(event) {
+  let l = event.target.attributes.value.value;
+  this.setState ({ language: l });
+}
+
 //TOGGLE DISPLAYS
 export function toggleDisplay(event) {
   let v = event.target.dataset.prop;

@@ -4,11 +4,12 @@
 import React, { Component } from 'react'
 import neo4j from "neo4j-driver/lib/browser/neo4j-web";
 // CHILD COMPONENTS
-import FilterNetwork from "../Filters/FilterNetwork.js";
-import EgoGraph from "../DataDisplays/EgoGraph.js";
-import Popup from "../DataDisplays/Popup.js";
-import NoResults from "../DataDisplays/NoResults.js";
-import NoSend from "../DataDisplays/NoSend.js";
+import FilterNetwork from "./FilterNetwork.js";
+import EgoGraph from "./EgoGraph.js";
+import Popup from "../Popups/Popup.js";
+import NoResults from "../Popups/NoResults.js";
+import NoSend from "../Popups/NoSend.js";
+import Navbar from "../Navbar/Navbar.js";
 // HELPER FILES
 import credentials from "../../credentials.json";
 import * as helper from "../Utils/Helpers.js";
@@ -21,6 +22,7 @@ class NetworkView extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      language: "en",
       //FILTER INPUTS
       people_include: false,
       corp_include: false,
@@ -67,17 +69,21 @@ class NetworkView extends Component {
     this.fetchNetworkIndexes = query.fetchNetworkIndexes.bind(this);
     this.handleChangeData = helper.handleChangeData.bind(this);
     this.toggleDisplay = helper.toggleDisplay.bind(this);
+    this.langSwitch = helper.langSwitch.bind(this);
   };
 
 //RUN ON COMPONENT MOUNT //////////////////////////////////////////////////////
   componentDidMount() {
     this.fetchNetworkIndexes();
+    let receivedLang = this.props.location.langGive
+    if (receivedLang) {this.setState({ language: receivedLang })}
   };
 
 //RENDER //////////////////////////////////////////////////////////////////////
   render() {
     return (
       <div>
+        <Navbar language={this.state.language} langSwitch={this.langSwitch}/>
         <NoSend
           nosend={this.state.nosend}
           toggleDisplay = {this.toggleDisplay}

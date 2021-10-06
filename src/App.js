@@ -1,28 +1,27 @@
 import './Styles/Sass/App.scss';
-import Navbar from './Components/Navbar/Navbar.js'
-import SearchView from './Components/Views/SearchView.js'
-import MapView from './Components/Views/MapView.js'
-import NetworkView from './Components/Views/NetworkView.js'
-import DataView from './Components/Views/DataView.js'
-import { BrowserRouter, Route } from 'react-router-dom'
+import HomeView from './Components/Home/HomeView.js'
+import SearchView from './Components/Search/SearchView.js'
+import MapView from './Components/Map/MapView.js'
+import NetworkView from './Components/Network/NetworkView.js'
+import DataView from './Components/Data/DataView.js'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import React, { useState } from 'react'
 
-function App() {
 
+export default class App extends React.Component {
 
-  return (
-    <div className="App">
-      <header className="App-header">
-      <BrowserRouter>
-          <Route path="/" component={Navbar} />
-          <Route path="/search" component={SearchView} />
-          <Route path="/map" component={MapView} />
-          <Route path="/network" component={NetworkView} />
-          <Route path="/data" component={DataView} />
-      </BrowserRouter>
-      </header>
+render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+            <Route path="/" exact component={HomeView}/>
+            <Route path="/search" component={SearchView} />
+            <Route path="/map" component={MapView} />
+            <Route path="/network" component={NetworkView} />
+            <Route path="/data" component={DataView} />
+        </header>
 
-    </div>
-  );
+      </div>
+    );
+  }
 }
-
-export default App;

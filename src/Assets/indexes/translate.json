@@ -1,0 +1,192 @@
+[{
+
+"_COMMENT": "NAVBAR TRANSLATIONS ==========================================",
+
+"language": {
+  "en": "EN",
+  "zh": "简体",
+  "tw": "繁體"
+  },
+
+"home": {
+  "en": "Home",
+  "zh": "主页",
+  "tw": "主頁"
+  },
+
+"data": {
+  "en": "Data",
+  "zh": "数据",
+  "tw": "數據"
+  },
+
+"explore": {
+  "en": "Explore",
+  "zh": "探索",
+  "tw": "探索"
+  },
+
+"map": {
+  "en": "Map",
+  "zh": "地图",
+  "tw": "地圖"
+  },
+
+"network": {
+  "en": "Network",
+  "zh": "网络",
+  "tw": "網絡"
+},
+
+"_COMMENT": "SEARCH TRANSLATIONS ==========================================",
+
+"search": {
+  "en": "Search...",
+  "zh": "搜索...",
+  "tw": "搜索..."
+},
+
+"filter": {
+  "en": "Filter",
+  "zh": "超滤",
+  "tw": "超濾"
+},
+
+"clear-all": {
+  "en": "Clear All",
+  "zh": "清除所有",
+  "tw": "清除所有"
+},
+
+"filter-results": {
+  "en": "Filter Results",
+  "zh": "过滤搜索结果",
+  "tw": "過濾搜索結果"
+},
+
+"search-prompt": {
+  "en": "Search to Get Filters",
+  "zh": "过滤搜索结果",
+  "tw": "過濾搜索結果"
+},
+
+"general-filter": {
+  "en": "General Filters",
+  "zh": "搜索以获取过滤器",
+  "tw": "搜索以獲取過濾器"
+},
+
+    "start_year": {
+      "en": "Start Year",
+      "zh": "开始年",
+      "tw": "開始年"
+    },
+
+    "end_year": {
+      "en": "End Year",
+      "zh": "年终",
+      "tw": "年終"
+    },
+
+    "type": {
+      "en": "Type",
+      "zh": "类别",
+      "tw": "範疇"
+    },
+
+    "christian_tradition": {
+      "en": "Chrstian Tradition",
+      "zh": "基督教传统",
+      "tw": "基督教傳統"
+    },
+
+    "religious_family": {
+      "en": "Religious Family",
+      "zh": "宗教家庭",
+      "tw": "宗教家庭"
+    },
+
+"people-filter": {
+  "en": "People Filters",
+  "zh": "人员筛选器",
+  "tw": "人物過濾器"
+},
+
+    "gender": {
+      "en": "Gender",
+      "zh": "性别",
+      "tw": "性別"
+    },
+
+    "nationality": {
+      "en": "Nationality",
+      "zh": "国籍",
+      "tw": "国籍"
+    },
+
+    "affiliation": {
+      "en": "Affiliation",
+      "zh": "联系",
+      "tw": "聯繫"
+    },
+
+"institution-filter": {
+  "en": "Institution Filters",
+  "zh": "机构过滤器",
+  "tw": "機構過濾器"
+},
+
+    "inst_category": {
+      "en": "Institutional Category",
+      "zh": "机构类别",
+      "tw": "機構類別"
+    },
+
+    "inst_subcategory": {
+      "en": "Institutional Subcategory",
+      "zh": "機構子類",
+      "tw": "機構子類"
+    },
+
+"corp-filter": {
+  "en": "Corporate Entity Filters",
+  "zh": "组织过滤器",
+  "tw": "組織過濾器"
+},
+
+    "corp_category": {
+      "en": "Corporate Entity Category",
+      "zh": "组织类别",
+      "tw": "組織類別"
+    },
+
+    "corp_subcategory": {
+      "en": "Corporate Entity Subcategory",
+      "zh": "组织子类别",
+      "tw": "組織子類別"
+    },
+
+"event-filter": {
+  "en": "Event Filters",
+  "zh": "事件过滤器",
+  "tw": "事件過濾器"
+},
+
+    "event_category": {
+      "en": "Event Category",
+      "zh": "事件类别",
+      "tw": "事件類別"
+    },
+
+    "event_subcategory": {
+      "en": "Event Subcategory",
+      "zh": "事件子类别",
+      "tw": "事件子類別"
+    },
+    
+"_COMMENT": "MAP TRANSLATIONS ==========================================",
+
+"_COMMENT": "NETWORK TRANSLATIONS ==========================================",
+
+"_COMMENT": "DATA TRANSLATIONS =========================================="
+}]

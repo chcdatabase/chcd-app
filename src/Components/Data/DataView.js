@@ -4,14 +4,18 @@
 import React, { Component } from 'react'
 import neo4j from "neo4j-driver/lib/browser/neo4j-web";
 // CHILD COMPONENTS
-import FilterData from "../Filters/FilterData.js";
-import DataCharts from "../DataDisplays/DataCharts.js"
-import Popup from "../DataDisplays/Popup.js";
-import NoResults from "../DataDisplays/NoResults.js";
+import FilterData from "./FilterData.js";
+import DataCharts from "./DataCharts.js"
+import Popup from "../Popups/Popup.js";
+import NoResults from "../Popups/NoResults.js";
+import Navbar from "../Navbar/Navbar.js";
 // HELPER FILES
 import credentials from "../../credentials.json";
 import * as helper from "../Utils/Helpers.js";
 import * as query from "../Utils/Queries.js";
+
+import {Link, useLocation} from "react-router-dom";
+
 
 
 class DataView extends Component {
@@ -20,6 +24,7 @@ class DataView extends Component {
     constructor(props) {
       super(props);
       this.state = {
+        language: "en",
         //FILTER INPUTS
         people_include: false,
         corp_include: false,
@@ -64,17 +69,22 @@ class DataView extends Component {
     this.handleFormChange = helper.handleFormChange.bind(this);
     this.fetchMapIndexes = query.fetchMapIndexes.bind(this);
     this.toggleDisplay = helper.toggleDisplay.bind(this);
+    this.langSwitch = helper.langSwitch.bind(this);
   };
 
 //RUN ON COMPONENT MOUNT //////////////////////////////////////////////////////
   componentDidMount() {
-    this.fetchMapIndexes()
+    this.fetchMapIndexes();
+    let receivedLang = this.props.location.langGive
+    if (receivedLang) {this.setState({ language: receivedLang })}
   }
 
 //RENDER //////////////////////////////////////////////////////////////////////
   render() {
+
     return (
       <div>
+      <Navbar language={this.state.language} langSwitch={this.langSwitch}/>
       <FilterData
         {...this.state}
         selectSwitchInitial={this.selectSwitchInitial}
@@ -86,7 +96,7 @@ class DataView extends Component {
         fetchNetworkIndexes={this.fetchNetworkIndexes}
         handleChangeData={this.handleChangeData}
       />
-      <DataCharts />
+      <DataCharts {...this.state} />
       </div>
     )
   }

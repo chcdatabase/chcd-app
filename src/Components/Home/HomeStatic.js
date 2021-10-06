@@ -8,14 +8,14 @@ import { Row, Col, Spinner } from 'react-bootstrap';
 
 // FUNCTIONAL COMPONENT ////////////////////////////////////////////////////////
 
-function DataCharts() {
+function HomeStatic(props) {
 
   // RETURNS PLACEHOLDER
   return (
-    <div className="list_container">
-      <div className="list_float d-flex align-items-center justify-content-center">
+    <div className="container">
+      <div className="d-flex align-items-center justify-content-center">
         <Row><Col>
-          <div>Stats, yay!</div>
+          <div>Home</div>
         </Col></Row>
       </div>
     </div>
@@ -23,4 +23,4 @@ function DataCharts() {
 
 }
 
-export default DataCharts
+export default HomeStatic
