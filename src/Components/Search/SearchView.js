@@ -24,6 +24,7 @@ class SearchView extends Component {
       language: "en",
       //FILTER INPUTS
       search: "",
+      search_set: "",
       start_year: "",
       end_year: "",
       // DATA ARRAYS & SELECT NODE
@@ -105,6 +106,7 @@ class SearchView extends Component {
     this.filterResults = helper.filterResults.bind(this);
     this.clearFilters = helper.clearFilters.bind(this);
     this.langSwitch = helper.langSwitch.bind(this);
+    this.linkCheck = helper.linkCheck.bind(this);
   };
 
 //RUN ON COMPONENT MOUNT //////////////////////////////////////////////////////
@@ -120,6 +122,7 @@ class SearchView extends Component {
         <Navbar language={this.state.language} langSwitch={this.langSwitch}/>
         <NoResults
           noresults={this.state.noresults}
+          language={this.state.language} l
           toggleDisplay = {this.toggleDisplay}
         />
         <FilterSearch
@@ -141,6 +144,7 @@ class SearchView extends Component {
           handleChange={this.handleChange}
           breadCrumbChainer={this.breadCrumbChainer}
           selectSwitchInitial={this.selectSwitchInitial}
+          linkCheck={this.linkCheck}
         />
         <Popup
           {...this.state}
@@ -150,6 +154,7 @@ class SearchView extends Component {
           selectSwitchAppend={this.selectSwitchAppend}
           selectSwitchReduce={this.selectSwitchReduce}
           selectSwitchInitial={this.selectSwitchInitial}
+          linkCheck={this.linkCheck}
         />
       </div>
     )

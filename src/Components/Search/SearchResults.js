@@ -7,6 +7,9 @@ import { FaSearch } from 'react-icons/fa';
 import Pagination from "react-js-pagination";
 
 import translate from "../../Assets/indexes/translate.json"
+import nationality from "../../Assets/indexes/nationality.json"
+import family_trans from "../../Assets/indexes/religious_family.json"
+import cat_trans from "../../Assets/indexes/categories.json"
 
 
 
@@ -88,24 +91,34 @@ function SearchResults(props) {
         if (altVal.length > 0) {altDisp = <Row><Col className="card_sources pt-1">{altVal}</Col></Row>}
       //SET NAME
       let nameVal;
-      if (node.label === "Person") { nameVal = `${node.properties.given_name_western} ${node.properties.family_name_western}`}
-      else {nameVal = node.properties.name_western}
+      if (node.label === "Person") {
+        if ((props.language == "zh" || props.language == "tw") && node.properties.chinese_given_name_hanzi) {nameVal = `${node.properties.chinese_family_name_western} ${node.properties.chinese_given_name_western}`}
+        else {nameVal = `${node.properties.given_name_western} ${node.properties.family_name_western}`}
+        }
+      else {
+        if ((props.language == "zh" || props.language == "tw") && node.properties.chinese_name_hanzi) {nameVal = node.properties.chinese_name_hanzi}
+        else {nameVal = node.properties.name_western}
+      }
+
       //SET TYPE & STYLE
       let typeVal; let typeStyle;
-      if (node.label === "CorporateEntity") {typeVal = "Corporate Entity"; typeStyle = "font-weight-bold align-middle mt-1 p-2 badge bg-info"}
-      else if (node.label === "Person") {typeVal = node.label; typeStyle = "font-weight-bold align-middle mt-1 p-2 badge bg-danger"}
-      else if (node.label === "Institution") {typeVal = node.label; typeStyle = "font-weight-bold align-middle mt-1 p-2 badge bg-secondary"}
-      else if (node.label === "Event") {typeVal = node.label;typeStyle = "font-weight-bold align-middle mt-1 p-2 badge bg-warning"};
+      if (node.label === "CorporateEntity") {typeVal = translate[0]["corporate_entity"][props.language]; typeStyle = "d-inline-block font-weight-bold mt-1 p-2 badge bg-info"}
+      else if (node.label === "Person") {typeVal = translate[0][node.label.toLowerCase()][props.language]; typeStyle = "d-inline-block font-weight-bold mt-1 p-2 badge bg-danger"}
+      else if (node.label === "Institution") {typeVal = translate[0][node.label.toLowerCase()][props.language]; typeStyle = "d-inline-block font-weight-bold mt-1 p-2 badge bg-secondary"}
+      else if (node.label === "Event") {typeVal = translate[0][node.label.toLowerCase()][props.language]; typeStyle = "d-inline-block font-weight-bold mt-1 p-2 badge bg-warning"};
 
 
       return (
       <li className="list-group-item pt-1 pb-1"><div className="card-body px-1 p-1"><Row>
-        <Col className="col-9">
+        <Col className="col-7">
           <Row><Col className="text-start"><span className="popup_link" data-prop="popupcontainer" onClick={() => props.selectSwitchInitial((node.key))}>{nameVal}</span></Col></Row>
           {altDisp}
           <Row><Col className="card_sources pt-1">{node.rel} - {otherVal}</Col></Row>
         </Col>
-        <Col className="col-3 text-end"><span className={typeStyle}>{typeVal}</span></Col>
+        <Col className="col-5 text-end">
+          {props.linkCheck(props, node)}
+          <div className={typeStyle}>{typeVal}</div>
+        </Col>
       </Row></div></li>
     )
   });
@@ -141,7 +154,7 @@ function SearchResults(props) {
       <div className="list_float">
       {searchField(props)}
         <Row>
-          <Col className="mb-2 mt-3 text-dark"><h5>Results for "{props.search}"</h5></Col>
+          <Col className="mb-2 mt-3 text-dark"><h5>Results for "{props.search_set}"</h5></Col>
         </Row>
         <div className="card">
           <ul className="list-group list-group-flush">

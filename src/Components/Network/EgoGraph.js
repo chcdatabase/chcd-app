@@ -6,12 +6,15 @@ import { Row, Col, Spinner } from 'react-bootstrap';
 //D3 DEPENDENCIES
 import * as d3 from "d3";
 import forceBoundary from 'd3-force-boundary';
-
+import translate from "../../Assets/indexes/translate.json"
+import nationality from "../../Assets/indexes/nationality.json"
+import family_trans from "../../Assets/indexes/religious_family.json"
+import cat_trans from "../../Assets/indexes/categories.json"
 
 
 // FUNCTIONAL COMPONENT ////////////////////////////////////////////////////////
 
-export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial}) {
+export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial, language}) {
 
   //CONSTRUCT CONTAINER
   const d3Container = useRef(null);
@@ -148,8 +151,14 @@ export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial}) {
         .attr("dx", 0)
         .attr("dy", 0)
         .text(function(d){
-          if (d.label === "Person") {return d.properties.family_name_western +`, ` + d.properties.given_name_western}
-          else {return d.properties.name_western}
+          if (d.label === "Person") {
+             if ((language == "zh" || language == "tw") && d.properties.chinese_given_name_hanzi) {return d.properties.chinese_family_name_hanzi + d.properties.chinese_given_name_hanzi }
+             else { return d.properties.given_name_western + ` ` + d.properties.family_name_western  }
+          }
+          else {
+            if ((language == "zh" || language == "tw") && d.properties.chinese_name_hanzi) { return d.properties.chinese_name_hanzi }
+            else { return d.properties.name_western }
+          }
         });
 
       // TICKACTION TO UPDATE POSITION ON INTERNAL D3 SIMULATION CHANGE
@@ -191,7 +200,7 @@ export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial}) {
     <div className="graph_container">
       <div className="graph_float d-flex align-items-center justify-content-center">
         <Row><Col>
-          <h4 className="list_placeholder_title text-center">Use the Network Settings to Get Results</h4>
+          <h4 className="list_placeholder_title text-center">{translate[0]["network-prompt"][language]}</h4>
           <div className="list_placeholder"> </div>
         </Col></Row>
       </div>

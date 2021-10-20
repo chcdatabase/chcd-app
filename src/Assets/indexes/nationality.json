@@ -1,0 +1,131 @@
+[{
+
+"_COMMENT": "NATIONALITY TRANSLATIONS ==========================================",
+
+"all": {
+  "en": "All",
+  "zh": "都",
+  "tw": "都"
+},
+
+"n_a": {
+  "en": "N/A",
+  "zh": "不适用",
+  "tw": "不適用"
+},
+
+"australia": {
+  "en": "Australia",
+  "zh": "澳大利亚",
+  "tw": "澳大利亞"
+},
+
+"england": {
+  "en": "England",
+  "zh": "英国",
+  "tw": "英國"
+},
+
+"canada": {
+  "en": "Canada",
+  "zh": "加拿大",
+  "tw": "加拿大"
+},
+
+"china": {
+  "en": "China",
+  "zh": "中国",
+  "tw": "中國"
+},
+
+"italy": {
+  "en": "Italy",
+  "zh": "意大利",
+  "tw": "意大利"
+},
+
+"portugal": {
+  "en": "Portugal",
+  "zh": "葡萄牙",
+  "tw": "葡萄牙"
+},
+
+"spain": {
+  "en": "Spain",
+  "zh": "西班牙",
+  "tw": "西班牙"
+},
+
+"france": {
+  "en": "France",
+  "zh": "法国",
+  "tw": "法國"
+},
+
+"belgium": {
+  "en": "Belgium",
+  "zh": "比利时",
+  "tw": "比利時"
+},
+
+"austria": {
+  "en": "Austria",
+  "zh": "奥地利",
+  "tw": "奧地利"
+},
+
+"germany": {
+  "en": "Germany",
+  "zh": "德国",
+  "tw": "德國"
+},
+
+"switzerland": {
+  "en": "Switzerland",
+  "zh": "瑞士",
+  "tw": "瑞士"
+},
+
+"sweden": {
+  "en": "Sweden",
+  "zh": "瑞典",
+  "tw": "瑞典"
+},
+
+"norway": {
+  "en": "Norway",
+  "zh": "挪威",
+  "tw": "挪威"
+},
+
+"international": {
+  "en": "International",
+  "zh": "国际的",
+  "tw": "國際的"
+},
+
+"beligum": {
+  "en": "Beligum",
+  "zh": "比利时",
+  "tw": "比利時"
+},
+
+"netherlands": {
+  "en": "Netherlands",
+  "zh": "荷兰",
+  "tw": "荷蘭"
+},
+
+"united_states_of_america": {
+  "en": "United States of America",
+  "zh": "美国",
+  "tw": "美國"
+},
+
+"united_kingdom": {
+  "en": "United Kingdom",
+  "zh": "英国",
+  "tw": "英國"
+}
+
+}]

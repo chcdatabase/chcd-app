@@ -4,6 +4,10 @@ import { Link } from 'react-router-dom'
 import { DropdownButton, Dropdown } from 'react-bootstrap';
 
 import translate from "../../Assets/indexes/translate.json"
+import nationality from "../../Assets/indexes/nationality.json"
+import family_trans from "../../Assets/indexes/religious_family.json"
+import cat_trans from "../../Assets/indexes/categories.json"
+
 
 function Navbar(props) {
     const [click, setClick] = useState(false);
@@ -35,9 +39,9 @@ function Navbar(props) {
                             <li className='nav-item'>
                                 <Link onClick={closeMobileMenu} className='nav_bar_link' to={{pathname:"/network", langGive: props.language }}>{translate[0].network[props.language]}</Link>
                             </li>
-                            <li className='nav-item'>
-                                <Link onClick={closeMobileMenu} className='nav_bar_link' to={{pathname:"/data", langGive: props.language }}>{translate[0].data[props.language]}</Link>
-                            </li>
+                            {/* <li className='nav-item'> */}
+                            {/*     <Link onClick={closeMobileMenu} className='nav_bar_link' to={{pathname:"/data", langGive: props.language }}>{translate[0].data[props.language]}</Link> */}
+                            {/* </li> */}
                             <DropdownButton
                               align="end"
                               variant="secondary"

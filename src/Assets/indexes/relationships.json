@@ -1,0 +1,221 @@
+[{
+
+"n_a": {
+  "en": "N/A",
+  "zh": "不适用",
+  "tw": "不適用"
+},
+
+"located_at" : {
+"en": "Located at",
+"zh": "位于",
+"tw": "位於"
+},
+"spouse" : {
+"en": "Spouse",
+"zh": "伴侣",
+"tw": "伴侶"
+},
+"teacher" : {
+"en": "Teacher",
+"zh": "老师",
+"tw": "老師"
+},
+"principal" : {
+"en": "Principal",
+"zh": "主要的",
+"tw": "主要的"
+},
+"in_charge" : {
+"en": "In Charge",
+"zh": "负责",
+"tw": "負責"
+},
+"officer" : {
+"en": "Officer",
+"zh": "官",
+"tw": "官"
+},
+"assistant_master" : {
+"en": "Assistant Master",
+"zh": "助理硕士",
+"tw": "助理碩士"
+},
+"president" : {
+"en": "President",
+"zh": "总统",
+"tw": "總統"
+},
+"internee" : {
+"en": "Internee",
+"zh": "被拘禁者",
+"tw": "被拘禁者"
+},
+"commissioned" : {
+"en": "Commissioned",
+"zh": "委托",
+"tw": "委託"
+},
+"cadet" : {
+"en": "Cadet",
+"zh": "学员",
+"tw": "學員"
+},
+"director" : {
+"en": "Director",
+"zh": "导向器",
+"tw": "導向器"
+},
+"superintendent" : {
+"en": "Superintendent",
+"zh": "总监",
+"tw": "總監"
+},
+"acting_principal" : {
+"en": "Acting Principal",
+"zh": "代理校长",
+"tw": "代理校長"
+},
+"founder" : {
+"en": "Founder",
+"zh": "创始人",
+"tw": "創始人"
+},
+"passenger" : {
+"en": "Passenger",
+"zh": "乘客",
+"tw": "乘客"
+},
+"novice" : {
+"en": "Novice",
+"zh": "新手",
+"tw": "新手"
+},
+"avowed" : {
+"en": "Avowed",
+"zh": "承认",
+"tw": "承認"
+},
+"visitor" : {
+"en": "Visitor",
+"zh": "游客",
+"tw": "遊客"
+},
+"superior" : {
+"en": "Superior",
+"zh": "优越的",
+"tw": "優越的"
+},
+"chaplain" : {
+"en": "Chaplain",
+"zh": "牧师",
+"tw": "牧師"
+},
+"vice-provincial" : {
+"en": "Vice-Provincial",
+"zh": "副省级",
+"tw": "副省級"
+},
+"travelling_companion" : {
+"en": "Travelling Companion",
+"zh": "旅伴",
+"tw": "旅伴"
+},
+"servant_to" : {
+"en": "Servant to",
+"zh": "仆人",
+"tw": "僕人"
+},
+"assistant_to" : {
+"en": "Assistant to",
+"zh": "助理",
+"tw": "助理"
+},
+"procurator" : {
+"en": "Procurator",
+"zh": "检察官",
+"tw": "檢察官"
+},
+"father_coadjutor" : {
+"en": "Father Coadjutor",
+"zh": "父亲助理",
+"tw": "父親助理"
+},
+"astronomer" : {
+"en": "Astronomer",
+"zh": "天文学家",
+"tw": "天文學家"
+},
+"provincial" : {
+"en": "Provincial",
+"zh": "省级",
+"tw": "省級"
+},
+"apostolic_vicar" : {
+"en": "Apostolic Vicar",
+"zh": "宗座代牧",
+"tw": "宗座代牧"
+},
+"ordained_by" : {
+"en": "Ordained by",
+"zh": "受命者",
+"tw": "受命者"
+},
+"aide" : {
+"en": "Aide",
+"zh": "助手",
+"tw": "助手"
+},
+"administrator" : {
+"en": "Administrator",
+"zh": "行政人员",
+"tw": "行政人員"
+},
+"assistant_mistress" : {
+"en": "Assistant Mistress",
+"zh": "助理情妇",
+"tw": "助理情婦"
+},
+"ensign" : {
+"en": "Ensign",
+"zh": "军旗",
+"tw": "軍旗"
+},
+"adjutant" : {
+"en": "Adjutant",
+"zh": "副官",
+"tw": "副官"
+},
+"captain" : {
+"en": "Captain",
+"zh": "队长",
+"tw": "隊長"
+},
+"commandant" : {
+"en": "Commandant",
+"zh": "指挥官",
+"tw": "指揮官"
+},
+"major" : {
+"en": "Major",
+"zh": "主要的",
+"tw": "主要的"
+},
+"mission_of" : {
+"en": "Mission of",
+"zh": "使命",
+"tw": "使命"
+},
+"educational_facility_of" : {
+"en": "Educational Facility of",
+"zh": "教育设施",
+"tw": "教育設施"
+},
+"outpost_of" : {
+"en": "Outpost of",
+"zh": "前哨",
+"tw": "前哨"
+}
+
+
+}]

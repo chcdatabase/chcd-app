@@ -1,3 +1,7 @@
+import { Link } from 'react-router-dom';
+import { FaMapMarkedAlt } from 'react-icons/fa';
+import { BiNetworkChart } from 'react-icons/bi';
+
 //LANGUAGE SWITCHER
 export function langSwitch(event) {
   let l = event.target.attributes.value.value;
@@ -116,7 +120,10 @@ export function handleFilterCheck(event) {
      key: this.state.selectArray[0].key,
      family_name_western: this.state.selectArray[0].select_node.family_name_western,
      given_name_western: this.state.selectArray[0].select_node.given_name_western,
+     chinese_family_name_hanzi: this.state.selectArray[0].select_node.chinese_family_name_hanzi,
+     chinese_given_name_hanzi: this.state.selectArray[0].select_node.chinese_given_name_hanzi,
      name_western: this.state.selectArray[0].select_node.name_western,
+     chinese_name_hanzi: this.state.selectArray[0].select_node.chinese_name_hanzi,
      order: this.state.breadCrumb.length + 1
    };
    let breadCrumbArray = this.state.breadCrumb;
@@ -173,7 +180,6 @@ export function filterResults() {
     )}
     if (label.includes("Institution")) { instFilter = this.state.nodeArray.filter(e =>
         label.includes(e.label) &&
-        inst_name_western.includes(e.other.name_western || e.other.alternative_name_western) &&
         religious_family.includes(e.other.religious_family) &&
         christian_tradition.includes(e.properties.christian_tradition) &&
         institution_category.includes(e.other.institution_category || e.properties.institution_category) &&
@@ -225,4 +231,46 @@ export function filterResults() {
 export function clearFilters() {
   let filterArray = this.state.nodeArray;
   this.setState({ filterArray })
+};
+
+export function linkCheck(props, node) {
+  let tester; if (node.label) {tester = node.properties} else if (node.select_kind) {tester = node.select_node}
+  if (node.label === "Person" || node.select_kind === "Person") { return (
+      <div className="d-inline-block">
+        <Link to={{ pathname:"/map", langGive: props.language, kind: "People", given_name_western: tester.given_name_western, family_name_western: tester.family_name_western, sent_id: node.key }}>
+           <FaMapMarkedAlt className="link-icons" />
+        </Link>
+        <Link to={{ pathname:"/network", langGive: props.language, sent_id: node.key }}>
+           <BiNetworkChart className="link-icons" />
+        </Link>
+      </div>
+  )}
+  else if (node.label === "Institution" || node.select_kind === "Institution") { return (
+      <div className="d-inline-block">
+        <Link to={{ pathname:"/map", langGive: props.language, kind: "Institutions", name_western: tester.name_western, sent_id: node.key }}>
+           <FaMapMarkedAlt className="link-icons" />
+        </Link>
+        <Link to={{ pathname:"/network", langGive: props.language, sent_id: node.key }}>
+           <BiNetworkChart className="link-icons" />
+        </Link>
+      </div>
+  )}
+  else if (node.label === "CorporateEntity" || node.select_kind === "CorporateEntity") { return (
+      <div className="d-inline-block">
+      <Link to={{ pathname:"/map", langGive: props.language, kind: "Institutions", corp_name_western: tester.name_western, sent_id: node.key }}>
+           <FaMapMarkedAlt className="link-icons" />
+        </Link>
+        <Link to={{ pathname:"/network", langGive: props.language, sent_id: node.key }}>
+           <BiNetworkChart className="link-icons" />
+        </Link>
+      </div>
+  )}
+  else if (node.label === "Event" || node.select_kind === "Event") { return (
+      <div className="d-inline-block">
+        <Link to={{ pathname:"/network", langGive: props.language, sent_id: node.key }}>
+           <BiNetworkChart className="link-icons" />
+        </Link>
+      </div>
+  )}
+  else { return null }
 };

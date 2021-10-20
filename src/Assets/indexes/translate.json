@@ -1,5 +1,26 @@
 [{
 
+"_COMMENT": "POPUP MESSAGES ==========================================",
+
+"sorry": {
+  "en": "Sorry!",
+  "zh": "对不起！",
+  "tw": "對不起！"
+  },
+
+"no_results": {
+  "en": "This query produced no results. Try to broaden the scope of your search or filter.",
+  "zh": "此查询产生任何结果。 尝试扩大搜索或过滤器的范围。",
+  "tw": "此查詢未產生任何結果。 嘗試擴大搜索或過濾器的範圍。"
+  },
+
+"no_send": {
+  "en": "This query is too broad. Use the filters to get results.",
+  "zh": "这个查询太宽泛了。 使用过滤器获得结果。",
+  "tw": "這個查詢太寬泛了。 使用過濾器獲得結果。"
+  },
+
+
 "_COMMENT": "NAVBAR TRANSLATIONS ==========================================",
 
 "language": {
@@ -38,7 +59,7 @@
   "tw": "網絡"
 },
 
-"_COMMENT": "SEARCH TRANSLATIONS ==========================================",
+"_COMMENT": "FILTER HEADER & BUTTON TRANSLATIONS ==========================================",
 
 "search": {
   "en": "Search...",
@@ -52,16 +73,40 @@
   "tw": "超濾"
 },
 
+"submit": {
+  "en": "Submit",
+  "zh": "提交",
+  "tw": "提交"
+},
+
 "clear-all": {
   "en": "Clear All",
   "zh": "清除所有",
   "tw": "清除所有"
 },
 
+"all": {
+  "en": "All",
+  "zh": "都",
+  "tw": "都"
+},
+
+"reset": {
+  "en": "Reset",
+  "zh": "重启",
+  "tw": "重啟"
+},
+
 "filter-results": {
   "en": "Filter Results",
   "zh": "过滤搜索结果",
   "tw": "過濾搜索結果"
+},
+
+"map-filters": {
+  "en": "Map Filters",
+  "zh": "地图过滤器",
+  "tw": "地圖過濾器"
 },
 
 "search-prompt": {
@@ -95,7 +140,7 @@
     },
 
     "christian_tradition": {
-      "en": "Chrstian Tradition",
+      "en": "Christian Tradition",
       "zh": "基督教传统",
       "tw": "基督教傳統"
     },
@@ -104,6 +149,22 @@
       "en": "Religious Family",
       "zh": "宗教家庭",
       "tw": "宗教家庭"
+    },
+
+    "family_name": {
+      "en": "Family Name",
+      "zh": "姓字",
+      "tw": "姓字"
+    },
+    "given_name": {
+      "en": "Given Name",
+      "zh": "名字",
+      "tw": "名字"
+    },
+    "location": {
+      "en": "Location",
+      "zh": "地点",
+      "tw": "地點"
     },
 
 "people-filter": {
@@ -136,6 +197,17 @@
   "tw": "機構過濾器"
 },
 
+    "inst_name": {
+      "en": "Institution Name",
+      "zh": "机构名称",
+      "tw": "機構名稱"
+    },
+    "inst_affiliation": {
+      "en": "Institutional Affiliation",
+      "zh": "机构隶属关系",
+      "tw": "機構隸屬關係"
+    },
+
     "inst_category": {
       "en": "Institutional Category",
       "zh": "机构类别",
@@ -144,7 +216,7 @@
 
     "inst_subcategory": {
       "en": "Institutional Subcategory",
-      "zh": "機構子類",
+      "zh": "机构子类",
       "tw": "機構子類"
     },
 
@@ -183,10 +255,327 @@
       "zh": "事件子类别",
       "tw": "事件子類別"
     },
-    
-"_COMMENT": "MAP TRANSLATIONS ==========================================",
 
-"_COMMENT": "NETWORK TRANSLATIONS ==========================================",
+"network-parameters": {
+  "en": "Network Parameters",
+  "zh": "网络参数",
+  "tw": "網絡參數"
+},
 
-"_COMMENT": "DATA TRANSLATIONS =========================================="
+    "network-prompt": {
+      "en": "Use the Network Settings to Get Results",
+      "zh": "使用网络设置获取结果",
+      "tw": "使用網絡設置獲取結果"
+    },
+
+    "degrees_of_connection": {
+      "en": "Degrees of Connection",
+      "zh": "连接度",
+      "tw": "連接度"
+    },
+
+    "include": {
+      "en": "Include",
+      "zh": "包括",
+      "tw": "包括"
+    },
+
+
+"_COMMENT": "NODE TYPE TRANSLATIONS ==========================================",
+
+"nodes": {
+  "en": "Nodes",
+  "zh": "节点",
+  "tw": "節點"
+},
+
+"node": {
+  "en": "Node",
+  "zh": "节点",
+  "tw": "節點"
+},
+
+
+"person": {
+  "en": "Person",
+  "zh": "人",
+  "tw": "人"
+},
+
+"people": {
+  "en": "People",
+  "zh": "人们",
+  "tw": "人們"
+},
+
+"institution": {
+  "en": "Institution",
+  "zh": "机构",
+  "tw": "機構"
+},
+
+"institutions": {
+  "en": "Institutions",
+  "zh": "机构",
+  "tw": "機構"
+},
+
+"corporate_entity": {
+  "en": "Corporate Entity",
+  "zh": "组织",
+  "tw": "組織"
+},
+
+"corporate_entities": {
+  "en": "Corporate Entities",
+  "zh": "组织",
+  "tw": "組織"
+},
+
+"event": {
+  "en": "Event",
+  "zh": "事件",
+  "tw": "事件"
+},
+
+"events": {
+  "en": "Events",
+  "zh": "事件",
+  "tw": "事件"
+},
+
+"_COMMENT": "CHRISTIAN TRADITION TRANSLATIONS ==========================================",
+
+"catholic": {
+  "en": "Catholic",
+  "zh": "天主教",
+  "tw": "天主教"
+},
+
+"orthodox": {
+  "en": "Orthodox",
+  "zh": "东正",
+  "tw": "東正"
+},
+
+"protestant": {
+  "en": "Protestant",
+  "zh": "新教",
+  "tw": "新教"
+},
+
+"non-christian": {
+  "en": "Non-Christian",
+  "zh": "非基督徒",
+  "tw": "非基督徒"
+},
+
+"_COMMENT": "GENDER TRANSLATIONS ==========================================",
+
+"male": {
+  "en": "Male",
+  "zh": "男性",
+  "tw": "男性"
+},
+"female": {
+  "en": "Female",
+  "zh": "女性",
+  "tw": "女性"
+},
+"unknown": {
+  "en": "Unknown",
+  "zh": "未知",
+  "tw": "未知"
+},
+"mixed": {
+  "en": "Mixed",
+  "zh": "混合",
+  "tw": "混合"
+},
+"women": {
+  "en": "Women",
+  "zh": "女性",
+  "tw": "女性"
+},
+"men": {
+  "en": "Men",
+  "zh": "男人",
+  "tw": "男人"
+},
+
+
+"_COMMENT": "MAP ELEMENTS TRANSLATIONS ==========================================",
+
+"grayscale": {
+  "en": "Grayscale",
+  "zh": "灰度",
+  "tw": "灰度"
+},
+
+"topographic": {
+  "en": "Topographic",
+  "zh": "地形",
+  "tw": "地形"
+},
+
+"point_data": {
+  "en": "Point Data",
+  "zh": "点数据",
+  "tw": "點數據"
+},
+
+"heat_map": {
+  "en": "Heat Map",
+  "zh": "热图",
+  "tw": "熱圖"
+},
+
+"category": {
+  "en": "Category",
+  "zh": "类别",
+  "tw": "類別"
+},
+
+"subcategory": {
+  "en": "Subcategory",
+  "zh": "子类",
+  "tw": "子類"
+},
+
+"gender_served": {
+  "en": "Gender Served",
+  "zh": "服务性别",
+  "tw": "服務性別"
+},
+
+"years": {
+  "en": "Years",
+  "zh": "年份",
+  "tw": "年份"
+},
+
+
+"_COMMENT": "POPUP TRANSLATIONS ==========================================",
+
+"learn_more": {
+  "en": "Learn More...",
+  "zh": "了解更多...",
+  "tw": "了解更多..."
+},
+
+"loading": {
+  "en": "Loading...",
+  "zh": "正在加载...",
+  "tw": "正在加載..."
+},
+
+"sources": {
+  "en": "Sources",
+  "zh": "来源",
+  "tw": "來源"
+},
+
+"pers_relationships": {
+  "en": "Personal Relationships",
+  "zh": "个人关系",
+  "tw": "個人關係"
+},
+
+"inst_relationships": {
+  "en": "Institutional Relationships",
+  "zh": "机构关系",
+  "tw": "機構關係"
+},
+
+"corp_relationships": {
+  "en": "Corporate Relationships",
+  "zh": "组织关系",
+  "tw": "組織關係"
+},
+
+"event_relationships": {
+  "en": "Event Relationships",
+  "zh": "事件关系",
+  "tw": "事件關係"
+},
+
+"relationship": {
+  "en": "Relationship",
+  "zh": "关系",
+  "tw": "關係"
+},
+
+"name": {
+  "en": "Name",
+  "zh": "姓名",
+  "tw": "姓名"
+},
+
+"additional_info": {
+  "en": "Show Additional Information",
+  "zh": "显示附加信息",
+  "tw": "顯示附加信息"
+},
+
+"alternate_western_names" : {
+  "en": "Alternate Western Name(s)",
+  "zh": "其他西方名称",
+  "tw": "替代西方名稱"
+},
+
+"chinese_name" : {
+  "en": "Chinese Name",
+  "zh": "中文名",
+  "tw": "中文名"
+},
+
+"alternate_chinese_names" : {
+  "en": "Alternate Chinese Name(s)",
+  "zh": "替代中文名称",
+  "tw": "替代中文名稱"
+},
+
+"chinese_name_romanization" : {
+  "en": "Chinese Name Romanization",
+  "zh": "中文名称罗马化",
+  "tw": "中文名稱羅馬化"
+},
+
+"alternate_chinese_name_romanizations" : {
+  "en": "Alternate Chinese Name Romanization(s)",
+  "zh": "替代中文名称罗马化",
+  "tw": "替代中文名稱羅馬化"
+},
+"birth_year" : {
+  "en": "Birth Year",
+  "zh": "出生年",
+  "tw": "出生年"
+},
+
+"birth_place" : {
+  "en": "Birth Place",
+  "zh": "出生地",
+  "tw": "出生地"
+},
+
+"death_place" : {
+  "en": "Death Place",
+  "zh": "死亡之地",
+  "tw": "死亡之地"
+},
+
+"death_year" : {
+  "en": "Death Year",
+  "zh": "死亡年",
+  "tw": "死亡年"
+},
+
+"n_a": {
+  "en": "N/A",
+  "zh": "不适用",
+  "tw": "不適用"
+},
+
+
+"_COMMENT": "END OF TRANSLATIONS =========================================="
 }]

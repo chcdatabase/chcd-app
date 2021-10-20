@@ -1,0 +1,89 @@
+[{
+
+  "_COMMENT": "RELIGIOUS FAMILY TRANSLATIONS ==========================================",
+
+  "all": {
+    "en": "All",
+    "zh": "都",
+    "tw": "都"
+  },
+
+  "n_a": {
+    "en": "N/A",
+    "zh": "不适用",
+    "tw": "不適用"
+  },
+
+  "adventist": {
+    "en": "Adventist",
+    "zh": "复临信徒",
+    "tw": "复臨信徒"
+  },
+
+  "anglican": {
+    "en": "Anglican",
+    "zh": "英国国教",
+    "tw": "英國國教"
+  },
+
+  "baptist": {
+    "en": "Baptist",
+    "zh": "浸信会",
+    "tw": "浸信會"
+  },
+
+  "congregational": {
+    "en": "Congregational",
+    "zh": "公理会",
+    "tw": "公理會"
+  },
+
+  "evangelical": {
+    "en": "Evangelical",
+    "zh": "福音",
+    "tw": "福音"
+  },
+
+  "franciscan": {
+    "en": "Franciscan",
+    "zh": "方济各会",
+    "tw": "方濟各會"
+  },
+
+  "holiness": {
+    "en": "Holiness",
+    "zh": "圣洁",
+    "tw": "聖潔"
+  },
+
+  "ignatian": {
+    "en": "Ignatian",
+    "zh": "伊格纳先",
+    "tw": "伊格納先"
+  },
+
+  "independent": {
+    "en": "Independent",
+    "zh": "独立的",
+    "tw": "獨立的"
+  },
+
+  "interdenominational": {
+    "en": "Interdenominational",
+    "zh": "跨宗派",
+    "tw": "跨宗派"
+  },
+
+  "mennonite": {
+    "en": "Mennonite",
+    "zh": "门诺派",
+    "tw": "門諾派"
+  },
+
+  "pentecostal": {
+    "en": "Pentecostal",
+    "zh": "五旬节",
+    "tw": "五旬節"
+  }
+
+}]

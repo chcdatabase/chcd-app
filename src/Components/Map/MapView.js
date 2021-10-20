@@ -16,6 +16,7 @@ import * as helper from "../Utils/Helpers.js";
 import * as query from "../Utils/Queries.js";
 
 
+
 class MapView extends Component {
 
 //STATE, PROPS, DRIVER INFO, & BINDS //////////////////////////////////////////
@@ -25,6 +26,7 @@ class MapView extends Component {
       language: "en",
       //FILTER INPUTS
       kind: "People",
+      sent_id: "init",
       given_name_western: "",
       family_name_western: "",
       name_western: "",
@@ -60,6 +62,7 @@ class MapView extends Component {
       //MAP BOUNDS
       mapBounds: [[54.31,137.28],[18.312,71.63],],
     };
+
     //INITIATE NEO4J INSTANCE
     this.driver = neo4j.driver(
       credentials.port,
@@ -82,24 +85,49 @@ class MapView extends Component {
     this.langSwitch = helper.langSwitch.bind(this);
   };
 
+
 //RUN ON COMPONENT MOUNT //////////////////////////////////////////////////////
   componentDidMount() {
     this.fetchMapIndexes();
-    let receivedLang = this.props.location.langGive
-    if (receivedLang) {this.setState({ language: receivedLang })}
+    let receivedLang = this.props.location.langGive;
+    let receivedKind = this.props.location.kind;
+    let receivedGiveName = this.props.location.given_name_western;
+    let receivedFamName = this.props.location.family_name_western;
+    let receivedName = this.props.location.name_western;
+    let receivedId = this.props.location.sent_id;
+    let receivedAff = this.props.location.corp_name_western;
+
+
+    if (receivedLang) {this.setState({ language: receivedLang })};
+    if (receivedKind) {this.setState({ kind: receivedKind })};
+    if (receivedGiveName) {this.setState({ given_name_western: receivedGiveName })};
+    if (receivedFamName) {this.setState({ family_name_western: receivedFamName })};
+    if (receivedName) {this.setState({ name_western: receivedName })};
+    if (receivedId) {this.setState({ sent_id: receivedId })};
+    if (receivedAff) {this.setState({ affiliation: receivedAff })};
+
+    setTimeout(() => {
+      if (this.state.sent_id === "init" || this.state.affiliation === "All" ) {return null}
+      else {this.fetchResults()}
+    } , 1500)
+
   };
+
 
 //RENDER //////////////////////////////////////////////////////////////////////
   render() {
+
     return (
       <div>
         <Navbar language={this.state.language} langSwitch={this.langSwitch}/>
         <NoSend
           nosend={this.state.nosend}
+          language={this.state.language}
           toggleDisplay = {this.toggleDisplay}
         />
         <NoResults
           noresults={this.state.noresults}
+          language={this.state.language}
           toggleDisplay = {this.toggleDisplay}
         />
         <FilterMap
@@ -111,6 +139,7 @@ class MapView extends Component {
           handleFormChange={this.handleFormChange}
         />
         <LeafletMap
+          language={this.state.language}
           content={this.state.content}
           nodeArray={this.state.nodeArray}
           bounds={this.state.mapBounds}

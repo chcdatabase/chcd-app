@@ -1,6 +1,6 @@
 import React from 'react'
 import { Row, Col, Form, Button } from 'react-bootstrap';
-import { BsFillCaretLeftFill } from 'react-icons/bs';
+import { BsFilterLeft } from 'react-icons/bs'
 import Select from 'react-select'
 
 function FilterData(props) {
@@ -9,6 +9,7 @@ function FilterData(props) {
    <div className="filter_area">
      <div className={props.filterDisplay}>
      <div className="filter_header">Data Parameters</div>
+     <div className="filter_scroll_area mb-4">
      <Form>
 
      <Row className="mb-2">
@@ -43,7 +44,8 @@ function FilterData(props) {
 
      <br />
      </Form>
-
+     </div>
+     <div classname="filter-buttons">
      <Row className="mb-2">
        <Col>
          <Button className="mb-2 col-12" variant="danger" onClick={() =>  props.fetchNetworkResults()}>Submit</Button>
@@ -52,10 +54,10 @@ function FilterData(props) {
          <Button className="mb-2 col-12" variant="outline-danger" onClick={() => window.location.reload(false)}>Reset</Button>
        </Col>
      </Row>
-
+     </div>
      <div className="filter_button_container">
        <div onClick={() =>  props.filterHide()} className="filter_button">
-         <BsFillCaretLeftFill />
+         <BsFilterLeft />
        </div>
      </div>
      </div>

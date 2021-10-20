@@ -5,6 +5,9 @@ import Select from 'react-select'
 
 import locations from "../../Assets/indexes/location-index.json"
 import translate from "../../Assets/indexes/translate.json"
+import nationality from "../../Assets/indexes/nationality.json"
+import family_trans from "../../Assets/indexes/religious_family.json"
+import cat_trans from "../../Assets/indexes/categories.json"
 
 
 function FilterSearch(props) {
@@ -34,7 +37,7 @@ function FilterSearch(props) {
 // SETUP GENERAL FILTERS /////////////////////////////////////////////////////////////
 
   function timeFilter(props) {
-    if (props.labelList.length > 1) { return (<Row className="mb-2">
+    if (props.labelList.length > 0) { return (<Row className="mb-1">
        <Col><Form.Group><Row><Col>
           <Form.Label className="filter_label mb-0">{translate[0]["start_year"][props.language]}</Form.Label>
           <Form.Control type="text" name="start_year" value={props.start_year} onChange={(value) =>  props.handleChange(value)}/>
@@ -48,29 +51,30 @@ function FilterSearch(props) {
 };
 
   function labelFilter(props) {
-    if (props.labelList.length > 1) { return (<Form.Group className="mb-2"><Row><Col><Form.Label className="filter_label mb-0">
+    if (props.labelList.length > 1) { return (<Form.Group className="mb-1"><Row><Col><Form.Label className="filter_label mb-0">
       {translate[0]["type"][props.language]}</Form.Label><div key="default-checkbox1" className="mb-1 filter-checkbox-list">
-      {props.labelList.filter(i => (i !== undefined && i !== "County" && i !== "Village" && i !== "Township" && i !== "Prefecture" && i !== "Province")).map(i => (<Form.Check type="checkbox"
-      name="label" label={i.replace(/([A-Z])/g, ' $1').trim()} value={i} onChange={(e) =>  props.handleFilterCheck(e)}/>))}</div></Col></Row></Form.Group>)} else { return null}
+      {props.labelList.filter(i => (i !== undefined && i !== "County" && i !== "Village" && i !== "Township" && i !== "Prefecture" && i !== "Province")).map(i => (
+        <Form.Check type="checkbox"
+      name="label" label={translate[0][i.replace(/([A-Z])/g, '_$1').replace(/\s|\//g, '_').substring(1).toLowerCase()][props.language]} value={i} onChange={(e) =>  props.handleFilterCheck(e)}/>))}</div></Col></Row></Form.Group>)} else { return null}
   };
 
   function relFamFilter(props) {
-    if (props.relFamList.length > 1) { return (<Form.Group className="mb-2"><Row><Col><Form.Label className="filter_label mb-0">
+    if (props.relFamList.length > 1) { return (<Form.Group className="mb-1"><Row><Col><Form.Label className="filter_label mb-0">
       {translate[0]["religious_family"][props.language]}</Form.Label><div key="default-checkbox1" className="mb-1 filter-checkbox-list">
       {props.relFamList.filter(i => i !== undefined).map(i => (<Form.Check type="checkbox"
-      name="religious_family" label={i} value={i} onChange={(e) =>  props.handleFilterCheck(e)}/>))}</div></Col></Row></Form.Group>)} else { return null}
+      name="religious_family" label={family_trans[0][i.toLowerCase()][props.language]} value={i} onChange={(e) =>  props.handleFilterCheck(e)}/>))}</div></Col></Row></Form.Group>)} else { return null}
   };
 
   function christTradFilter(props) {
-    if (props.christTradList.length > 1) { return (<Form.Group className="mb-2"><Row><Col><Form.Label className="filter_label mb-0">
+    if (props.christTradList.length > 1) { return (<Form.Group className="mb-1"><Row><Col><Form.Label className="filter_label mb-0">
       {translate[0]["christian_tradition"][props.language]}</Form.Label><div key="default-checkbox1" className="mb-1 filter-checkbox-list">
       {props.christTradList.filter(i => i !== undefined).map(i => (<Form.Check type="checkbox"
-      name="christian_tradition" label={i} value={i} onChange={(e) =>  props.handleFilterCheck(e)}/>))}</div></Col></Row></Form.Group>)} else { return null}
+      name="christian_tradition" label={translate[0][i.toLowerCase()][props.language]} value={i} onChange={(e) =>  props.handleFilterCheck(e)}/>))}</div></Col></Row></Form.Group>)} else { return null}
   };
 
 
   function generalFiltersDisplay(props) {return (
-    <div><div className="filter_label text-danger h6 mb-0 ">{translate[0]["general-filter"][props.language]}</div><div className="border border-danger p-2 mb-2">
+    <div><div className="filter_label text-danger h6 mb-0 ">{translate[0]["general-filter"][props.language]}</div><div className="border border-danger p-2 mb-1">
       {timeFilter(props)}{labelFilter(props)}{christTradFilter(props)}{relFamFilter(props)}
     </div></div>
   )}
@@ -78,95 +82,89 @@ function FilterSearch(props) {
 // SETUP PERSON FILTERS /////////////////////////////////////////////////////////////
 
  function genderFilter(props) {
-   if (props.genderList.length > 1 && props.label.includes("Person")) { return (<Form.Group className="mb-2"><Row><Col><Form.Label className="filter_label mb-0">
+   if (props.genderList.length > 1 && props.label.includes("Person")) { return (<Form.Group className="mb-1"><Row><Col><Form.Label className="filter_label mb-0">
      {translate[0]["gender"][props.language]}</Form.Label><div key="default-checkbox1" className="mb-1 filter-checkbox-list">
      {props.genderList.filter(i => i !== undefined).map(i => (<Form.Check type="checkbox"
-     name="gender" label={i} value={i} onChange={(e) =>  props.handleFilterCheck(e)}/>))}</div></Col></Row></Form.Group>)} else { return null}
+     name="gender" label={translate[0][i.toLowerCase()][props.language]} value={i} onChange={(e) =>  props.handleFilterCheck(e)}/>))}</div></Col></Row></Form.Group>)} else { return null}
  };
 
  function nationalityFilter(props) {
-   if (props.nationalityList.length > 1 && props.label.includes("Person")) { return (<Form.Group className="mb-2"><Row><Col><Form.Label className="filter_label mb-0">
+   if (props.nationalityList.length > 1 && props.label.includes("Person")) { return (<Form.Group className="mb-1"><Row><Col><Form.Label className="filter_label mb-0">
      {translate[0]["nationality"][props.language]}</Form.Label><div key="default-checkbox1" className="mb-1 filter-checkbox-list">
      {props.nationalityList.filter(i => i !== undefined).map(i => (<Form.Check type="checkbox"
-     name="nationality" label={i} value={i} onChange={(e) =>  props.handleFilterCheck(e)}/>))}</div></Col></Row></Form.Group>)} else { return null}
+     name="nationality" label={nationality[0][i.replace(/\s|\//g, '_').toLowerCase()][props.language]} value={i} onChange={(e) =>  props.handleFilterCheck(e)}/>))}</div></Col></Row></Form.Group>)} else { return null}
   };
 
   function affFilter(props) {
-    if (props.affList.length > 1 && props.label.includes("Person")) { return (<Form.Group className="mb-2"><Row><Col><Form.Label className="filter_label mb-0">
+    if (props.affList.length > 1 && props.label.includes("Person")) { return (<Form.Group className="mb-1"><Row><Col><Form.Label className="filter_label mb-0">
       {translate[0]["affiliation"][props.language]}</Form.Label><div key="default-checkbox1" className="mb-1 filter-checkbox-list">
       {props.affList.filter(i => i !== undefined).map(i => (<Form.Check type="checkbox"
       name="name_western" label={i} value={i} onChange={(e) =>  props.handleFilterCheck(e)}/>))}</div></Col></Row></Form.Group>)} else { return null}
    };
 
   function peopleFiltersDisplay(props) { if (props.label.includes("Person")) { return (
-    <div><div className="filter_label text-danger h6 mb-0 ">{translate[0]["people-filter"][props.language]}</div><div className="border border-danger p-2 mb-2">
+    <div><div className="filter_label text-danger h6 mb-0 ">{translate[0]["people-filter"][props.language]}</div><div className="border border-danger p-2 mb-1">
       {genderFilter(props)}{nationalityFilter(props)}{affFilter(props)}
     </div></div>
   )}};
 
 // SETUP INST FILTERS /////////////////////////////////////////////////////////////
-function instFilter(props) {
-  if (props.instList.length > 1 && props.label.includes("Institution")) { return (<Form.Group className="mb-2"><Row><Col><Form.Label className="filter_label mb-0">
-    {translate[0]["affiliation"][props.language]}</Form.Label><div key="default-checkbox1" className="mb-1 filter-checkbox-list">
-    {props.instList.filter(i => i !== undefined).map(i => (<Form.Check type="checkbox"
-    name="inst_name_western" label={i} value={i} onChange={(e) =>  props.handleFilterCheck(e)}/>))}</div></Col></Row></Form.Group>)} else { return null}
- };
  function instCatFilter(props) {
-    if (props.instCatList.length > 0 && props.label.includes("Institution")) { return (<Form.Group className="mb-2"><Row><Col><Form.Label className="filter_label mb-0">
+    if (props.instCatList.length > 0 && props.label.includes("Institution")) { return (<Form.Group className="mb-1"><Row><Col><Form.Label className="filter_label mb-0">
       {translate[0]["inst_category"][props.language]}</Form.Label><div key="default-checkbox1" className="mb-1 filter-checkbox-list">
       {props.instCatList.filter(i => i !== undefined).map(i => (<Form.Check type="checkbox"
-      name="institution_category" label={i} value={i} onChange={(e) =>  props.handleFilterCheck(e)}/>))}</div></Col></Row></Form.Group>)} else { return null}
+      name="institution_category" label={cat_trans[0][i.replace(/\s|\//g, '_').toLowerCase()][props.language]} value={i} onChange={(e) =>  props.handleFilterCheck(e)}/>))}</div></Col></Row></Form.Group>)} else { return null}
   };
   function instSubCatFilter(props) {
-    if (props.instSubCatList.length > 0 && props.label.includes("Institution")) { return (<Form.Group className="mb-2"><Row><Col><Form.Label className="filter_label mb-0">
+    if (props.instSubCatList.length > 0 && props.label.includes("Institution")) { return (<Form.Group className="mb-1"><Row><Col><Form.Label className="filter_label mb-0">
       {translate[0]["inst_subcategory"][props.language]}</Form.Label><div key="default-checkbox1" className="mb-1 filter-checkbox-list">
       {props.instSubCatList.filter(i => i !== undefined).map(i => (<Form.Check type="checkbox"
-      name="institution_subcategory" label={i} value={i} onChange={(e) =>  props.handleFilterCheck(e)}/>))}</div></Col></Row></Form.Group>)} else { return null}
+      name="institution_subcategory" label={cat_trans[0][i.replace(/\s|\//g, '_').toLowerCase()][props.language]} value={i} onChange={(e) =>  props.handleFilterCheck(e)}/>))}</div></Col></Row></Form.Group>)} else { return null}
   };
 
   function instFiltersDisplay(props) { if (props.label.includes("Institution")) { return (
-    <div><div className="filter_label text-danger h6 mb-0 ">{translate[0]["institution-filter"][props.language]}</div><div className="border border-danger p-2 mb-2">
-      {instCatFilter(props)}{instSubCatFilter(props)}{instFilter(props)}
+    <div><div className="filter_label text-danger h6 mb-0 ">{translate[0]["institution-filter"][props.language]}</div><div className="border border-danger p-2 mb-1">
+      {instCatFilter(props)}{instSubCatFilter(props)}
     </div></div>
   )}};
 
 
 // SETUP CORP FILTERS /////////////////////////////////////////////////////////////
   function corpCatFilter(props) {
-    if (props.corpCatList.length > 0 && props.label.includes("CorporateEntity")) { return (<Form.Group className="mb-2"><Row><Col><Form.Label className="filter_label mb-0">
+    if (props.corpCatList.length > 0 && props.label.includes("CorporateEntity")) { return (<Form.Group className="mb-1"><Row><Col><Form.Label className="filter_label mb-0">
       {translate[0]["corp_category"][props.language]}</Form.Label><div key="default-checkbox1" className="mb-1 filter-checkbox-list">
       {props.corpCatList.filter(i => i !== undefined).map(i => (<Form.Check type="checkbox"
-      name="corporate_entity_category" label={i} value={i} onChange={(e) =>  props.handleFilterCheck(e)}/>))}</div></Col></Row></Form.Group>)} else { return null}
+      name="corporate_entity_category" label={cat_trans[0][i.replace(/\s|\//g, '_').toLowerCase()][props.language]} value={i} onChange={(e) =>  props.handleFilterCheck(e)}/>))}</div></Col></Row></Form.Group>)} else { return null}
   };
   function corpSubCatFilter(props) {
-    if (props.corpSubCatList.length > 0 && props.label.includes("CorporateEntity")) { return (<Form.Group className="mb-2"><Row><Col><Form.Label className="filter_label mb-0">
+    if (props.corpSubCatList.length > 0 && props.label.includes("CorporateEntity")) { return (<Form.Group className="mb-1"><Row><Col><Form.Label className="filter_label mb-0">
       {translate[0]["corp_subcategory"][props.language]}</Form.Label><div key="default-checkbox1" className="mb-1 filter-checkbox-list">
       {props.corpSubCatList.filter(i => i !== undefined).map(i => (<Form.Check type="checkbox"
-      name="corporate_entity_subcategory" label={i} value={i} onChange={(e) =>  props.handleFilterCheck(e)}/>))}</div></Col></Row></Form.Group>)} else { return null}
+      name="corporate_entity_subcategory" label={cat_trans[0][i.replace(/\s|\//g, '_').toLowerCase()][props.language]} value={i} onChange={(e) =>  props.handleFilterCheck(e)}/>))}</div></Col></Row></Form.Group>)} else { return null}
   };
 
   function corpFiltersDisplay(props) { if (props.label.includes("CorporateEntity")) { return (
-    <div><div className="filter_label text-danger h6 mb-0 ">{translate[0]["corp-filter"][props.language]}</div><div className="border border-danger p-2 mb-2">
+    <div><div className="filter_label text-danger h6 mb-0 ">{translate[0]["corp-filter"][props.language]}</div><div className="border border-danger p-2 mb-1">
       {corpCatFilter(props)}{corpSubCatFilter(props)}
     </div></div>
   )}};
 
 // SETUP EVENT FILTERS /////////////////////////////////////////////////////////////
   function eventCatFilter(props) {
-    if (props.eventCatList.length > 0 && props.label.includes("Event")) { return (<Form.Group className="mb-2"><Row><Col><Form.Label className="filter_label mb-0">
+    if (props.eventCatList.length > 0 && props.label.includes("Event")) { return (<Form.Group className="mb-1"><Row><Col><Form.Label className="filter_label mb-0">
       {translate[0]["event_category"][props.language]}</Form.Label><div key="default-checkbox1" className="mb-1 filter-checkbox-list">
       {props.eventCatList.filter(i => i !== undefined).map(i => (<Form.Check type="checkbox"
-      name="event_category" label={i} value={i} onChange={(e) =>  props.handleFilterCheck(e)}/>))}</div></Col></Row></Form.Group>)} else { return null}
+      name="event_category" label={cat_trans[0][i.replace(/\s|\//g, '_').toLowerCase()][props.language]} value={i} onChange={(e) =>  props.handleFilterCheck(e)}/>))}</div></Col></Row></Form.Group>)} else { return null}
   };
   function eventSubCatFilter(props) {
-    if (props.eventSubCatList.length > 0 && props.label.includes("Event")) { return (<Form.Group className="mb-2"><Row><Col><Form.Label className="filter_label mb-0">
+    if (props.eventSubCatList.length > 0 && props.label.includes("Event")) { return (<Form.Group className="mb-1"><Row><Col><Form.Label className="filter_label mb-0">
     {translate[0]["event_subcategory"][props.language]}</Form.Label><div key="default-checkbox1" className="mb-1 filter-checkbox-list">
       {props.eventSubCatList.filter(i => i !== undefined).map(i => (<Form.Check type="checkbox"
-      name="event_subcategory" label={i} value={i} onChange={(e) =>  props.handleFilterCheck(e)}/>))}</div></Col></Row></Form.Group>)} else { return null}
+      name="event_subcategory" label={cat_trans[0][i.replace(/\s|\//g, '_').toLowerCase()][props.language]} value={i} onChange={(e) =>  props.handleFilterCheck(e)}/>))}</div></Col></Row></Form.Group>)} else { return null}
   };
 
   function eventFiltersDisplay(props) { if (props.label.includes("Event")) { return (
-    <div><div className="filter_label text-danger h6 mb-0 ">{translate[0]["event-filter"][props.language]}</div><div className="border border-danger p-2 mb-2">
+    <div><div className="filter_label text-danger h6 mb-0 ">{translate[0]["event-filter"][props.language]}</div><div className="border border-danger p-2 mb-1">
       {eventCatFilter(props)}{eventSubCatFilter(props)}
     </div></div>
   )}};
@@ -195,6 +193,7 @@ function instFilter(props) {
   }
 
   else {
+      console.log(props.nodeArray)
     return (
       <div className="filter_area">
         <div className={props.filterDisplay}>
@@ -208,12 +207,12 @@ function instFilter(props) {
           </div>
           {/* BUTTONS SELECT ------------------------------------ */}
           <div classname="filter-buttons">
-            <Row className="mb-2">
+            <Row className="mb-1">
               <Col>
-                <Button className="mb-2 col-12" variant="danger" onClick={() =>  props.filterResults()}>{translate[0]["filter"][props.language]}</Button>
+                <Button className="mb-1 col-12" variant="danger" onClick={() =>  props.filterResults()}>{translate[0]["filter"][props.language]}</Button>
               </Col>
               <Col>
-                <Button className="mb-2 col-12" variant="outline-danger" onClick={() =>  props.clearFilters()}>{translate[0]["clear-all"][props.language]}</Button>
+                <Button className="mb-1 col-12" variant="outline-danger" onClick={() =>  props.clearFilters()}>{translate[0]["clear-all"][props.language]}</Button>
               </Col>
             </Row>
           </div>

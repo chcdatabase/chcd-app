@@ -80,20 +80,18 @@
 
 .lang-switch-button .btn-secondary {
   background: none !important;
-  color: #f2905c;
+  color: $orange;
+  border: 1px solid $orange;
   font-size: 1.25rem;
   text-transform: uppercase;
   padding: 0.4rem 0.4rem 0rem 0.4rem;
   margin-bottom: 0.4rem;
-  min-height: 28px;
+  height: 2.25rem;
   min-width: 50px;
   &:hover {
     color: $mid-gray;
-    border: 2px solid $mid-gray;
+    border: 1px solid $mid-gray;
     padding: 0.4rem 0.4rem 0rem 0.4rem;
-    margin-bottom: 0.4rem;
-    min-height: 28px;
-    min-width: 50px;
     }
 }
 
@@ -103,13 +101,33 @@
 
 .lang-switch-button .dropdown-menu.show {
   min-width: 50px;
-  transform: translate(-8px, 29px) !important;
+  transform: translate(-8px, 40px) !important;
 }
 .dropdown-item:hover {
-  background: $orange;
+  background: $light-gray !important;
+}
+.dropdown-item:active {
+  background: $dark-pink !important;
 }
 
 @include media-breakpoint-down(lg) {
+
+  .lang-switch-button .btn-secondary {
+    color: $white;
+    border: 1px solid $white;
+    height: 2.25rem;
+    min-width: 200px;
+    padding: 0.4rem 0.4rem 0rem 0.4rem;
+    &:hover {
+      color: $mid-gray;
+      border: 2px solid $mid-gray;
+      padding: 0.4rem 0.4rem 0rem 0.4rem;
+      }
+  }
+  .lang-switch-button .dropdown-menu.show {
+    min-width: 200px;
+    transform: translate(0px, 40px) !important;
+  }
 
     .NavItems {
       position: relative;

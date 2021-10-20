@@ -25,7 +25,7 @@ export function fetchSearch() {
     this.setState ({ label: "", nationality: "", gender: "", religious_family: "", christian_tradition: "", institution_category: "", institution_subcategory: "", corporate_entity_category: "", corporate_entity_subcategory: "", event_category: "", event_subcategory: "", name_western: "", inst_name_western: "" });
 
     const nodeArray = results.records.map((record) => record.get('Nodes'));
-    if (nodeArray.length === 0) {this.setState ({ noresults: "noresults" }); this.setState ({ content: "loaded" });}
+    if (nodeArray.length === 0) {this.setState ({ noresults: "noresults" }); this.setState ({ content: "loaded" }); this.setState ({ search_set: this.state.search })}
 
     else {
       let filterArray = nodeArray;
@@ -46,6 +46,7 @@ export function fetchSearch() {
       this.setState ({noResults: "no_results hide", content: "loaded" });
       this.setState ({ nodeArray, filterArray });
       this.setState ({ instList, affList, genderList, nationalityList, labelList, relFamList, christTradList, instCatList, instSubCatList, corpCatList, corpSubCatList, eventCatList, eventSubCatList });
+      this.setState ({ search_set: this.state.search })
     }
     session.close()})
   } else {}
@@ -64,7 +65,6 @@ export function fetchResults() {
     (this.state.location === "All" || this.state.location === "都") &&
     this.state.affiliation === "All" &&
     this.state.religious_family === "All" &&
-    this.state.location === "" &&
     this.state.start_year === "" &&
     this.state.end_year === "" ) {
       this.setState ({nosend: "nosend"})
@@ -88,7 +88,16 @@ export function fetchResults() {
       else if (this.state.start_year === "" && this.state.end_year !== "") {timeFilter = 'WHERE (t.start_year <= ' + this.state.end_year + ') OR t.start_year IS NULL'}
       else if (this.state.start_year !== "" && this.state.end_year === "") {timeFilter = 'WHERE (t.start_year >= ' + this.state.start_year + ') OR t.start_year IS NULL'}
       else { timeFilter = ""};
-
+    let keyFilter;
+      if (this.state.sent_id !== "init" && this.state.kind === "People" ) {
+        if (timeFilter !== "") {keyFilter = ' AND ID(n)=' + this.state.sent_id }
+        else {keyFilter = ' WHERE ID(n)=' + this.state.sent_id }
+      }
+      else if (this.state.sent_id !== "init" && this.state.kind === "Institutions" ) {
+        if (timeFilter !== "") {keyFilter = ' AND ID(r)=' + this.state.sent_id }
+        else {keyFilter = ' WHERE ID(r)=' + this.state.sent_id }
+      }
+      else {keyFilter = ""}
     //CONCAT & CLEAN FILTERS
     const filterStatic = [familyNameFilter, givenNameFilter, genderFilter, nationalityFilter]
     const filterStaticClean = filterStatic.filter(value => value.length > 1).join();
@@ -102,14 +111,15 @@ export function fetchResults() {
     let query;
     if (this.state.kind === "People") {
         const query = `
-          MATCH (n:Person {`+ filterStaticClean +`})-[t]->(r:Institution)-[]->(e:CorporateEntity {`+ affFilter +`})`+ timeFilter +`
+          MATCH (n:Person {`+ filterStaticClean +`})-[t]->(r:Institution)-[]->(e:CorporateEntity {`+ affFilter +`})`+ timeFilter + keyFilter +`
           WITH n,r,e,t MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)
           RETURN {key:id(n),properties:properties(n),inst:properties(r),aff:properties(e),locat:properties(l),rel:properties(t),locat_name:properties(l).name_wes} AS Nodes
-          UNION MATCH (e:CorporateEntity {`+ affFilter +`})<-[]-(n:Person {`+ filterStaticClean +`})-[t]->(r:Institution)`+ timeFilter +`
+          UNION MATCH (e:CorporateEntity {`+ affFilter +`})<-[]-(n:Person {`+ filterStaticClean +`})-[t]->(r:Institution)`+ timeFilter + keyFilter +`
           WITH n,r,e,t MATCH (r)-[]->(l)
           WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)
           RETURN {key:id(n),properties:properties(n),inst:properties(r),aff:properties(e),locat:properties(l),rel:properties(t),locat_name:properties(l).name_wes} AS Nodes
           `
+          console.log(query)
           session
           .run(query)
           .then((results) => {
@@ -132,10 +142,17 @@ export function fetchResults() {
 
     } else if (this.state.kind === "Institutions") {
         const query = `
-          MATCH (r:Institution {`+ instFilterStaticClean +`})-[t]-(e:CorporateEntity {`+ corpFilterStaticClean +`})`+ timeFilter +`
-          WITH r,e,t MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)
-          RETURN {key:id(r),properties:properties(r),aff:properties(e),locat:properties(l),rel:properties(t),locat_name:properties(l).name_wes} AS Nodes
+          MATCH (p:Person)-[t]-(r:Institution {`+ instFilterStaticClean +`})-[q]-(e:CorporateEntity {`+ corpFilterStaticClean +`})`+ timeFilter + keyFilter +`
+          WITH p,q,r,e,t MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)
+          RETURN {key:id(r),properties:properties(r),aff:properties(e),locat:properties(l),rel:properties(q),locat_name:properties(l).name_wes} AS Nodes
+          UNION MATCH (p:Person)-[t]-(r:Institution {`+ instFilterStaticClean +`})-[q*2]-(e:CorporateEntity {`+ corpFilterStaticClean +`})`+ timeFilter + keyFilter +`
+          WITH p,q,r,e,t MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)
+          RETURN {key:id(r),properties:properties(r),aff:properties(e),locat:properties(l),rel:properties(q[1]),locat_name:properties(l).name_wes} AS Nodes
+          UNION MATCH (p:Person)-[t]-(r:Institution {`+ instFilterStaticClean +`})-[q*3]-(e:CorporateEntity {`+ corpFilterStaticClean +`})`+ timeFilter + keyFilter +`
+          WITH p,q,r,e,t MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)
+          RETURN {key:id(r),properties:properties(r),aff:properties(e),locat:properties(l),rel:properties(q[1]),locat_name:properties(l).name_wes} AS Nodes
           `
+          console.log(query)
           session.run(query).then((results) => {
             let unfiltArray = results.records.map((record) => record.get('Nodes'));
             let nodeArray;
@@ -151,6 +168,7 @@ export function fetchResults() {
               this.setState ({ mapBounds });
               this.setState ({noresults: "noresults hide"})
               this.setState ({ content: "loaded" })
+              console.log(nodeArray)
             }
             session.close()})
      }
@@ -185,7 +203,7 @@ export function fetchNetworkResults() {
 
     //CONSTRUCT QUERY WITH VARIABLES
     const query = `
-      MATCH (n:Person)-[t]-(o)`+ nodeIdFilter +`
+      MATCH (n)-[t]-(o)`+ nodeIdFilter +`
       CALL apoc.path.subgraphAll(n, {
               maxLevel:`+degreeFilter+`,
               labelFilter:"`+ peopleFilter +`Person|`+ instFilter +`Institution|`+ corpFilter +`CorporateEntity|`+ eventFilter +`Event|-Village|-Township|-County|-Prefecture|-Province"
@@ -241,11 +259,12 @@ export function selectSwitchAppend(event) {
     this.setState({nodeSelect: event});
     const session = this.driver.session()
     const selectquery = `
-    MATCH (n)-[t]-(p:Person) WHERE ID(n) =` + event +` RETURN {key:id(n), select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t)} AS SelectNodes
-    UNION MATCH (n)-[t]-(p:CorporateEntity) WHERE ID(n) =` + event +` RETURN {key:id(n), select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t)} AS SelectNodes
-    UNION MATCH (n)-[t]-(p:Institution) WHERE ID(n) =` + event +` RETURN {key:id(n), select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t)} AS SelectNodes
-    UNION MATCH (n)-[t]-(p:Event) WHERE ID(n) =` + event +` RETURN {key:id(n), select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t)} AS SelectNodes
+    MATCH (n)-[t]-(p:Person) WHERE ID(n) =` + event +` RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t)} AS SelectNodes
+    UNION MATCH (n)-[t]-(p:CorporateEntity) WHERE ID(n) =` + event +` RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t)} AS SelectNodes
+    UNION MATCH (n)-[t]-(p:Institution) WHERE ID(n) =` + event +` RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t)} AS SelectNodes
+    UNION MATCH (n)-[t]-(p:Event) WHERE ID(n) =` + event +` RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t)} AS SelectNodes
     `
+    console.log(selectquery)
     session.run(selectquery).then((results) => {const selectArray = results.records.map((record) => record.get('SelectNodes')); this.setState ({ selectArray });
     this.breadCrumbChainer();
     session.close()});
@@ -256,10 +275,10 @@ export function selectSwitchReduce(event, order) {
     this.setState({nodeSelect: event});
     const session = this.driver.session()
     const selectquery = `
-    MATCH (n)-[t]-(p:Person) WHERE ID(n) =` + event +` RETURN {key:id(n), select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t)} AS SelectNodes
-    UNION MATCH (n)-[t]-(p:CorporateEntity) WHERE ID(n) =` + event +` RETURN {key:id(n), select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t)} AS SelectNodes
-    UNION MATCH (n)-[t]-(p:Institution) WHERE ID(n) =` + event +` RETURN {key:id(n), select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t)} AS SelectNodes
-    UNION MATCH (n)-[t]-(p:Event) WHERE ID(n) =` + event +` RETURN {key:id(n), select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t)} AS SelectNodes
+    MATCH (n)-[t]-(p:Person) WHERE ID(n) =` + event +` RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t)} AS SelectNodes
+    UNION MATCH (n)-[t]-(p:CorporateEntity) WHERE ID(n) =` + event +` RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t)} AS SelectNodes
+    UNION MATCH (n)-[t]-(p:Institution) WHERE ID(n) =` + event +` RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t)} AS SelectNodes
+    UNION MATCH (n)-[t]-(p:Event) WHERE ID(n) =` + event +` RETURN {key:id(n), select_kind:labels(n)\0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t)} AS SelectNodes
     `
     session.run(selectquery).then((results) => {const selectArray = results.records.map((record) => record.get('SelectNodes')); this.setState ({ selectArray });
     this.breadCrumbReducer(event, order);
@@ -281,8 +300,12 @@ export function selectSwitchInitial(event) {
 //QUERY TO FETCH LISTS FOR NETWORK SELECTS
 export function fetchNetworkIndexes() {
   const session = this.driver.session();
-  const query = `MATCH (p:Person) WHERE p.family_name_western IS NOT NULL
-    RETURN DISTINCT {value:ID(p), label:p.given_name_western + ' ' + p.family_name_western} AS List`
+  const query = `
+    MATCH (p:Person) WHERE p.family_name_western IS NOT NULL
+    RETURN DISTINCT {value:ID(p), label:p.given_name_western + ' ' + p.family_name_western} AS List
+    UNION MATCH (p) WHERE p:CorporateEntity OR  p:Event OR  p:Institution
+    RETURN DISTINCT {value:ID(p), label:p.name_western} AS List
+    `
   session.run(query).then((results) => {
     const netPersonIndex = results.records.map((record) => record.get('List'));
     this.setState ({ netPersonIndex })
@@ -312,9 +335,16 @@ export function fetchMapIndexes() {
   //GET INST AFFILIATION LIST
   const session2 = this.driver.session();
   const query2 = `
-    MATCH (r:Institution)-[t:PART_OF]->(e:CorporateEntity)
+  MATCH (r:Institution)-[t]-(e:CorporateEntity)
     WITH r,t,e MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)
-    RETURN DISTINCT {value:e.name_western} AS List`
+    RETURN DISTINCT {value:e.name_western, zh:e.chinese_name_hanzi} AS List
+  UNION MATCH (r:Institution)-[t*2]-(e:CorporateEntity)
+    WITH r,t,e MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)
+    RETURN DISTINCT {value:e.name_western, zh:e.chinese_name_hanzi} AS List
+  UNION MATCH (r:Institution)-[t*3]-(e:CorporateEntity)
+    WITH r,t,e MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)
+    RETURN DISTINCT {value:e.name_western, zh:e.chinese_name_hanzi} AS List
+    `
   session2.run(query2).then((results) => {
     const resultIndex2 = results.records.map((record) => record.get('List')); const addAll2 = [{value: "All"}];
     const affIndex = addAll2.concat(resultIndex2);
@@ -347,7 +377,7 @@ export function fetchMapIndexes() {
   const session5 = this.driver.session();
   const query5 = `MATCH (r:Person)-[]->(e:Institution)-[]->(c:CorporateEntity)
     WITH r,e,c MATCH (e)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)
-    RETURN DISTINCT {value:c.name_western} AS List`
+    RETURN DISTINCT {value:c.name_western, zh:c.chinese_name_hanzi} AS List`
   session5.run(query5).then((results) => {
     const resultIndex5 = results.records.map((record) => record.get('List')); const addAll5 = [{value: "All"}];
     const pAffIndex = addAll5.concat(resultIndex5);

@@ -1,5 +1,17 @@
 @import "mixins";
 
+.link-icons{
+  float: left;
+  height: 1.5em;
+  width:1.5em;
+  color: $mid-gray;
+  margin: 0em 0.5em;
+  transform: translateY(0.25em);
+  &:hover {
+    color: $gray;
+  }
+}
+
 .popupcontainer {
   background-color: $light-gray;
   display: block;
@@ -69,6 +81,9 @@
   font-family: $header;
   font-size: $x-large;
   font-weight: bold;
+  clear: none;
+  width: auto;
+  float: left;
 }
 
 .addinfo {

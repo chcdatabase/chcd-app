@@ -1,0 +1,127 @@
+[{
+  "_COMMENT": "CATEGORIES AND SUBCATEGORIES TRANSLATIONS ==========================================",
+
+"all": {
+  "en": "All",
+  "zh": "都",
+  "tw": "都"
+},
+
+"n_a": {
+  "en": "N/A",
+  "zh": "不适用",
+  "tw": "不適用"
+},
+
+"ecclesial": {
+    "en": "Ecclesial",
+    "zh": "教会的",
+    "tw": "教會的"
+  },
+  "education": {
+    "en": "Education",
+    "zh": "教育",
+    "tw": "教育"
+  },
+  "other": {
+    "en": "Other",
+    "zh": "其他",
+    "tw": "其他"
+  },
+  "mission": {
+    "en": "Mission",
+    "zh": "使命",
+    "tw": "使命"
+  },
+  "residence": {
+    "en": "Residence",
+    "zh": "住宅",
+    "tw": "住宅"
+  },
+  "itinerant_uncertain_work": {
+    "en": "Itinerant/Uncertain Work",
+    "zh": "流动/不确定的工作",
+    "tw": "流動/不確定的工作"
+  },
+  "church": {
+    "en": "Church",
+    "zh": "教会",
+    "tw": "教會"
+  },
+  "higher_educational_facility": {
+    "en": "Higher Educational Facility",
+    "zh": "高等教育机构",
+    "tw": "高等教育機構"
+  },
+  "school": {
+    "en": "School",
+    "zh": "学校",
+    "tw": "學校"
+  },
+  "seminary": {
+    "en": "Seminary",
+    "zh": "神学院",
+    "tw": "神學院"
+  },
+  "internment_camp": {
+    "en": "Internment Camp",
+    "zh": "拘留营",
+    "tw": "拘留營"
+  },
+  "journey": {
+    "en": "Journey",
+    "zh": "旅行",
+    "tw": "旅行"
+  },
+  "boat_embarkment": {
+    "en": "Boat Embarkment",
+    "zh": "登船",
+    "tw": "登船"
+  },
+  "governmental_body": {
+    "en": "Governmental Body",
+    "zh": "政府机构",
+    "tw": "政府機構"
+  },
+  "administrative_unit": {
+    "en": "Administrative Unit",
+    "zh": "行政单位",
+    "tw": "行政單位"
+  },
+  "notable_family": {
+    "en": "Notable Family",
+    "zh": "显赫家族",
+    "tw": "顯赫家族"
+  },
+  "religious_body": {
+    "en": "Religious Body",
+    "zh": "宗教团体",
+    "tw": "宗教團體"
+  },
+  "administrative_subunit": {
+    "en": "Administrative Subunit",
+    "zh": "行政单位",
+    "tw": "行政單位"
+  },
+  "clerical_religious_congregation": {
+    "en": "Clerical Religious Congregation",
+    "zh": "神职人员宗教会",
+    "tw": "神職人員宗教會"
+  },
+  "order_of_clerics_regular": {
+    "en": "Order of Clerics Regular",
+    "zh": "正常的神职人员秩序",
+    "tw": "常規教士團"
+  },
+  "religious_institute_of_consecrated_life": {
+    "en": "Religious Institute of Consecrated Life",
+    "zh": "献身生活宗教学院",
+    "tw": "獻身生活宗教學院"
+  },
+  "mission_organization": {
+    "en": "Mission Organization",
+    "zh": "宣教组织",
+    "tw": "宣教組織"
+  }
+
+}]

@@ -23,6 +23,7 @@ class NetworkView extends Component {
     super(props);
     this.state = {
       language: "en",
+      sent_id: "init",
       //FILTER INPUTS
       people_include: false,
       corp_include: false,
@@ -75,9 +76,25 @@ class NetworkView extends Component {
 //RUN ON COMPONENT MOUNT //////////////////////////////////////////////////////
   componentDidMount() {
     this.fetchNetworkIndexes();
-    let receivedLang = this.props.location.langGive
-    if (receivedLang) {this.setState({ language: receivedLang })}
+    let receivedLang = this.props.location.langGive;
+    let receivedId = this.props.location.sent_id;
+
+    if (receivedLang) {this.setState({ language: receivedLang })};
+    if (receivedId) {
+      this.setState({ sent_id: receivedId });
+      this.setState({ node_id: receivedId });
+      this.setState({ degree: 2 });
+      this.setState({ people_include: true });
+      this.setState({ inst_include: true });
+      this.setState({ corp_include: true });
+    };
+
+    setTimeout(() => {
+      if (this.state.sent_id === "init") {return null}
+      else {this.fetchNetworkResults()}
+    } , 1000)
   };
+
 
 //RENDER //////////////////////////////////////////////////////////////////////
   render() {
@@ -109,6 +126,7 @@ class NetworkView extends Component {
           node_id={this.state.node_id}
           breadCrumbChainer={this.breadCrumbChainer}
           selectSwitchInitial={this.selectSwitchInitial}
+          language={this.state.language}
         />
         <Popup
           {...this.state}
