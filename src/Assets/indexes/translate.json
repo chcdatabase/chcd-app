@@ -1,5 +1,37 @@
 [{
 
+"_COMMENT": "HOME SCREEN ==========================================",
+
+"home_headline": {
+  "en": "Visualizing China's Christian Past",
+  "zh": "可视化中国的基督教过去",
+  "tw": "可視化中國的基督教過去"
+  },
+
+"home_subheadline": {
+  "en": "The China Historical Christian Database is a new digital tool for the study of Chinese Christianity from 1550 to 1950.",
+  "zh": "中国基督教历史数据库是研究1550年至1950年中国基督教的新型数字工具。",
+  "tw": "中國基督教歷史數據庫是研究1550年至1950年中國基督教的新型數字工具。"
+  },
+
+"about_the_project": {
+  "en": "About the Project",
+  "zh": "关于该项目",
+  "tw": "關於該項目"
+  },
+
+"documentation": {
+  "en": "Documentation",
+  "zh": "文档",
+  "tw": "文檔"
+  },
+
+"download_data": {
+  "en": "Download Data",
+  "zh": "下载数据",
+  "tw": "下載數據"
+  },
+
 "_COMMENT": "POPUP MESSAGES ==========================================",
 
 "sorry": {

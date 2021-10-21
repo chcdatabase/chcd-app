@@ -10,7 +10,6 @@
     top: 0;
     z-index: 999;
     margin: 0 !important;
-    box-shadow: 0px 0px 8px -3px $gray;
 }
 
 .nav_container {
@@ -110,6 +109,46 @@
   background: $dark-pink !important;
 }
 
+.nav_bar_trans {
+  background: none;
+  font-family: $header;
+  color: $white;
+  height: 80px;
+  padding: .75rem;
+  color: $white;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  margin: 0 !important;
+  & .nav_bar_link {
+    color: $white;
+    display: flex;
+    text-transform: uppercase;
+    align-items: center;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    height: 100%;
+    font-size: $medium;
+    &:hover {
+      color: $gray;
+    }
+  }
+  & .lang-switch-button .btn-secondary {
+    color: $white;
+    border: 1px solid $white;
+    &:hover {
+      color: $gray;
+      border: 1px solid $gray;
+      }
+  }
+  & .nav-logo, .nav-logo a {
+      background: $en-logo-white;
+      background-repeat: no-repeat;
+      background-size: contain;
+      color: $white;
+    }
+}
+
 @include media-breakpoint-down(lg) {
 
   .lang-switch-button .btn-secondary {
@@ -192,6 +231,34 @@
       transition: all 0.3s ease;
       &:hover {
         opacity: .25;
+      }
+    }
+
+    .nav_bar_trans {
+      color: $white;
+      & .nav-menu.active {
+        background: $gray;
+      }
+      & .fa-times {
+        color: $white;
+      }
+      & .nav_bar_link {
+        text-align: center;
+        color: $white;
+        padding: 2rem;
+        width: 100%;
+        display: table;
+        &:hover {
+          color: $orange;
+          transition: all 0.3s ease;
+        }
+      }
+      & .menu-icon {
+        color: $white;
+        &:hover {
+          color: $white;
+          opacity: .25;
+        }
       }
     }
 

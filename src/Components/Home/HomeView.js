@@ -32,11 +32,24 @@ class HomeView extends Component {
 
 //RENDER //////////////////////////////////////////////////////////////////////
   render() {
+
+    const styles = {
+      background: 'url(https://chcdatabase.com/wp-content/uploads/2020/07/Last_Supper-e1596117198957.jpg)'
+    }
+
     return (
-      <div>
-      <Navbar language={this.state.language} langSwitch={this.langSwitch}/>
-      <HomeStatic language={this.state.language} />
+      <div style={{
+        backgroundImage: `url("https://chcdatabase.com/wp-content/uploads/2020/07/Last_Supper-e1596117198957.jpg")`,
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+        overflow: 'auto'
+      }}>
+      <div className="gradient-back text-light bg-opacity-50" >
+        <Navbar home="home" language={this.state.language} langSwitch={this.langSwitch}/>
+        <HomeStatic language={this.state.language} />
       </div>
+    </div>
     )
   }
 
