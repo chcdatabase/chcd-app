@@ -145,6 +145,21 @@ function LeafletMap(props) {
       )} else {return null}
    }
 
+   function getMap(props) {
+     if (props.language === "en") { return (
+       <TileLayer
+         attribution="Map tiles by <a href='http://stamen.com'>Stamen Design</a>, <a href='http://creativecommons.org/licenses/by/3.0'>CC BY 3.0</a> &mdash; Map data &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
+         url='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
+       />
+    )}
+    else { return (
+      <TileLayer
+        attribution="Map tiles by <a href='http://stamen.com'>Stamen Design</a>, <a href='http://creativecommons.org/licenses/by/3.0'>CC BY 3.0</a> &mdash; Map data &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
+        url='http://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png'
+      />
+    )}
+   }
+
    // MAP RETURN
    return (
      <div>
@@ -152,13 +167,9 @@ function LeafletMap(props) {
      {checkLoad(props)}
      <Map bounds={props.bounds} zoom={7} zoomControl={false} id="main">
       <LayersControl position="topright">
-
         {/* LAYER CONTROLS - GRAY BASELAYER */}
-        <LayersControl.BaseLayer checked name={translate[0]["grayscale"][props.language]}>
-          <TileLayer
-            attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
-            url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
-          />
+        <LayersControl.BaseLayer checked name={translate[0]["standard"][props.language]}>
+          {getMap(props)}
         </LayersControl.BaseLayer>
         {/* LAYER CONTROLS - TOPOGRAPHIC BASELAYER */}
         <LayersControl.BaseLayer name={translate[0]["topographic"][props.language]}>

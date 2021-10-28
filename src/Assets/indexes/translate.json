@@ -455,10 +455,10 @@
 
 "_COMMENT": "MAP ELEMENTS TRANSLATIONS ==========================================",
 
-"grayscale": {
-  "en": "Grayscale",
-  "zh": "灰度",
-  "tw": "灰度"
+"standard": {
+  "en": "Standard",
+  "zh": "标准",
+  "tw": "標準"
 },
 
 "topographic": {
