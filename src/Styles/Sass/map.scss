@@ -7,13 +7,14 @@
   width: 100%;
   bottom: 0;
   z-index: 1;
+  background: $gray;
 }
 .leaflet-control-attribution {
   display: none;
 }
 
 .marker-cluster-custom {
-  background: $gray;
+  background: $black;
   border-radius: 50%;
   color: $white;
   text-align: center;
@@ -25,14 +26,14 @@
     line-height: 22px;
   }
   &.medium {
-    border: 5px solid $orange;
+    border: 5px solid $light-orange;
     border-radius: 50%;
     height: 40px;
     width: 40px;
     line-height: 32px;
   }
   &.large {
-    border: 5px solid $dark-pink;
+    border: 5px solid $red;
     border-radius: 50%;
     height: 60px;
     width: 60px;
@@ -49,24 +50,27 @@
 
 .map_popup {
   & .leaflet-popup-content-wrapper {
-  background: $dark-gray;
+  background: $black;
   border-radius: 7px;
   color: $white;
   }
   & .leaflet-popup-content {
     margin: 12px;
-    font-family: $sans-serif;
+    font-family: $black;
   }
   & .leaflet-popup-tip {
-    background: $dark-gray;
+    background: $black;
   }
   & .highlight {
-    color: $orange;
+    color: #d7d7d7
   }
   & .pop_head {
     font-family: $header;
     font-weight: bold;
-    color: $red;
+    color: $yellow;
+    float: left;
+    width: 100%;
+    font-size: $medium;
   }
 }
 

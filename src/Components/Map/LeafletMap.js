@@ -1,15 +1,14 @@
-// IMPORTS ////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// IMPORTS //////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// MAIN DEPENDENCIES
 import React, { useEffect, useRef, useState } from 'react';
 import { Map, TileLayer, Marker, Popup, ZoomControl, FeatureGroup, LayersControl, LayerGroup, Circle} from "react-leaflet";
 import { Row, Col, Form, Button, Spinner } from 'react-bootstrap';
-//LEAFLET DEPENDENCIES
 import 'leaflet/dist/leaflet.css';
 import * as L from 'leaflet';
 import HeatmapLayer  from "react-leaflet-heatmap-layer";
 import MarkerClusterGroup from 'react-leaflet-markercluster';
-//ASSET IMPORTS
 import newIcon from "../../Assets/icons/circle-marker.png"
 import translate from "../../Assets/indexes/translate.json"
 import nationality from "../../Assets/indexes/nationality.json"
@@ -17,7 +16,9 @@ import family_trans from "../../Assets/indexes/religious_family.json"
 import cat_trans from "../../Assets/indexes/categories.json"
 
 
-// SUPPORTING FUNCTIONS ////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// SUPPORTING FUNCTIONS /////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //CREATE CUSTOMIZED CLUSTER ICONS BASED ON CLUSTER SIZE
 const createClusterCustomIcon = function (cluster) {
@@ -49,7 +50,9 @@ const myIcon = L.icon({
   className: "custom-icon"
 });
 
-// FUNCTIONAL COMPONENT ////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// COMPONENT ////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function LeafletMap(props) {
 
@@ -84,7 +87,7 @@ function LeafletMap(props) {
        return (
        <Popup className="map_popup"><Row><Col className="col-12">
         <p className="mb-2 mt-0">
-          <h6 className="pop_head">{pers_name}</h6>
+          <span className="pop_head">{pers_name}</span>
           <span className="highlight">{translate[0]["gender"][props.language]}:</span> {translate[0][node.properties.gender.toLowerCase()][props.language]}<br/>
           <span className="highlight">{translate[0]["institution"][props.language]}:</span> {inst_name}<br/>
           <span className="highlight">{translate[0]["affiliation"][props.language]}:</span> {aff_name}<br/>
@@ -127,7 +130,9 @@ function LeafletMap(props) {
      )}
    }
 
-   // RETURNS SPINNER ON CONTENT LOADING STATE
+// RETURNS ////////////////////////////////////////////////////////////////////////////////////////
+
+   // LOADING STATE RETURN
    function checkLoad(props) {
      if (props.content === "loading") { return (
          <div className="list_container">
@@ -140,11 +145,12 @@ function LeafletMap(props) {
       )} else {return null}
    }
 
-   // RETURNS MAP
+   // MAP RETURN
    return (
      <div>
+     <h1 className="aria-only">{translate[0]["map"][props.language]}</h1>
      {checkLoad(props)}
-     <Map bounds={props.bounds} zoom={7} zoomControl={false}>
+     <Map bounds={props.bounds} zoom={7} zoomControl={false} id="main">
       <LayersControl position="topright">
 
         {/* LAYER CONTROLS - GRAY BASELAYER */}
@@ -200,7 +206,10 @@ function LeafletMap(props) {
      </Map>
      </div>
    )
+ }
 
-}
+ /////////////////////////////////////////////////////////////////////////////////////////////////////
+ // EXPORT //////////////////////////////////////////////////////////////////////////////////////////
+ /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default LeafletMap
+ export default LeafletMap

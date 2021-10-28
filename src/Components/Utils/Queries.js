@@ -1,9 +1,14 @@
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// IMPORTS //////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import locations from "../../Assets/indexes/location-index.json"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // MAIN SEARCH & FILTER QUERIES /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//QUERY TO FETCH RESULTS FOR SEARCH
 export function fetchSearch() {
   if (this.state.search !== "") {
   this.setState ({ content: "loading" })
@@ -25,7 +30,7 @@ export function fetchSearch() {
     this.setState ({ label: "", nationality: "", gender: "", religious_family: "", christian_tradition: "", institution_category: "", institution_subcategory: "", corporate_entity_category: "", corporate_entity_subcategory: "", event_category: "", event_subcategory: "", name_western: "", inst_name_western: "" });
 
     const nodeArray = results.records.map((record) => record.get('Nodes'));
-    if (nodeArray.length === 0) {this.setState ({ noresults: "noresults" }); this.setState ({ content: "loaded" }); this.setState ({ search_set: this.state.search })}
+    if (nodeArray.length === 0) {this.setState ({ noresults: "noresults" }); this.setState ({ content: "loaded" }); this.setState ({ searchSet: this.state.search })}
 
     else {
       let filterArray = nodeArray;
@@ -46,13 +51,13 @@ export function fetchSearch() {
       this.setState ({noResults: "no_results hide", content: "loaded" });
       this.setState ({ nodeArray, filterArray });
       this.setState ({ instList, affList, genderList, nationalityList, labelList, relFamList, christTradList, instCatList, instSubCatList, corpCatList, corpSubCatList, eventCatList, eventSubCatList });
-      this.setState ({ search_set: this.state.search })
+      this.setState ({ searchSet: this.state.search })
     }
     session.close()})
   } else {}
 }
 
-//QUERY TO FETCH RESULTS FOR MAP AND LIST FILTER
+//QUERY TO FETCH RESULTS FOR MAP
 export function fetchResults() {
   if (
     this.state.family_name_western === "" &&
@@ -93,7 +98,7 @@ export function fetchResults() {
         if (timeFilter !== "") {keyFilter = ' AND ID(n)=' + this.state.sent_id }
         else {keyFilter = ' WHERE ID(n)=' + this.state.sent_id }
       }
-      else if (this.state.sent_id !== "init" && this.state.kind === "Institutions" ) {
+      else if (this.state.sent_id !== "init" && this.state.kind === "Institutions" && this.state.affiliation === "All" ) {
         if (timeFilter !== "") {keyFilter = ' AND ID(r)=' + this.state.sent_id }
         else {keyFilter = ' WHERE ID(r)=' + this.state.sent_id }
       }
@@ -111,15 +116,14 @@ export function fetchResults() {
     let query;
     if (this.state.kind === "People") {
         const query = `
-          MATCH (n:Person {`+ filterStaticClean +`})-[t]->(r:Institution)-[]->(e:CorporateEntity {`+ affFilter +`})`+ timeFilter + keyFilter +`
+          MATCH (n:Person {`+ filterStaticClean +`})-[t]-(r:Institution)-[]-(e:CorporateEntity {`+ affFilter +`})`+ timeFilter + keyFilter +`
           WITH n,r,e,t MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)
           RETURN {key:id(n),properties:properties(n),inst:properties(r),aff:properties(e),locat:properties(l),rel:properties(t),locat_name:properties(l).name_wes} AS Nodes
-          UNION MATCH (e:CorporateEntity {`+ affFilter +`})<-[]-(n:Person {`+ filterStaticClean +`})-[t]->(r:Institution)`+ timeFilter + keyFilter +`
+          UNION MATCH (e:CorporateEntity {`+ affFilter +`})-[]-(n:Person {`+ filterStaticClean +`})-[t]-(r:Institution)`+ timeFilter + keyFilter +`
           WITH n,r,e,t MATCH (r)-[]->(l)
           WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)
           RETURN {key:id(n),properties:properties(n),inst:properties(r),aff:properties(e),locat:properties(l),rel:properties(t),locat_name:properties(l).name_wes} AS Nodes
           `
-          console.log(query)
           session
           .run(query)
           .then((results) => {
@@ -135,8 +139,9 @@ export function fetchResults() {
               const mapBounds = nodeArray.map(node => ([node.locat.latitude,node.locat.longitude]));
               this.setState ({ nodeArray });
               this.setState ({ mapBounds });
-              this.setState ({noresults: "noresults hide"})
-              this.setState ({ content: "loaded" })
+              this.setState ({noresults: "noresults hide"});
+              this.setState ({ content: "loaded" });
+              this.setState ({sent_id: "init"});
             }
             session.close()})
 
@@ -152,7 +157,6 @@ export function fetchResults() {
           WITH p,q,r,e,t MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)
           RETURN {key:id(r),properties:properties(r),aff:properties(e),locat:properties(l),rel:properties(q[1]),locat_name:properties(l).name_wes} AS Nodes
           `
-          console.log(query)
           session.run(query).then((results) => {
             let unfiltArray = results.records.map((record) => record.get('Nodes'));
             let nodeArray;
@@ -166,9 +170,9 @@ export function fetchResults() {
               const mapBounds = nodeArray.map(node => ([node.locat.latitude,node.locat.longitude]));
               this.setState ({ nodeArray });
               this.setState ({ mapBounds });
-              this.setState ({noresults: "noresults hide"})
-              this.setState ({ content: "loaded" })
-              console.log(nodeArray)
+              this.setState ({noresults: "noresults hide"});
+              this.setState ({ content: "loaded" });
+              this.setState ({sent_id: "init"});
             }
             session.close()})
      }
@@ -176,13 +180,13 @@ export function fetchResults() {
   }
 }
 
-//QUERY FOR NETWORK DATA FILTER
+//QUERY FOR NETWORK GRAPH
 export function fetchNetworkResults() {
   if (this.state.node_id === "") {
       this.setState ({nosend: "nosend"})
   }
   else {
-  this.setState ({ content: "loading" })
+    this.setState ({ content: "loading" })
     const session = this.driver.session();
 
     //CONSTRUCT FILTERS FROM USER INPUT
@@ -223,7 +227,7 @@ export function fetchNetworkResults() {
         for (let i = 0; i < ulinks.length; i++) {
           if ((
                 (this.state.start_year !== "" && this.state.end_year !== "") &&
-                (ulinks[i].start_year >= this.state.start_year && ulinks[i].end_year <= this.state.end_year || ulinks[i].end_year === null )
+                (ulinks[i].start_year >= this.state.start_year && ulinks[i].end_year <= this.state.end_year && ulinks[i].start_year <= this.state.end_year)
               ) || (
                 (this.state.start_year === "" && this.state.end_year !== "") &&
                 (ulinks[i].start_year <= this.state.end_year || ulinks[i].end_year <= this.state.end_year || ulinks[i].end_year === null )
@@ -248,8 +252,6 @@ export function fetchNetworkResults() {
     }
   };
 
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // QUERIES FOR POPUP INFORMATION ////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -264,7 +266,6 @@ export function selectSwitchAppend(event) {
     UNION MATCH (n)-[t]-(p:Institution) WHERE ID(n) =` + event +` RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t)} AS SelectNodes
     UNION MATCH (n)-[t]-(p:Event) WHERE ID(n) =` + event +` RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t)} AS SelectNodes
     `
-    console.log(selectquery)
     session.run(selectquery).then((results) => {const selectArray = results.records.map((record) => record.get('SelectNodes')); this.setState ({ selectArray });
     this.breadCrumbChainer();
     session.close()});
@@ -288,10 +289,9 @@ export function selectSwitchReduce(event, order) {
 //QUERY FOR SELECTED NODE + APPEND BREADCRUMB + OPEN POPUP (CLICK IN CHILD VIEW)
 export function selectSwitchInitial(event) {
     this.selectSwitchAppend(event)
-    this.setState ({ popupcontainer: "popupcontainer" });
+    if (this.state.filterDisplay === "filter_container") {this.setState ({ popupcontainer: "popupcontainer" })}
+    else if (this.state.filterDisplay === "filter_container2") {this.setState ({ popupcontainer: "popupcontainer-full" })}
   };
-
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // QUERIES FOR FETCHING FILTER INDEXES ON LOAD //////////////////////////////////////////////////////
@@ -304,7 +304,7 @@ export function fetchNetworkIndexes() {
     MATCH (p:Person) WHERE p.family_name_western IS NOT NULL
     RETURN DISTINCT {value:ID(p), label:p.given_name_western + ' ' + p.family_name_western} AS List
     UNION MATCH (p) WHERE p:CorporateEntity OR  p:Event OR  p:Institution
-    RETURN DISTINCT {value:ID(p), label:p.name_western} AS List
+    RETURN DISTINCT {type:"node_id", value:ID(p), label:p.name_western} AS List
     `
   session.run(query).then((results) => {
     const netPersonIndex = results.records.map((record) => record.get('List'));
@@ -335,19 +335,20 @@ export function fetchMapIndexes() {
   //GET INST AFFILIATION LIST
   const session2 = this.driver.session();
   const query2 = `
-  MATCH (r:Institution)-[t]-(e:CorporateEntity)
+  MATCH (r:Institution)-[t]-(e:CorporateEntity {corporate_entity_category: "Religious Body"})
     WITH r,t,e MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)
     RETURN DISTINCT {value:e.name_western, zh:e.chinese_name_hanzi} AS List
-  UNION MATCH (r:Institution)-[t*2]-(e:CorporateEntity)
+  UNION MATCH (r:Institution)-[t*2]-(e:CorporateEntity {corporate_entity_category: "Religious Body"})
     WITH r,t,e MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)
     RETURN DISTINCT {value:e.name_western, zh:e.chinese_name_hanzi} AS List
-  UNION MATCH (r:Institution)-[t*3]-(e:CorporateEntity)
+  UNION MATCH (r:Institution)-[t*3]-(e:CorporateEntity {corporate_entity_category: "Religious Body"})
     WITH r,t,e MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)
     RETURN DISTINCT {value:e.name_western, zh:e.chinese_name_hanzi} AS List
     `
   session2.run(query2).then((results) => {
     const resultIndex2 = results.records.map((record) => record.get('List')); const addAll2 = [{value: "All"}];
-    const affIndex = addAll2.concat(resultIndex2);
+    const affIndexPrep = addAll2.concat(resultIndex2);
+    const affIndex = affIndexPrep.map(i => ({ zh: i.zh, value: i.value, type: "affiliation" }));
     this.setState ({ affIndex });
     session2.close()});
 
@@ -358,7 +359,8 @@ export function fetchMapIndexes() {
     RETURN DISTINCT {value:e.religious_family} AS List`
   session3.run(query3).then((results) => {
     const resultIndex3 = results.records.map((record) => record.get('List')); const addAll3 = [{value: "All"}];
-    const relFamIndex = addAll3.concat(resultIndex3);
+    const relFamIndexPrep = addAll3.concat(resultIndex3);
+    const relFamIndex = relFamIndexPrep.map(i => ({ value: i.value, type: "religious_family" }));
     this.setState ({ relFamIndex });
     session3.close()});
 
@@ -369,19 +371,24 @@ export function fetchMapIndexes() {
     RETURN DISTINCT {value:r.nationality} AS List`
   session4.run(query4).then((results) => {
     const resultIndex4 = results.records.map((record) => record.get('List')); const addAll4 = [{value: "All"}];
-    const natIndex = addAll4.concat(resultIndex4);
+    const natIndexPrep = addAll4.concat(resultIndex4);
+    const natIndex = natIndexPrep.map(i => ({ value: i.value, type: "nationality" }));
     this.setState ({ natIndex });
     session4.close()});
 
   //PERSON AFFILIATION INDEX
   const session5 = this.driver.session();
-  const query5 = `MATCH (r:Person)-[]->(e:Institution)-[]->(c:CorporateEntity)
+  const query5 = `MATCH (r:Person)-[]->(e:Institution)-[]->(c:CorporateEntity {corporate_entity_category: "Religious Body"})
     WITH r,e,c MATCH (e)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)
-    RETURN DISTINCT {value:c.name_western, zh:c.chinese_name_hanzi} AS List`
+    RETURN DISTINCT {value:c.name_western, zh:c.chinese_name_hanzi} AS List
+    UNION MATCH (c:CorporateEntity {corporate_entity_category: "Religious Body"})-[]-(r:Person)-[]-(e:Institution)
+    WITH r,e,c MATCH (e)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)
+    RETURN DISTINCT {type:"affiliation", value:c.name_western, zh:c.chinese_name_hanzi} AS List
+    `
   session5.run(query5).then((results) => {
     const resultIndex5 = results.records.map((record) => record.get('List')); const addAll5 = [{value: "All"}];
-    const pAffIndex = addAll5.concat(resultIndex5);
+    const pAffIndexPrep = addAll5.concat(resultIndex5);
+    const pAffIndex = pAffIndexPrep.map(i => ({ zh: i.zh, value: i.value, type: "affiliation" }));
     this.setState ({ pAffIndex });
     session5.close()});
-
 };

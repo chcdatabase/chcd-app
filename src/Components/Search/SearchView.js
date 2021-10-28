@@ -1,30 +1,35 @@
-// IMPORTS ////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// IMPORTS //////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// MAIN DEPENDENCIES
 import React, { Component } from 'react'
+import PropTypes from "prop-types";
 import neo4j from "neo4j-driver/lib/browser/neo4j-web";
-// CHILD COMPONENTS
+import {Helmet} from "react-helmet";
 import FilterSearch from "./FilterSearch.js";
 import SearchResults from "./SearchResults.js"
 import Popup from "../Popups/Popup.js";
 import NoResults from "../Popups/NoResults.js";
 import Navbar from "../Navbar/Navbar.js";
-// HELPER FILES
 import credentials from "../../credentials.json";
 import * as helper from "../Utils/Helpers.js";
 import * as query from "../Utils/Queries.js";
+import translate from "../../Assets/indexes/translate.json"
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// COMPONENT ////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class SearchView extends Component {
 
-//STATE, PROPS, DRIVER INFO, & BINDS //////////////////////////////////////////
+//STATE CONSTRUCTOR ////////////////////////////////////////////////////////////////////////////////
   constructor(props) {
     super(props);
     this.state = {
       language: "en",
       //FILTER INPUTS
       search: "",
-      search_set: "",
+      searchSet: "",
       start_year: "",
       end_year: "",
       // DATA ARRAYS & SELECT NODE
@@ -81,13 +86,14 @@ class SearchView extends Component {
       // LOAD STATES
       content: "loaded"
     };
-    // INITIATE NEO4J INSTANCE
+
+//INITIATE NEO4J INSTANCE ///////////////////////////////////////////////////////////////////////////
     this.driver = neo4j.driver(
       credentials.port,
       neo4j.auth.basic(credentials.username, credentials.password),
       { disableLosslessIntegers: true }
     );
-    // BIND UTILITY FUNCTIONS TO THIS CONTEXT
+// BIND UTILITY FUNCTIONS TO THIS CONTEXT ///////////////////////////////////////////////////////////
     this.fetchResults = query.fetchResults.bind(this);
     this.fetchSearch = query.fetchSearch.bind(this);
     this.selectSwitchInitial = query.selectSwitchInitial.bind(this);
@@ -109,16 +115,22 @@ class SearchView extends Component {
     this.linkCheck = helper.linkCheck.bind(this);
   };
 
-//RUN ON COMPONENT MOUNT //////////////////////////////////////////////////////
+//RUN ON COMPONENT MOUNT /////////////////////////////////////////////////////////////////////////
   componentDidMount() {
     let receivedLang = this.props.location.langGive
     if (receivedLang) {this.setState({ language: receivedLang })}
+
   };
 
-//RENDER //////////////////////////////////////////////////////////////////////
+//RENDER ////////////////////////////////////////////////////////////////////////////////////////
   render() {
+
     return (
       <div>
+        <Helmet>
+          <html lang={this.state.language} />
+          <title>{translate[0]["chcd_name"][this.state.language]} - {translate[0]["explore"][this.state.language]}</title>
+        </Helmet>
         <Navbar language={this.state.language} langSwitch={this.langSwitch}/>
         <NoResults
           noresults={this.state.noresults}
@@ -159,7 +171,10 @@ class SearchView extends Component {
       </div>
     )
   }
-
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// EXPORT //////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default SearchView

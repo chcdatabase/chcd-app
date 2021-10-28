@@ -1,11 +1,23 @@
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// IMPORTS //////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import { Link } from 'react-router-dom';
 import { FaMapMarkedAlt } from 'react-icons/fa';
 import { BiNetworkChart } from 'react-icons/bi';
 
-//LANGUAGE SWITCHER
-export function langSwitch(event) {
-  let l = event.target.attributes.value.value;
-  this.setState ({ language: l });
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// TOGGLES & HIDES  /////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//HIDE NETWORK LEGEND
+export function hideKey(){
+  if (this.state.networkKey === "addinfo hide" ) {
+    this.setState({ networkKey: "addinfo" });
+    this.setState({ keyBorder: "border-bottom-0 rounded-top" }); }
+  else {
+    this.setState({ networkKey: "addinfo hide" })
+    this.setState({ keyBorder: "rounded" }) }
 }
 
 //TOGGLE DISPLAYS
@@ -13,8 +25,12 @@ export function toggleDisplay(event) {
   let v = event.target.dataset.prop;
   let h = event.target.dataset.prop + " hide";
   let p ="popupcontainer";
-  if (this.state[v] === v && v === p) {
-    let hidden = v + " hide";
+  let v2 = event.target.dataset.prop + "-full";
+  let h2 = event.target.dataset.prop + "-full hide";
+  let f ="popupcontainer-full";
+
+  if ((this.state[v] === v && v === p) || (this.state[v] === v2 && v2 === f)) {
+    let hidden = this.state[v] + " hide";
     this.setState ({ [v]: hidden });
     this.setState ({ addinfo: "addinfo hide" });
     this.setState ({ breadCrumb: [] });
@@ -28,6 +44,10 @@ export function toggleDisplay(event) {
     this.setState ({ [v]: v });
     return this.state[v];
   }
+  else if (this.state[v] === h2)  {
+    this.setState ({ [v]: v2 });
+    return this.state[v];
+  }
 };
 
 //TOGGLE FILTER STATE
@@ -35,116 +55,26 @@ export function filterHide() {
   const test = "filter_container"
   if (this.state.filterDisplay === test) {
     this.setState ({filterDisplay: "filter_container2"})
+      if (this.state.popupcontainer === "popupcontainer"){this.setState ({ popupcontainer: "popupcontainer-full" })}
+      else if (this.state.popupcontainer === "popupcontainer hide"){this.setState ({ popupcontainer: "popupcontainer-full hide" })}
     return this.state.filterDisplay
   } else if (this.state.filterDisplay !== test) {
     this.setState ({filterDisplay: "filter_container"})
+      if (this.state.popupcontainer === "popupcontainer-full"){this.setState ({ popupcontainer: "popupcontainer" })}
+      else if (this.state.popupcontainer === "popupcontainer-full hide"){this.setState ({ popupcontainer: "popupcontainer hide" })}
     return this.state.filterDisplay
   }
 };
 
-// HANDLE FORM CHANGE IN FILTER
-export function handleFormChange(event) {
-    this.setState({[event.target.name]: event.target.value});
-    if (this.state.kind === "People") {
-      this.setState ({
-        personEntry: "mb-2 details",
-        instEntry: "mb-2 details hide",
-        orgEntry: "mb-2 details hide"})
-    } else if (this.state.kind === "Institutions") {
-      this.setState ({
-        personEntry: "mb-2 details hide",
-        instEntry: "mb-2 details",
-        orgEntry: "mb-2 details hide"})
-    } else if (this.state.kind === "Organizations") {
-      this.setState ({
-        personEntry: "mb-2 details hide",
-        instEntry: "mb-2 details hide",
-        orgEntry: "mb-2 details"})
-    } else {}
-};
-
-//RESET FILTER AND RELOAD PAGE
-export function resetFilter() {
-  this.setState ({given_name_western: ""});
-  this.setState ({family_name_western: ""});
-  this.setState ({gender: "All"});
-  this.setState ({nationality: ""});
-  this.setState ({location: ""});
-  this.setState ({affiliation: ""});
-  this.setState ({start_time: ""});
-  this.setState ({end_time: ""});
-  this.setState ({mapBounds: [[54.31,137.28],[18.312,71.63],]});
-  this.setState ({nodeArray: []});
-};
-
-// HANDLE CHANGES IN FILTER
-export function handleChange(event) {
-    this.setState({
-      [event.target.name]: event.target.value}
-    );
-};
-
-// HANDLE CHANGES IN FILTER
-export function handleChangeData(event) {
-  const data = event.value;
-    this.setState({node_id: data});
-};
-
-// HANDLE CHECKS IN NETWORK FILTER
-export function handleCheck(event) {
-   const target = event.target;
-   const value = target.type === 'checkbox' ? target.checked : target.value;
-   const name = target.name;
-   this.setState({[name]: value});
- };
-
-// HANDLE CHECKS IN SEARCH FILTER
-export function handleFilterCheck(event) {
-  if (this.state[event.target.name].length === 0) {
-    this.setState({ [event.target.name]: [event.target.value] });
-  }
-  else if (this.state[event.target.name].indexOf(event.target.value) > -1) {
-    let arr = this.state[event.target.name].filter(e => e !== event.target.value)
-    this.setState({ [event.target.name]: arr });
-  }
-  else {
-    let arr = this.state[event.target.name]
-    let newArr = arr.concat(event.target.value)
-    this.setState({ [event.target.name]: newArr });
-  }
-};
-
-//BREADCRUMB CONSTRUCTOR
- export function breadCrumbChainer() {
-   let crumb = {
-     key: this.state.selectArray[0].key,
-     family_name_western: this.state.selectArray[0].select_node.family_name_western,
-     given_name_western: this.state.selectArray[0].select_node.given_name_western,
-     chinese_family_name_hanzi: this.state.selectArray[0].select_node.chinese_family_name_hanzi,
-     chinese_given_name_hanzi: this.state.selectArray[0].select_node.chinese_given_name_hanzi,
-     name_western: this.state.selectArray[0].select_node.name_western,
-     chinese_name_hanzi: this.state.selectArray[0].select_node.chinese_name_hanzi,
-     order: this.state.breadCrumb.length + 1
-   };
-   let breadCrumbArray = this.state.breadCrumb;
-   let newBreadCrumbArray = breadCrumbArray.concat(crumb);
-   this.setState({ breadCrumb: newBreadCrumbArray })
- };
-
-//BREADCRUMB LINK HANDLER
- export function breadCrumbReducer(event, order) {
-   let index = this.state.breadCrumb.findIndex(element => {if (element.order === order ) {return true}});
-   let i = index + 1;
-   let newlist = this.state.breadCrumb.slice(0, i)
-   this.setState({ breadCrumb: newlist })
- };
-
- export function handleKeyPress(e) {
-   let text = e.value;
-   if (e.key === "Enter") {
-     handleKeyPress(text);
-   } else {}
+//LANGUAGE SWITCHER
+export function langSwitch(event) {
+  let l = event.target.attributes.value.value;
+  this.setState ({ language: l });
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// FILTER HANDLERS  /////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // HANDLE CHECKS IN SEARCH FILTER
 export function filterResults() {
@@ -228,46 +158,162 @@ export function filterResults() {
   }
 };
 
+// HANDLE FORM CHANGE IN FILTER
+export function handleFormChange(event) {
+    this.setState({[event.target.name]: event.target.value});
+    if (this.state.kind === "People") {
+      this.setState ({
+        personEntry: "mb-2 details",
+        instEntry: "mb-2 details hide",
+        orgEntry: "mb-2 details hide"})
+    } else if (this.state.kind === "Institutions") {
+      this.setState ({
+        personEntry: "mb-2 details hide",
+        instEntry: "mb-2 details",
+        orgEntry: "mb-2 details hide"})
+    } else if (this.state.kind === "Organizations") {
+      this.setState ({
+        personEntry: "mb-2 details hide",
+        instEntry: "mb-2 details hide",
+        orgEntry: "mb-2 details"})
+    } else {}
+};
+
+// HANDLE CHANGES IN FILTER
+export function handleChange(event) {
+    this.setState({
+      [event.target.name]: event.target.value}
+    );
+};
+
+// HANDLE CHANGES IN FILTER
+export function handleChangeData(event) {
+  this.setState({ [event.type]: event.value });
+};
+
+// HANDLE CHECKS IN NETWORK FILTER
+export function handleCheck(event) {
+   const target = event.target;
+   const value = target.type === 'checkbox' ? target.checked : target.value;
+   const name = target.name;
+   this.setState({[name]: value});
+ };
+
+// HANDLE CHECKS IN SEARCH FILTER
+export function handleFilterCheck(event) {
+  if (this.state[event.target.name].length === 0) {
+    this.setState({ [event.target.name]: [event.target.value] });
+  }
+  else if (this.state[event.target.name].indexOf(event.target.value) > -1) {
+    let arr = this.state[event.target.name].filter(e => e !== event.target.value)
+    this.setState({ [event.target.name]: arr });
+  }
+  else {
+    let arr = this.state[event.target.name]
+    let newArr = arr.concat(event.target.value)
+    this.setState({ [event.target.name]: newArr });
+  }
+};
+
+// CLEAR ALL FILTERS
 export function clearFilters() {
   let filterArray = this.state.nodeArray;
   this.setState({ filterArray })
 };
 
+//RESET FILTER AND RELOAD PAGE
+export function resetFilter() {
+  this.setState ({sent_id: "init"});
+  this.setState ({given_name_western: ""});
+  this.setState ({family_name_western: ""});
+  this.setState ({name_western: ""});
+  this.setState ({religious_family: "All"});
+  this.setState ({institution_category: "All"});
+  this.setState ({institution_subcategory: "All"});
+  this.setState ({gender: "All"});
+  this.setState ({nationality: "All"});
+  this.setState ({location: "All"});
+  this.setState ({affiliation: "All"});
+  this.setState ({start_year: ""});
+  this.setState ({end_year: ""});
+};
+
+export function handleKeyPress(e) {
+  let text = e.value;
+  if (e.key === "Enter") {
+    handleKeyPress(text);
+  } else {}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// BREACRUMBS //////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//BREADCRUMB CONSTRUCTOR
+ export function breadCrumbChainer() {
+   let crumb = {
+     key: this.state.selectArray[0].key,
+     family_name_western: this.state.selectArray[0].select_node.family_name_western,
+     given_name_western: this.state.selectArray[0].select_node.given_name_western,
+     chinese_family_name_hanzi: this.state.selectArray[0].select_node.chinese_family_name_hanzi,
+     chinese_given_name_hanzi: this.state.selectArray[0].select_node.chinese_given_name_hanzi,
+     name_western: this.state.selectArray[0].select_node.name_western,
+     chinese_name_hanzi: this.state.selectArray[0].select_node.chinese_name_hanzi,
+     order: this.state.breadCrumb.length + 1
+   };
+   let breadCrumbArray = this.state.breadCrumb;
+   let newBreadCrumbArray = breadCrumbArray.concat(crumb);
+   this.setState({ breadCrumb: newBreadCrumbArray })
+ };
+
+//BREADCRUMB LINK HANDLER
+ export function breadCrumbReducer(event, order) {
+   let index = this.state.breadCrumb.findIndex(element => {if (element.order === order ) {return true}});
+   let i = index + 1;
+   let newlist = this.state.breadCrumb.slice(0, i)
+   this.setState({ breadCrumb: newlist })
+ };
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// LINK ADDITION/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// ADD MAP AND NETWORK LINKS BASED ON NODE TYPE & PROPERTIES
 export function linkCheck(props, node) {
   let tester; if (node.label) {tester = node.properties} else if (node.select_kind) {tester = node.select_node}
   if (node.label === "Person" || node.select_kind === "Person") { return (
       <div className="d-inline-block">
-        <Link to={{ pathname:"/map", langGive: props.language, kind: "People", given_name_western: tester.given_name_western, family_name_western: tester.family_name_western, sent_id: node.key }}>
+        <Link title="geographic map" to={{ pathname:"/map", langGive: props.language, kind: "People", given_name_western: tester.given_name_western, family_name_western: tester.family_name_western, sent_id: node.key }}>
            <FaMapMarkedAlt className="link-icons" />
         </Link>
-        <Link to={{ pathname:"/network", langGive: props.language, sent_id: node.key }}>
+        <Link title="network map" to={{ pathname:"/network", langGive: props.language, sent_id: node.key }}>
            <BiNetworkChart className="link-icons" />
         </Link>
       </div>
   )}
   else if (node.label === "Institution" || node.select_kind === "Institution") { return (
       <div className="d-inline-block">
-        <Link to={{ pathname:"/map", langGive: props.language, kind: "Institutions", name_western: tester.name_western, sent_id: node.key }}>
+        <Link title="geographic map" to={{ pathname:"/map", langGive: props.language, kind: "Institutions", name_western: tester.name_western, sent_id: node.key }}>
            <FaMapMarkedAlt className="link-icons" />
         </Link>
-        <Link to={{ pathname:"/network", langGive: props.language, sent_id: node.key }}>
+        <Link title="network map" to={{ pathname:"/network", langGive: props.language, sent_id: node.key }}>
            <BiNetworkChart className="link-icons" />
         </Link>
       </div>
   )}
-  else if (node.label === "CorporateEntity" || node.select_kind === "CorporateEntity") { return (
+  else if (tester.corporate_entity_category === "Religious Body" && (node.label === "CorporateEntity" || node.select_kind === "CorporateEntity")) { return (
       <div className="d-inline-block">
-      <Link to={{ pathname:"/map", langGive: props.language, kind: "Institutions", corp_name_western: tester.name_western, sent_id: node.key }}>
+      <Link title="geographic map" to={{ pathname:"/map", langGive: props.language, kind: "Institutions", corp_name_western: tester.name_western, sent_id: node.key }}>
            <FaMapMarkedAlt className="link-icons" />
         </Link>
-        <Link to={{ pathname:"/network", langGive: props.language, sent_id: node.key }}>
+        <Link title="network map" to={{ pathname:"/network", langGive: props.language, sent_id: node.key }}>
            <BiNetworkChart className="link-icons" />
         </Link>
       </div>
   )}
   else if (node.label === "Event" || node.select_kind === "Event") { return (
       <div className="d-inline-block">
-        <Link to={{ pathname:"/network", langGive: props.language, sent_id: node.key }}>
+        <Link title="network map" to={{ pathname:"/network", langGive: props.language, sent_id: node.key }}>
            <BiNetworkChart className="link-icons" />
         </Link>
       </div>

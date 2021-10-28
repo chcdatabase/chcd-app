@@ -21,7 +21,7 @@ import cat_trans from "../../Assets/indexes/categories.json"
 function HomeStatic(props) {
 
   const headline = {
-    fontFamily: "'Baloo Tamma 2', cursive",
+    fontFamily: "'Baloo Tamma 2', sans-serif",
     fontSize: '4rem',
     lineHeight: '3.5rem',
     fontWeight: '600',
@@ -34,29 +34,29 @@ function HomeStatic(props) {
 
   // RETURNS PLACEHOLDER
   return (
-    <div className="container-md px-5">
+    <div className="container-md px-5" tabindex="-1" id="main">
         <Row className="d-flex align-items-center pt-4" style={fullHeight}>
           <Col lg={8}>
-            <div style={headline} className="mb-4">{translate[0]["home_headline"][props.language]}</div>
+            <h1 style={headline} className="mb-4">{translate[0]["home_headline"][props.language]}</h1>
             <p>{translate[0]["home_subheadline"][props.language]}</p>
           </Col>
           <Col lg={4}>
             <a href="https://chcdatabase.com/" target="_blank">
               <Card className={cardStyle}><Card.Body>
                 <div className="float-start"><FaReadme size='2em' /></div>
-                <div className="float-start ms-2 pt-1">{translate[0]["about_the_project"][props.language]}</div>
+                <div className="float-start ms-2 pt-1" >{translate[0]["about_the_project"][props.language]}</div>
               </Card.Body></Card>
             </a>
             <a href="https://chcdatabase.github.io/data-collection/" target="_blank">
               <Card className={cardStyle}><Card.Body>
                 <div className="float-start"><HiDocumentText size='2em' /></div>
-                <div className="float-start ms-2 pt-1">{translate[0]["documentation"][props.language]}</div>
+                <div className="float-start ms-2 pt-1" >{translate[0]["documentation"][props.language]}</div>
               </Card.Body></Card>
             </a>
             <a href="https://github.com/chcdatabase/data-collection/" target="_blank">
               <Card className={cardStyle}><Card.Body>
                 <div className="float-start"><MdCloudDownload size='2em' /></div>
-                <div className="float-start ms-2 pt-1">{translate[0]["download_data"][props.language]}</div>
+                <div className="float-start ms-2 pt-1" >{translate[0]["download_data"][props.language]}</div>
               </Card.Body></Card>
             </a>
           </Col>

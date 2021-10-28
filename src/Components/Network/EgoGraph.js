@@ -1,9 +1,9 @@
-// IMPORTS ////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// IMPORTS //////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// MAIN DEPENDENCIES
 import React, { useEffect, useRef } from "react";
 import { Row, Col, Spinner } from 'react-bootstrap';
-//D3 DEPENDENCIES
 import * as d3 from "d3";
 import forceBoundary from 'd3-force-boundary';
 import translate from "../../Assets/indexes/translate.json"
@@ -11,15 +11,16 @@ import nationality from "../../Assets/indexes/nationality.json"
 import family_trans from "../../Assets/indexes/religious_family.json"
 import cat_trans from "../../Assets/indexes/categories.json"
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// COMPONENT ////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// FUNCTIONAL COMPONENT ////////////////////////////////////////////////////////
+export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial, language, filterDisplay, networkKey}) {
 
-export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial, language}) {
-
-  //CONSTRUCT CONTAINER
+// CONSTRUCT CONTAINER ///////////////////////////////////////////////////////////////////////////////
   const d3Container = useRef(null);
 
-  //HOOK TO UPDATE GRAPH ON STATE CHANGE
+// HOOK TO CREATE GRAPH & UPDATE  ON STATE CHANGE ////////////////////////////////////////////////////
   useEffect(() => {
     if (nodeArray.length !== 0 && d3Container.current) {
 
@@ -40,19 +41,18 @@ export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial, lan
       }
 
       //SET HEIGHT & WIDTH
-      var parentDiv = document.getElementById("graph-float")
+      var parentDiv = document.getElementById("graph-float");
       var styles = window.getComputedStyle(parentDiv);
-      var divWidth = styles.width.slice(0, -2)
-      var divHeight = styles.height.slice(0, -2)
-      var w = divWidth;
-      var h = divHeight;
+      var w = styles.width.slice(0, -2);
+      var h = styles.height.slice(0, -2);
 
       //CONSTRUCT SVG CONTAINER WITH ZOOM
       const svg = d3
         .select(d3Container.current)
         .html("")
         .attr("viewBox", [0, 0, w, h])
-        .call(d3.zoom().on("zoom", function () {svg.attr("transform", d3.event.transform)}));
+        .call(d3.zoom().on("zoom", function () {svg.attr("transform", d3.event.transform)}))
+        .append("g");
 
       //CONSTRUCT SCALER FOR GRAPH SYMBOLS
       const myScale = d3
@@ -68,8 +68,8 @@ export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial, lan
         .forceSimulation()
         .nodes(newNodeArray);
       simulation
-        .force("boundary", forceBoundary(0, 0, w*.9, h*.9))
         .force("charge_force", d3.forceManyBody().strength(-200))
+        .force('radial', d3.forceRadial().radius(100).x(w / 2).y(h / 2))
         .force("center_force", d3.forceCenter(w / 2, h / 2))
         .force("collision", d3.forceCollide())
         .force("links", link_force);
@@ -100,8 +100,8 @@ export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial, lan
       //DRAW LINES FOR LINKS
       let link = svg
         .append("g")
-        .attr("stroke", "#eee")
-        .attr("stroke-opacity", 0.4)
+        .attr("stroke", "#afafaf")
+        .attr("stroke-opacity", 1)
         .selectAll("line")
         .data(nodeArray[0].links)
         .join("line")
@@ -136,17 +136,28 @@ export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial, lan
           else if (d.properties.gender === "Female") {return "#f25c73"}
           else {return "#b18cf5"}
         })
-        .attr("stroke", "#eee")
+        .attr("stroke", "#000")
         .attr("stroke-width", function(d){
           if (d.key === node_id) {return "3"}
           else { return "0"}
         })
-        .call(drag(simulation));
+        .call(drag(simulation))
+        .on('mouseover', function (d) {
+          link
+          .style('stroke', function (link_d) { return link_d.source.key === d.key|| link_d.target.key === d.key ? '#fff' : '#afafaf';})
+          .style('stroke-width', function (link_d) { return link_d.source.key === d.key || link_d.target.key === d.key ? 3 : 1;})
+        })
+        .on('mouseout', function (d) {
+          link
+            .style('stroke', '#afafaf')
+            .style('stroke-width', '1')
+        });
 
       //ADD NODE LABELS
       node
         .append("text")
         .classed("node_label", true)
+        .on("click", function(d){selectSwitchInitial(d.key)})
         .attr("text-anchor", "middle")
         .attr("dx", 0)
         .attr("dy", 0)
@@ -159,6 +170,16 @@ export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial, lan
             if ((language == "zh" || language == "tw") && d.properties.chinese_name_hanzi) { return d.properties.chinese_name_hanzi }
             else { return d.properties.name_western }
           }
+        })
+        .on('mouseover', function (d) {
+          link
+          .style('stroke', function (link_d) { return link_d.source.key === d.key|| link_d.target.key === d.key ? '#fff' : '#afafaf';})
+          .style('stroke-width', function (link_d) { return link_d.source.key === d.key || link_d.target.key === d.key ? 3 : 1;})
+        })
+        .on('mouseout', function (d) {
+          link
+            .style('stroke', '#afafaf')
+            .style('stroke-width', '1')
         });
 
       // TICKACTION TO UPDATE POSITION ON INTERNAL D3 SIMULATION CHANGE
@@ -182,8 +203,10 @@ export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial, lan
     }
   },[nodeArray, selectSwitchInitial, node_id])
 
-  // RETURNS SPINNER ON CONTENT LOADING STATE
-  function checkLoad() {
+// PRE-RENDER CONSTRUCTORS //////////////////////////////////////////////////////////////////////////
+
+   // CHECKS & CONSTRUCTS LOADING STATE RETURN
+   function checkLoad() {
     if (content === "loading") { return (
         <div className="graph_container">
           <div className="graph_float d-flex align-items-center justify-content-center">
@@ -193,26 +216,34 @@ export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial, lan
           </div>
         </div>
      )} else {return null}
-  }
+  };
 
-  // RETURN PLACEHOLDER
+  // CHECKS & CONSTRUCTS GRAPH CONTAINER
+  let containerCheck;
+    if (filterDisplay == "filter_container") {containerCheck = "graph_float"}
+    else {containerCheck = "graph_float_full"}
+
+// RETURNS ////////////////////////////////////////////////////////////////////////////////////////
+
+  // LOADING STATE RETURN
   if (nodeArray.length === 0) { return (
     <div className="graph_container">
-      <div className="graph_float d-flex align-items-center justify-content-center">
+      <div className={containerCheck + " d-flex align-items-center justify-content-center"} id="main">
         <Row><Col>
-          <h4 className="list_placeholder_title text-center">{translate[0]["network-prompt"][language]}</h4>
+          <h1 className="list_placeholder_title text-center">{translate[0]["network-prompt"][language]}</h1>
           <div className="list_placeholder"> </div>
         </Col></Row>
       </div>
     </div>
   )}
 
-  // RETURN NETWORK GRAPH
+  // NETWORK GRAPH RETURN
   else { return (
     <div>
       {checkLoad()}
-      <div className="graph_container">
-        <div id="graph-float" className="graph_float">
+      <h1 className="aria-only">{translate[0]["network"][language]}</h1>
+      <div className="graph_container" id="main">
+        <div id="graph-float" className={containerCheck}>
 
           <svg className="d3-component" ref={d3Container} />
         </div>
@@ -221,5 +252,9 @@ export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial, lan
   )}
 
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// EXPORT //////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default EgoGraph

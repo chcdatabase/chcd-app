@@ -1,30 +1,35 @@
-// IMPORTS ////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// IMPORTS //////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// MAIN DEPENDENCIES
 import React, { Component } from 'react'
 import neo4j from "neo4j-driver/lib/browser/neo4j-web";
-// CHILD COMPONENTS
 import FilterNetwork from "./FilterNetwork.js";
 import EgoGraph from "./EgoGraph.js";
 import Popup from "../Popups/Popup.js";
 import NoResults from "../Popups/NoResults.js";
 import NoSend from "../Popups/NoSend.js";
 import Navbar from "../Navbar/Navbar.js";
-// HELPER FILES
+import NetworkKey from './NetworkKey.js'
+import {Helmet} from "react-helmet";
+import translate from "../../Assets/indexes/translate.json"
 import credentials from "../../credentials.json";
 import * as helper from "../Utils/Helpers.js";
 import * as query from "../Utils/Queries.js";
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// COMPONENT ////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class NetworkView extends Component {
 
-//STATE, PROPS, DRIVER INFO, & BINDS
+//STATE CONSTRUCTOR ////////////////////////////////////////////////////////////////////////////////
   constructor(props) {
     super(props);
     this.state = {
       language: "en",
-      sent_id: "init",
       //FILTER INPUTS
+      sent_id: "init",
       people_include: false,
       corp_include: false,
       inst_include: false,
@@ -45,18 +50,20 @@ class NetworkView extends Component {
       addinfo: "addinfo hide",
       noresults: "noresults hide",
       nosend: "nosend hide",
+      networkKey: "addinfo hide",
+      keyBorder: "rounded",
       // FORM SELECTS
       netPersonIndex: [],
       // LOAD STATES
       content: "loaded"
     }
-    //INITIATE NEO4J INSTANCE
+//INITIATE NEO4J INSTANCE ///////////////////////////////////////////////////////////////////////////
     this.driver = neo4j.driver(
       credentials.port,
       neo4j.auth.basic(credentials.username, credentials.password),
       { disableLosslessIntegers: true }
     );
-    // BIND UTILITY FUNCTIONS TO THIS CONTEXT
+// BIND UTILITY FUNCTIONS TO THIS CONTEXT ///////////////////////////////////////////////////////////
     this.fetchNetworkResults = query.fetchNetworkResults.bind(this);
     this.handleChange = helper.handleChange.bind(this);
     this.handleCheck = helper.handleCheck.bind(this);
@@ -71,14 +78,17 @@ class NetworkView extends Component {
     this.handleChangeData = helper.handleChangeData.bind(this);
     this.toggleDisplay = helper.toggleDisplay.bind(this);
     this.langSwitch = helper.langSwitch.bind(this);
+    this.linkCheck = helper.linkCheck.bind(this);
+    this.hideKey = helper.hideKey.bind(this);
   };
 
-//RUN ON COMPONENT MOUNT //////////////////////////////////////////////////////
+//RUN ON COMPONENT MOUNT /////////////////////////////////////////////////////////////////////////
   componentDidMount() {
+
     this.fetchNetworkIndexes();
+
     let receivedLang = this.props.location.langGive;
     let receivedId = this.props.location.sent_id;
-
     if (receivedLang) {this.setState({ language: receivedLang })};
     if (receivedId) {
       this.setState({ sent_id: receivedId });
@@ -95,11 +105,14 @@ class NetworkView extends Component {
     } , 1000)
   };
 
-
-//RENDER //////////////////////////////////////////////////////////////////////
+//RENDER ////////////////////////////////////////////////////////////////////////////////////////////
   render() {
     return (
       <div>
+        <Helmet>
+          <html lang={this.state.language} />
+          <title>{translate[0]["chcd_name"][this.state.language]} - {translate[0]["network"][this.state.language]}</title>
+        </Helmet>
         <Navbar language={this.state.language} langSwitch={this.langSwitch}/>
         <NoSend
           nosend={this.state.nosend}
@@ -127,6 +140,13 @@ class NetworkView extends Component {
           breadCrumbChainer={this.breadCrumbChainer}
           selectSwitchInitial={this.selectSwitchInitial}
           language={this.state.language}
+          filterDisplay={this.state.filterDisplay}
+        />
+        <NetworkKey
+          networkKey={this.state.networkKey}
+          keyBorder={this.state.keyBorder}
+          hideKey={this.hideKey}
+          language={this.state.language}
         />
         <Popup
           {...this.state}
@@ -136,11 +156,16 @@ class NetworkView extends Component {
           selectSwitchAppend={this.selectSwitchAppend}
           selectSwitchReduce={this.selectSwitchReduce}
           selectSwitchInitial={this.selectSwitchInitial}
+          linkCheck={this.linkCheck}
         />
       </div>
     )
   }
 
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// EXPORT //////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default NetworkView

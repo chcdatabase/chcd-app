@@ -40,16 +40,50 @@
 
 .graph_float {
   position: absolute;
-  left: 350px;
-  width: calc(100% - 350px);
+  left: 300px;
+  width: calc(100% - 300px);
   height: calc(100vh - 80px);
   height: -o-calc(100vh - 80px);
   height: -webkit-calc(100vh - 80px);
   height: -moz-calc(100vh - 80px);
 }
 
+.graph_float_full {
+  position: absolute;
+  width: 100%;
+  height: calc(100vh - 80px);
+  height: -o-calc(100vh - 80px);
+  height: -webkit-calc(100vh - 80px);
+  height: -moz-calc(100vh - 80px);
+}
+
+.list_placeholder {
+  background-image: $chcd-icon-white;
+  background-repeat: no-repeat;
+  background-size: 300px;
+  display: block;
+  height: 300px;
+  width: 300px;
+  margin: auto;
+  opacity: .25;
+  &_title {
+    color: $white;
+    font-size: $large !important;
+    opacity: .25;
+  }
+}
+
+.network-key {
+  color: $white;
+  transition: all 0.6s ease;
+  &:hover {
+    cursor: pointer;
+    opacity: .5;
+  }
+}
+
 @include media-breakpoint-down(lg) {
-  .graph_float {
+  .graph_float, .graph_float_full {
     position: absolute;
     left: 0;
     width: 100%;

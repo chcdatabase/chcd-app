@@ -1,7 +1,7 @@
-$danger: #f77e7e;
-$secondary: #f2905c;
-$warning: #f7c55f;
-$info: #bc0943;
+$danger: #d5203f;
+$secondary: #7f6000;
+$warning: #BF4C0F;
+$info: #5F0321;
 
 .btn-danger {
   color: #fff !important;
@@ -12,15 +12,17 @@ $info: #bc0943;
 
 //THEME COLORS
 $white: #ffffff;
-$light-gray: #eeeeee;
+$light-gray: #f1f1f1;
 $mid-gray: #a5a5a5;
 $gray: #666666;
 $dark-gray: #444444;
-$red: #f77e7e;
-$yellow: #f7c55f;
-$orange: #f2905c;
-$pink: #e8859b;
-$dark-pink: #bc0943;
+$black: #202020;
+$red: #d5203f;
+$light-orange: #EE702D;
+$orange: #BF4C0F;
+$light-pink: #E94F8A;
+$pink: #E94F8A;
+$dark-pink: #5F0321;
 $yellow: #efc65d;
 
 
@@ -42,4 +44,4 @@ $chcd-icon-white: url("../../Assets/icons/chcd-white.png");
 //FONTS
 $sans-serif: 'Lato', sans-serif;
 $serif: 'Arvo', serif;
-$header: 'Baloo Tamma 2', cursive;
+$header: 'Baloo Tamma 2', sans-serif;

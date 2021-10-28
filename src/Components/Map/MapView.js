@@ -1,32 +1,35 @@
-// IMPORTS ////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// IMPORTS //////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// MAIN DEPENDENCIES
 import React, { Component } from 'react'
 import neo4j from "neo4j-driver/lib/browser/neo4j-web";
-// CHILD COMPONENTS
+import {Helmet} from "react-helmet";
 import FilterMap from "./FilterMap.js";
 import LeafletMap from "./LeafletMap.js";
 import Popup from "../Popups/Popup.js";
 import NoResults from "../Popups/NoResults.js";
 import NoSend from "../Popups/NoSend.js";
 import Navbar from "../Navbar/Navbar.js";
-// HELPER FILES
 import credentials from "../../credentials.json";
 import * as helper from "../Utils/Helpers.js";
 import * as query from "../Utils/Queries.js";
+import translate from "../../Assets/indexes/translate.json"
 
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// COMPONENT ////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class MapView extends Component {
 
-//STATE, PROPS, DRIVER INFO, & BINDS //////////////////////////////////////////
+//STATE CONSTRUCTOR ////////////////////////////////////////////////////////////////////////////////
   constructor(props) {
     super(props);
     this.state = {
       language: "en",
       //FILTER INPUTS
-      kind: "People",
       sent_id: "init",
+      kind: "People",
       given_name_western: "",
       family_name_western: "",
       name_western: "",
@@ -63,13 +66,13 @@ class MapView extends Component {
       mapBounds: [[54.31,137.28],[18.312,71.63],],
     };
 
-    //INITIATE NEO4J INSTANCE
+//INITIATE NEO4J INSTANCE ///////////////////////////////////////////////////////////////////////////
     this.driver = neo4j.driver(
       credentials.port,
       neo4j.auth.basic(credentials.username, credentials.password),
       { disableLosslessIntegers: true }
     );
-    // BIND UTILITY FUNCTIONS TO THIS CONTEXT
+// BIND UTILITY FUNCTIONS TO THIS CONTEXT ///////////////////////////////////////////////////////////
     this.fetchResults = query.fetchResults.bind(this);
     this.selectSwitchInitial = query.selectSwitchInitial.bind(this);
     this.selectSwitchAppend = query.selectSwitchAppend.bind(this);
@@ -83,12 +86,16 @@ class MapView extends Component {
     this.fetchMapIndexes = query.fetchMapIndexes.bind(this);
     this.toggleDisplay = helper.toggleDisplay.bind(this);
     this.langSwitch = helper.langSwitch.bind(this);
+    this.linkCheck = helper.linkCheck.bind(this);
+    this.handleChangeData = helper.handleChangeData.bind(this);
   };
 
 
-//RUN ON COMPONENT MOUNT //////////////////////////////////////////////////////
+//RUN ON COMPONENT MOUNT /////////////////////////////////////////////////////////////////////////////
   componentDidMount() {
+
     this.fetchMapIndexes();
+
     let receivedLang = this.props.location.langGive;
     let receivedKind = this.props.location.kind;
     let receivedGiveName = this.props.location.given_name_western;
@@ -96,8 +103,6 @@ class MapView extends Component {
     let receivedName = this.props.location.name_western;
     let receivedId = this.props.location.sent_id;
     let receivedAff = this.props.location.corp_name_western;
-
-
     if (receivedLang) {this.setState({ language: receivedLang })};
     if (receivedKind) {this.setState({ kind: receivedKind })};
     if (receivedGiveName) {this.setState({ given_name_western: receivedGiveName })};
@@ -107,18 +112,21 @@ class MapView extends Component {
     if (receivedAff) {this.setState({ affiliation: receivedAff })};
 
     setTimeout(() => {
-      if (this.state.sent_id === "init" || this.state.affiliation === "All" ) {return null}
-      else {this.fetchResults()}
-    } , 1500)
-
+      if (this.state.sent_id === "init" && this.state.affiliation === "All" ) {return null}
+      else  {this.fetchResults()}
+    } , 1500);
   };
 
 
-//RENDER //////////////////////////////////////////////////////////////////////
+//RENDER ////////////////////////////////////////////////////////////////////////////////////////////
   render() {
 
     return (
       <div>
+        <Helmet>
+          <html lang={this.state.language} />
+          <title>{translate[0]["chcd_name"][this.state.language]} - {translate[0]["map"][this.state.language]}</title>
+        </Helmet>
         <Navbar language={this.state.language} langSwitch={this.langSwitch}/>
         <NoSend
           nosend={this.state.nosend}
@@ -137,6 +145,7 @@ class MapView extends Component {
           fetchResults={this.fetchResults}
           filterHide={this.filterHide}
           handleFormChange={this.handleFormChange}
+          handleChangeData={this.handleChangeData}
         />
         <LeafletMap
           language={this.state.language}
@@ -154,11 +163,16 @@ class MapView extends Component {
           selectSwitchAppend={this.selectSwitchAppend}
           selectSwitchReduce={this.selectSwitchReduce}
           selectSwitchInitial={this.selectSwitchInitial}
+          linkCheck={this.linkCheck}
         />
       </div>
     )
   }
 
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// EXPORT //////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export default MapView

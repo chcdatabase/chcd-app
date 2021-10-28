@@ -2,6 +2,12 @@
 
 "_COMMENT": "HOME SCREEN ==========================================",
 
+"chcd_name": {
+  "en": "China Historical Christian Database",
+  "zh": "中国基督教资料库",
+  "tw": "中國基督教資料庫"
+  },
+
 "home_headline": {
   "en": "Visualizing China's Christian Past",
   "zh": "可视化中国的基督教过去",
@@ -52,6 +58,11 @@
   "tw": "這個查詢太寬泛了。 使用過濾器獲得結果。"
   },
 
+"results_for": {
+  "en": "Results for",
+  "zh": "搜索结果",
+  "tw": "搜索結果"
+  },
 
 "_COMMENT": "NAVBAR TRANSLATIONS ==========================================",
 
@@ -97,6 +108,12 @@
   "en": "Search...",
   "zh": "搜索...",
   "tw": "搜索..."
+},
+
+"select": {
+  "en": "Select...",
+  "zh": "选择...",
+  "tw": "選擇..."
 },
 
 "filter": {
@@ -608,6 +625,99 @@
   "tw": "不適用"
 },
 
+"_COMMENT": "NETWORK KEY TRANSLATIONS ==========================================",
+
+"more_connections": {
+  "en": "More Connections",
+  "zh": "更多连接",
+  "tw": "更多連接"
+},
+
+"fewer_connections": {
+  "en": "Fewer Connections",
+  "zh": "更少的连接",
+  "tw": "更少的連接"
+},
+
+"selected": {
+  "en": "Selected",
+  "zh": "選定的",
+  "tw": "選定的"
+},
+
+"key": {
+  "en": "Key",
+  "zh": "地图键",
+  "tw": "地圖鍵"
+},
+
+"_COMMENT": "TOOLTIP TRANSLATIONS ==========================================",
+
+"enter_year": {
+  "en": "Enter Year",
+  "zh": "输入年份",
+  "tw": "輸入年份"
+},
+
+"enter_name": {
+  "en": "Enter Name",
+  "zh": "输入姓名",
+  "tw": "輸入姓名"
+},
+
+"select_start": {
+  "en": "Select",
+  "zh": "选择",
+  "tw": "選擇"
+},
+
+"select_type_map": {
+  "en": "Select Type of Entity to Map",
+  "zh": "选择要映射的实体类型",
+  "tw": "選擇要映射的實體類型"
+},
+
+"type_to_select": {
+  "en": "Begin Typing to Select an Entity from Database",
+  "zh": "开始输入以从数据库中选择一个实体",
+  "tw": "開始輸入以從數據庫中選擇一個實體"
+},
+
+"type_to_select_location": {
+  "en": "Begin Typing to Select an Administrative Division",
+  "zh": "开始输入以选择行政区划",
+  "tw": "開始輸入以選擇行政區劃"
+},
+
+"type_to_select_country": {
+  "en": "Begin Typing to Select a Country of Origin",
+  "zh": "开始输入以选择原产国",
+  "tw": "開始輸入以選擇原產國"
+},
+
+"type_to_select_religious_family": {
+  "en": "Begin Typing to Select a Religious Family",
+  "zh": "开始输入以选择一个宗教家庭",
+  "tw": "開始輸入以選擇一個宗教家庭"
+},
+
+"degree": {
+  "en": "Select the Degree of Relationships to Traverse",
+  "zh": "选择要遍历的关系度数",
+  "tw": "選擇要遍歷的關係度數"
+},
+
+"include_entities": {
+  "en": "Select the Types of Entities to Include",
+  "zh": "选择要包含的实体类型",
+  "tw": "選擇要包含的實體類型"
+},
+
+"toggle_filters": {
+  "en": "Toggle Filters",
+  "zh": "切换过滤器",
+  "tw": "切換過濾器"
+},
 
 "_COMMENT": "END OF TRANSLATIONS =========================================="
 }]

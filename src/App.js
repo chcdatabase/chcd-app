@@ -11,16 +11,16 @@ import React, { useState } from 'react'
 export default class App extends React.Component {
 
 render() {
+
     return (
       <div className="App">
-        <header className="App-header">
+        <main className="App-header" role="main">
             <Route path="/" exact component={HomeView}/>
             <Route path="/search" component={SearchView} />
             <Route path="/map" component={MapView} />
             <Route path="/network" component={NetworkView} />
             <Route path="/data" component={DataView} />
-        </header>
-
+        </main>
       </div>
     );
   }
