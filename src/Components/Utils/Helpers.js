@@ -5,6 +5,8 @@
 import { Link } from 'react-router-dom';
 import { FaMapMarkedAlt } from 'react-icons/fa';
 import { BiNetworkChart } from 'react-icons/bi';
+import ReactTooltip from "react-tooltip"
+import translate from "../../Assets/indexes/translate.json"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // TOGGLES & HIDES  /////////////////////////////////////////////////////////////////////////////////
@@ -284,37 +286,44 @@ export function linkCheck(props, node) {
   if (node.label === "Person" || node.select_kind === "Person") { return (
       <div className="d-inline-block">
         <Link title="geographic map" to={{ pathname:"/map", langGive: props.language, kind: "People", given_name_western: tester.given_name_western, family_name_western: tester.family_name_western, sent_id: node.key }}>
-           <FaMapMarkedAlt className="link-icons" />
+           <FaMapMarkedAlt className="link-icons" data-tip data-for="map" />
+             <ReactTooltip id="map" place="bottom" effect="solid">{translate[0]["view_map"][props.language]}</ReactTooltip>
         </Link>
         <Link title="network map" to={{ pathname:"/network", langGive: props.language, sent_id: node.key }}>
-           <BiNetworkChart className="link-icons" />
+           <BiNetworkChart className="link-icons" data-tip data-for="network"/>
+              <ReactTooltip id="network" place="bottom" effect="solid">{translate[0]["view_network"][props.language]}</ReactTooltip>
         </Link>
       </div>
   )}
   else if (node.label === "Institution" || node.select_kind === "Institution") { return (
       <div className="d-inline-block">
         <Link title="geographic map" to={{ pathname:"/map", langGive: props.language, kind: "Institutions", name_western: tester.name_western, sent_id: node.key }}>
-           <FaMapMarkedAlt className="link-icons" />
+           <FaMapMarkedAlt className="link-icons" data-tip data-for="map" />
+              <ReactTooltip id="map" place="bottom" effect="solid">{translate[0]["view_map"][props.language]}</ReactTooltip>
         </Link>
         <Link title="network map" to={{ pathname:"/network", langGive: props.language, sent_id: node.key }}>
-           <BiNetworkChart className="link-icons" />
+           <BiNetworkChart className="link-icons" data-tip data-for="network"/>
+              <ReactTooltip id="network" place="bottom" effect="solid">{translate[0]["view_network"][props.language]}</ReactTooltip>
         </Link>
       </div>
   )}
   else if (tester.corporate_entity_category === "Religious Body" && (node.label === "CorporateEntity" || node.select_kind === "CorporateEntity")) { return (
       <div className="d-inline-block">
       <Link title="geographic map" to={{ pathname:"/map", langGive: props.language, kind: "Institutions", corp_name_western: tester.name_western, sent_id: node.key }}>
-           <FaMapMarkedAlt className="link-icons" />
+           <FaMapMarkedAlt className="link-icons" data-tip data-for="map" />
+              <ReactTooltip id="map" place="bottom" effect="solid">{translate[0]["view_map"][props.language]}</ReactTooltip>
         </Link>
         <Link title="network map" to={{ pathname:"/network", langGive: props.language, sent_id: node.key }}>
-           <BiNetworkChart className="link-icons" />
+           <BiNetworkChart className="link-icons" data-tip data-for="network"/>
+              <ReactTooltip id="network" place="bottom" effect="solid">{translate[0]["view_network"][props.language]}</ReactTooltip>
         </Link>
       </div>
   )}
   else if (node.label === "Event" || node.select_kind === "Event") { return (
       <div className="d-inline-block">
         <Link title="network map" to={{ pathname:"/network", langGive: props.language, sent_id: node.key }}>
-           <BiNetworkChart className="link-icons" />
+           <BiNetworkChart className="link-icons" data-tip data-for="network"/>
+              <ReactTooltip id="network" place="bottom" effect="solid">{translate[0]["view_network"][props.language]}</ReactTooltip>
         </Link>
       </div>
   )}

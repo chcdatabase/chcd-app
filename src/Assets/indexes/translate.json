@@ -719,5 +719,17 @@
   "tw": "切換過濾器"
 },
 
+"view_map": {
+  "en": "View a Map of this Entity",
+  "zh": "查看该实体的地图",
+  "tw": "查看該實體的地圖"
+},
+
+"view_network": {
+  "en": "View a Network Graph of this Entity",
+  "zh": "查看此实体的网络图",
+  "tw": "查看此實體的網絡圖"
+},
+
 "_COMMENT": "END OF TRANSLATIONS =========================================="
 }]
