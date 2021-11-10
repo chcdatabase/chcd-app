@@ -400,7 +400,7 @@ export function fetchMapIndexes() {
 //QUERY TO FETCH TOTAL PEOPLE
 export function fetchTotalPeople() {
   const session = this.driver.session();
-  const query = `MATCH (n:Person) RETURN labels(n), count(*) AS Count`
+  const query = `MATCH (n:Person) RETURN count(n) AS Count`
   session.run(query).then((results) => {
     const totalPeople = results.records.map((record) => record.get('Count'));
     this.setState ({ totalPeople })
