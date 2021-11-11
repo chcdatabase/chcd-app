@@ -1,6 +1,7 @@
 // IMPORTS ////////////////////////////////////////////////////////////////////
 import TotalCount from "./TotalCount";
 import TotalNode from "./TotalNode";
+import TotalRelationship from "./TotalRelationship";
 
 // MAIN DEPENDENCIES
 import React, { Component } from "react";
@@ -15,7 +16,8 @@ class GeneralView extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            totalPeople: ""
+            totalPeople: "",
+            totalRelationships: ""
         };
 
         // INITIATE NEO4J INSTANCE
@@ -25,12 +27,14 @@ class GeneralView extends Component {
         // BIND UTILITY FUNCTIONS TO THIS CONTEXT
         this.fetchTotalPeople = query.fetchTotalPeople.bind(this);
         this.fetchTotalNode = query.fetchTotalNode.bind(this);
+        this.fetchTotalRelationship = query.fetchTotalRelationship.bind(this);
     }
 
     //RUN ON COMPONENT MOUNT //////////////////////////////////////////////////////
     componentDidMount() {
         this.fetchTotalPeople();
         this.fetchTotalNode();
+        this.fetchTotalRelationship();
     }
 
     //RENDER ///////////////////////////////////////////////////////////////////////
@@ -39,7 +43,7 @@ class GeneralView extends Component {
             <>
                 <div className="d-flex">
                     <TotalCount type="Nodes" queryResult={this.state.totalNode} /* PUT YOUR CUSTOM QUERY HERE */ />
-                    <TotalCount type="Relationships" queryResult={98} /* PUT YOUR CUSTOM QUERY HERE */ />
+                    <TotalCount type="Relationships" queryResult={this.state.totalRelationship} />
                     <TotalCount type="People" queryResult={this.state.totalPeople} />
                 </div>
             </>

@@ -415,3 +415,13 @@ export function fetchTotalNode() {
     this.setState ({ totalNode })
     session.close()})
 };
+
+//Total Relationships
+export function fetchTotalRelationship() {
+  const session = this.driver.session();
+  const query = `MATCH p=()-->() RETURN count(p) AS Count`
+  session.run(query).then((results) => {
+    const totalRelationship = results.records.map((record) => record.get('Count'));
+    this.setState ({ totalRelationship })
+    session.close()})
+};
