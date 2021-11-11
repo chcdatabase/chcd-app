@@ -407,11 +407,12 @@ export function fetchTotalPeople() {
     session.close()})
 };
 
-export function fetchTotalNode() {
+//QUERY TO FETCH TOTAL INSTITUTIONS
+export function fetchTotalInstitutions() {
   const session = this.driver.session();
-  const query = `MATCH (n) RETURN count(n) AS Count`
+  const query = `MATCH (n:Institution) RETURN count(n) AS Count`
   session.run(query).then((results) => {
-    const totalNode = results.records.map((record) => record.get('Count'));
-    this.setState ({ totalNode })
+    const totalInstitutions = results.records.map((record) => record.get('Count'));
+    this.setState ({ totalInstitutions })
     session.close()})
 };
