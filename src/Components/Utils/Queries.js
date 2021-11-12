@@ -417,6 +417,16 @@ export function fetchTotalInstitutions() {
     session.close()})
 };
 
+//Total Relationships
+export function fetchTotalRelationship() {
+  const session = this.driver.session();
+  const query = `MATCH (n)-[r]->() RETURN COUNT(r) AS Count`
+  session.run(query).then((results) => {
+    const totalRelationships = results.records.map((record) => record.get('Count'));
+    this.setState ({ totalRelationships })
+    session.close()})
+};
+
 //QUERY TO FETCH TOTAL EVENTS
 export function fetchTotalEvents() {
   const session = this.driver.session();
