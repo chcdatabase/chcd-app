@@ -69,8 +69,11 @@ function LeafletMap(props) {
    // REDUCES FILTERED NODES TO HEATMAP COMPLIANT LAYER
    const heatArray = uniqueArray.map( (i) =>[Number(i.locat.latitude), Number(i.locat.longitude), 50])
 
-   // TEMPLATES FOR POPUPS BASED ON NODE TYPE
+   // TEMPLATES FOR POPUPS BASED ON NODE TYPE //////////////
+   /////////////////////////////////////////////////////////
    function popup(node) {
+
+     //Person Popup
      if (node.properties.given_name_western) {
        let pers_name;
           if ((props.language == "zh" || props.language == "tw") && node.inst.chinese_name_hanzi) { pers_name = `${node.properties.chinese_family_name_hanzi} ${node.properties.chinese_given_name_hanzi.toUpperCase()}` }
@@ -97,6 +100,8 @@ function LeafletMap(props) {
         <Button size="sm" className="col-12" variant="danger" onClick={() =>  props.selectSwitchInitial(node.key)}>{translate[0]["learn_more"][props.language]}</Button>
       </Col></Row></Popup>
      )}
+
+     //Institution Popup
      else if (node.properties.institution_category) {
        let inst_name;
           if ((props.language == "zh" || props.language == "tw") && node.properties.chinese_name_hanzi) { inst_name = node.properties.chinese_name_hanzi }
@@ -107,9 +112,22 @@ function LeafletMap(props) {
        let loc_name;
           if ((props.language == "zh" || props.language == "tw") && node.locat.name_zh) { loc_name = node.locat.name_zh }
           else { loc_name = node.locat.name_wes }
+
        let gender_serve;
-          if (node.properties.gender_served) { gender_serve = translate[0][node.properties.gender_served.toLowerCase()][props.language] }
-          else { gender_serve = '-' }
+         if (node.properties.gender_serve === undefined) {let na = "N/A"; gender_serve = translate[0][na.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+         else if (translate[0][node.properties.gender_serve.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined ) {gender_serve = node.properties.gender_serve}
+         else {gender_serve = translate[0][node.properties.gender_serve.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+
+       let category = node.properties.institution_category
+         if (node.properties.institution_category === undefined) {let na = "N/A"; category = translate[0][na.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+         else if (cat_trans[0][node.properties.institution_category.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined ) {category = node.properties.institution_category}
+         else {category = cat_trans[0][node.properties.institution_category.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+
+       let subcategory = node.properties.institution_subcategory
+         if (node.properties.institution_subcategory === undefined) {let na = "N/A"; subcategory = translate[0][na.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+         else if (cat_trans[0][node.properties.institution_subcategory.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined ) {subcategory = node.properties.institution_subcategory}
+         else {subcategory = cat_trans[0][node.properties.institution_subcategory.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+
        let aff;
         if (node.aff.religious_family) {aff = node.aff.religious_family;}
         else {aff = "N/A"}
@@ -118,16 +136,47 @@ function LeafletMap(props) {
        <Popup className="map_popup"><Row><Col className="col-12">
         <p className="mb-2 mt-0">
           <h6 className="pop_head">{inst_name}</h6>
-          <span className="highlight">{translate[0]["religious_family"][props.language]}:</span> {family_trans[0][aff.replace(/\s|\//g, '_').toLowerCase()][props.language]}<br/>
-          <span className="highlight">{translate[0]["category"][props.language]}:</span> {cat_trans[0][node.properties.institution_category.replace(/\s|\//g, '_').toLowerCase()][props.language]}<br/>
-          <span className="highlight">{translate[0]["subcategory"][props.language]}:</span> {cat_trans[0][node.properties.institution_subcategory.replace(/\s|\//g, '_').toLowerCase()][props.language]}<br/>
+          <span className="highlight">{translate[0]["religious_family"][props.language]}:</span> {family_trans[0][aff.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}<br/>
+          <span className="highlight">{translate[0]["category"][props.language]}:</span> {category}<br/>
+          <span className="highlight">{translate[0]["subcategory"][props.language]}:</span> {subcategory}<br/>
           <span className="highlight">{translate[0]["gender_served"][props.language]}:</span> {gender_serve}<br/>
-          <span className="highlight">{translate[0]["years"][props.language]}:</span> {node.properties.start_year} - {node.properties.end_year}<br/>
+          {/* <span className="highlight">{translate[0]["years"][props.language]}:</span> {node.properties.start_year} - {node.properties.end_year}<br/> */}
           <span className="highlight">{translate[0]["location"][props.language]}:</span> {loc_name}
         </p>
         <Button size="sm" className="col-12" variant="danger" onClick={() =>  props.selectSwitchInitial(node.key)}>{translate[0]["learn_more"][props.language]}</Button>
       </Col></Row></Popup>
      )}
+
+     //Event Popup
+     else if (node.properties.event_category) {
+       let inst_name;
+          if ((props.language == "zh" || props.language == "tw") && node.properties.chinese_name_hanzi) { inst_name = node.properties.chinese_name_hanzi }
+          else { inst_name = node.properties.name_western }
+       let loc_name;
+          if ((props.language == "zh" || props.language == "tw") && node.locat.name_zh) { loc_name = node.locat.name_zh }
+          else { loc_name = node.locat.name_wes }
+       let category = node.properties.event_category
+         if (node.properties.event_category === undefined) {let na = "N/A"; category = translate[0][na.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+         else if (cat_trans[0][node.properties.event_category.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined ) {category = node.properties.event_category}
+         else {category = cat_trans[0][node.properties.event_category.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+       let subcategory = node.properties.event_subcategory
+         if (node.properties.event_subcategory === undefined) {let na = "N/A"; subcategory = translate[0][na.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+         else if (cat_trans[0][node.properties.event_subcategory.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined ) {subcategory = node.properties.event_subcategory}
+         else {subcategory = cat_trans[0][node.properties.event_subcategory.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+    
+       return (
+       <Popup className="map_popup"><Row><Col className="col-12">
+        <p className="mb-2 mt-0">
+          <h6 className="pop_head">{inst_name}</h6>
+          <span className="highlight">{translate[0]["category"][props.language]}:</span> {category}<br/>
+          <span className="highlight">{translate[0]["subcategory"][props.language]}:</span> {subcategory}<br/>
+          {/* <span className="highlight">{translate[0]["years"][props.language]}:</span> {node.properties.start_year} - {node.properties.end_year}<br/> */}
+          <span className="highlight">{translate[0]["location"][props.language]}:</span> {loc_name}
+        </p>
+        <Button size="sm" className="col-12" variant="danger" onClick={() =>  props.selectSwitchInitial(node.key)}>{translate[0]["learn_more"][props.language]}</Button>
+      </Col></Row></Popup>
+     )}
+
    }
 
 // RETURNS ////////////////////////////////////////////////////////////////////////////////////////

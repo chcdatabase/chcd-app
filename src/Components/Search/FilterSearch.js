@@ -86,8 +86,8 @@ function FilterSearch(props) {
           <Form.Check
             type="checkbox"
             name="label"
-            label={translate[0][i.replace(/([A-Z])/g, '_$1').replace(/\s|\//g, '_').substring(1).toLowerCase()][props.language]}
-            aria-label={translate[0][i.replace(/([A-Z])/g, '_$1').replace(/\s|\//g, '_').substring(1).toLowerCase()][props.language]}
+            label={translate[0][i.replace(/([A-Z])/g, '_$1').replace(/\s+$/, '').replace(/\s|\//g, '_').substring(1).toLowerCase()][props.language]}
+            aria-label={translate[0][i.replace(/([A-Z])/g, '_$1').replace(/\s+$/, '').replace(/\s|\//g, '_').substring(1).toLowerCase()][props.language]}
             value={i}
             onChange={(e) =>  props.handleFilterCheck(e)}
           />))}
@@ -106,8 +106,8 @@ function FilterSearch(props) {
           <Form.Check
             type="checkbox"
             name="religious_family"
-            label={family_trans[0][i.toLowerCase()][props.language]}
-            aria-label={family_trans[0][i.toLowerCase()][props.language]}
+            label={family_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+            aria-label={family_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
             value={i}
             onChange={(e) =>  props.handleFilterCheck(e)}
           />))}
@@ -126,8 +126,8 @@ function FilterSearch(props) {
           <Form.Check
             type="checkbox"
             name="christian_tradition"
-            aria-label={translate[0][i.toLowerCase()][props.language]}
-            label={translate[0][i.toLowerCase()][props.language]}
+            aria-label={translate[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+            label={translate[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
             value={i}
             onChange={(e) =>  props.handleFilterCheck(e)}
           />))}
@@ -178,8 +178,8 @@ function FilterSearch(props) {
         <Form.Check
           type="checkbox"
           name="nationality"
-          label={nationality[0][i.replace(/\s|\//g, '_').toLowerCase()][props.language]}
-          aria-label={nationality[0][i.replace(/\s|\//g, '_').toLowerCase()][props.language]}
+          label={nationality[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+          aria-label={nationality[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
           value={i}
           onChange={(e) =>  props.handleFilterCheck(e)}
         />))}
@@ -230,11 +230,13 @@ function FilterSearch(props) {
           <Form.Check
             type="checkbox"
             name="institution_category"
-            label={cat_trans[0][i.replace(/\s|\//g, '_').toLowerCase()][props.language]}
-            aria-label={cat_trans[0][i.replace(/\s|\//g, '_').toLowerCase()][props.language]}
+            label={cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+            aria-label={cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
             value={i}
             onChange={(e) =>  props.handleFilterCheck(e)}
-          />))}
+          />
+          )
+        )}
         </div>
       </Col></Row></Form.Group>
     )} else { return null }
@@ -250,8 +252,8 @@ function FilterSearch(props) {
           <Form.Check
             type="checkbox"
             name="institution_subcategory"
-            label={cat_trans[0][i.replace(/\s|\//g, '_').toLowerCase()][props.language]}
-            aria-label={cat_trans[0][i.replace(/\s|\//g, '_').toLowerCase()][props.language]}
+            label={cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+            aria-label={cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
             value={i}
             onChange={(e) =>  props.handleFilterCheck(e)}
           />))}
@@ -283,8 +285,8 @@ function FilterSearch(props) {
           <Form.Check
             type="checkbox"
             name="corporate_entity_category"
-            label={cat_trans[0][i.replace(/\s|\//g, '_').toLowerCase()][props.language]}
-            aria-label={cat_trans[0][i.replace(/\s|\//g, '_').toLowerCase()][props.language]}
+            label={cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+            aria-label={cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
             value={i}
             onChange={(e) =>  props.handleFilterCheck(e)}
           />))}
@@ -303,8 +305,8 @@ function FilterSearch(props) {
           <Form.Check
             type="checkbox"
             name="corporate_entity_subcategory"
-            label={cat_trans[0][i.replace(/\s|\//g, '_').toLowerCase()][props.language]}
-            aria-label={cat_trans[0][i.replace(/\s|\//g, '_').toLowerCase()][props.language]}
+            label={cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+            aria-label={cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
             value={i}
             onChange={(e) =>  props.handleFilterCheck(e)}
           />))}
@@ -335,8 +337,8 @@ function FilterSearch(props) {
           <Form.Check
             type="checkbox"
             name="event_category"
-            label={cat_trans[0][i.replace(/\s|\//g, '_').toLowerCase()][props.language]}
-            aria-label={cat_trans[0][i.replace(/\s|\//g, '_').toLowerCase()][props.language]}
+            label={cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+            aria-label={cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
             value={i}
             onChange={(e) =>  props.handleFilterCheck(e)}
           />))}
@@ -355,8 +357,8 @@ function FilterSearch(props) {
           <Form.Check
             type="checkbox"
             name="event_subcategory"
-            label={cat_trans[0][i.replace(/\s|\//g, '_').toLowerCase()][props.language]}
-            aria-label={cat_trans[0][i.replace(/\s|\//g, '_').toLowerCase()][props.language]}
+            label={cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+            aria-label={cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
             value={i}
             onChange={(e) =>  props.handleFilterCheck(e)}
           />))}

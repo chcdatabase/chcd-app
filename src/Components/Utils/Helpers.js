@@ -35,19 +35,23 @@ export function toggleDisplay(event) {
     let hidden = this.state[v] + " hide";
     this.setState ({ [v]: hidden });
     this.setState ({ addinfo: "addinfo hide" });
+    this.setState ({addinfortext: "additional_info"})
     this.setState ({ breadCrumb: [] });
   }
   else if (this.state[v] === v) {
     let hidden = v + " hide";
     this.setState ({ [v]: hidden });
+    this.setState ({addinfortext: "additional_info"})
     return this.state[v];
   }
   else if (this.state[v] === h)  {
     this.setState ({ [v]: v });
+    this.setState ({addinfortext: "hide_additional_info"})
     return this.state[v];
   }
   else if (this.state[v] === h2)  {
     this.setState ({ [v]: v2 });
+    this.setState ({addinfortext: "hide_additional_info"})
     return this.state[v];
   }
 };
@@ -193,6 +197,32 @@ export function handleChangeData(event) {
   this.setState({ [event.type]: event.value });
 };
 
+// HANDLE CHANGES IN RADIO BUUTTON FILTER
+export function handleOptionChange(event) {
+  this.setState({ selectedOption: event.target.value });
+};
+
+export function handleInputChange(newValue: string) {
+  const inputValue = newValue;
+  this.setState({ inputValue });
+};
+
+export function handleMapInputChange(newValue: string) {
+  const inputValue = newValue;
+  this.setState({ inputValuePAff: inputValue });
+};
+
+export function handleMapAffInputChange(newValue: string) {
+  const inputValue = newValue;
+  this.setState({ inputValueAff: inputValue });
+  console.log(this.state.inputValueAff)
+};
+
+export function handleMapNatInputChange(newValue: string) {
+  const inputValue = newValue;
+  this.setState({ inputValueNat: inputValue });
+};
+
 // HANDLE CHECKS IN NETWORK FILTER
 export function handleCheck(event) {
    const target = event.target;
@@ -232,6 +262,8 @@ export function resetFilter() {
   this.setState ({religious_family: "All"});
   this.setState ({institution_category: "All"});
   this.setState ({institution_subcategory: "All"});
+  this.setState ({event_category: "All"});
+  this.setState ({event_subcategory: "All"});
   this.setState ({gender: "All"});
   this.setState ({nationality: "All"});
   this.setState ({location: "All"});
@@ -282,6 +314,7 @@ export function handleKeyPress(e) {
 
 // ADD MAP AND NETWORK LINKS BASED ON NODE TYPE & PROPERTIES
 export function linkCheck(props, node) {
+
   let tester; if (node.label) {tester = node.properties} else if (node.select_kind) {tester = node.select_node}
   if (node.label === "Person" || node.select_kind === "Person") { return (
       <div className="d-inline-block">
@@ -289,19 +322,19 @@ export function linkCheck(props, node) {
            <FaMapMarkedAlt className="link-icons" data-tip data-for="map" />
              <ReactTooltip id="map" place="bottom" effect="solid">{translate[0]["view_map"][props.language]}</ReactTooltip>
         </Link>
-        <Link title="network map" to={{ pathname:"/network", langGive: props.language, sent_id: node.key }}>
+        <Link title="network map" to={{ pathname:"/network", langGive: props.language, sent_id: node.key, selectedOption: "Person", inputValue: tester.given_name_western+' '+tester.family_name_western }}>
            <BiNetworkChart className="link-icons" data-tip data-for="network"/>
               <ReactTooltip id="network" place="bottom" effect="solid">{translate[0]["view_network"][props.language]}</ReactTooltip>
         </Link>
       </div>
   )}
-  else if (node.label === "Institution" || node.select_kind === "Institution") { return (
+  else if (node.label === "Institution" && node.properties.institution_category !== "General Area" || node.select_kind === "Institution" && node.select_node.institution_category !== "General Area" ) { return (
       <div className="d-inline-block">
         <Link title="geographic map" to={{ pathname:"/map", langGive: props.language, kind: "Institutions", name_western: tester.name_western, sent_id: node.key }}>
            <FaMapMarkedAlt className="link-icons" data-tip data-for="map" />
               <ReactTooltip id="map" place="bottom" effect="solid">{translate[0]["view_map"][props.language]}</ReactTooltip>
         </Link>
-        <Link title="network map" to={{ pathname:"/network", langGive: props.language, sent_id: node.key }}>
+        <Link title="network map" to={{ pathname:"/network", langGive: props.language, sent_id: node.key, selectedOption: "Institution", inputValue: tester.name_western }}>
            <BiNetworkChart className="link-icons" data-tip data-for="network"/>
               <ReactTooltip id="network" place="bottom" effect="solid">{translate[0]["view_network"][props.language]}</ReactTooltip>
         </Link>
@@ -313,7 +346,7 @@ export function linkCheck(props, node) {
            <FaMapMarkedAlt className="link-icons" data-tip data-for="map" />
               <ReactTooltip id="map" place="bottom" effect="solid">{translate[0]["view_map"][props.language]}</ReactTooltip>
         </Link>
-        <Link title="network map" to={{ pathname:"/network", langGive: props.language, sent_id: node.key }}>
+        <Link title="network map" to={{ pathname:"/network", langGive: props.language, sent_id: node.key, selectedOption: "CorporateEntity", inputValue: tester.name_western }}>
            <BiNetworkChart className="link-icons" data-tip data-for="network"/>
               <ReactTooltip id="network" place="bottom" effect="solid">{translate[0]["view_network"][props.language]}</ReactTooltip>
         </Link>
@@ -321,7 +354,11 @@ export function linkCheck(props, node) {
   )}
   else if (node.label === "Event" || node.select_kind === "Event") { return (
       <div className="d-inline-block">
-        <Link title="network map" to={{ pathname:"/network", langGive: props.language, sent_id: node.key }}>
+      <Link title="geographic map" to={{ pathname:"/map", langGive: props.language, kind: "Events", name_western: tester.name_western, sent_id: node.key }}>
+           <FaMapMarkedAlt className="link-icons" data-tip data-for="map" />
+              <ReactTooltip id="map" place="bottom" effect="solid">{translate[0]["view_map"][props.language]}</ReactTooltip>
+        </Link>
+        <Link title="network map" to={{ pathname:"/network", langGive: props.language, sent_id: node.key, selectedOption: "Event", inputValue: tester.name_western }}>
            <BiNetworkChart className="link-icons" data-tip data-for="network"/>
               <ReactTooltip id="network" place="bottom" effect="solid">{translate[0]["view_network"][props.language]}</ReactTooltip>
         </Link>

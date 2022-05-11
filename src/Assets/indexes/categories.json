@@ -1,127 +1,91 @@
 [{
-  "_COMMENT": "CATEGORIES AND SUBCATEGORIES TRANSLATIONS ==========================================",
-
-"all": {
-  "en": "All",
-  "zh": "都",
-  "tw": "都"
-},
-
-"n_a": {
-  "en": "N/A",
-  "zh": "不适用",
-  "tw": "不適用"
-},
-
-"ecclesial": {
-    "en": "Ecclesial",
-    "zh": "教会的",
-    "tw": "教會的"
-  },
-  "education": {
-    "en": "Education",
-    "zh": "教育",
-    "tw": "教育"
-  },
-  "other": {
-    "en": "Other",
-    "zh": "其他",
-    "tw": "其他"
-  },
-  "mission": {
-    "en": "Mission",
-    "zh": "使命",
-    "tw": "使命"
-  },
-  "residence": {
-    "en": "Residence",
-    "zh": "住宅",
-    "tw": "住宅"
-  },
-  "itinerant_uncertain_work": {
-    "en": "Itinerant/Uncertain Work",
-    "zh": "流动/不确定的工作",
-    "tw": "流動/不確定的工作"
-  },
-  "church": {
-    "en": "Church",
-    "zh": "教会",
-    "tw": "教會"
-  },
-  "higher_educational_facility": {
-    "en": "Higher Educational Facility",
-    "zh": "高等教育机构",
-    "tw": "高等教育機構"
-  },
-  "school": {
-    "en": "School",
-    "zh": "学校",
-    "tw": "學校"
-  },
-  "seminary": {
-    "en": "Seminary",
-    "zh": "神学院",
-    "tw": "神學院"
-  },
-  "internment_camp": {
-    "en": "Internment Camp",
-    "zh": "拘留营",
-    "tw": "拘留營"
-  },
-  "journey": {
-    "en": "Journey",
-    "zh": "旅行",
-    "tw": "旅行"
-  },
-  "boat_embarkment": {
-    "en": "Boat Embarkment",
-    "zh": "登船",
-    "tw": "登船"
-  },
-  "governmental_body": {
-    "en": "Governmental Body",
-    "zh": "政府机构",
-    "tw": "政府機構"
-  },
-  "administrative_unit": {
-    "en": "Administrative Unit",
-    "zh": "行政单位",
-    "tw": "行政單位"
-  },
-  "notable_family": {
-    "en": "Notable Family",
-    "zh": "显赫家族",
-    "tw": "顯赫家族"
-  },
-  "religious_body": {
-    "en": "Religious Body",
-    "zh": "宗教团体",
-    "tw": "宗教團體"
-  },
-  "administrative_subunit": {
-    "en": "Administrative Subunit",
-    "zh": "行政单位",
-    "tw": "行政單位"
-  },
-  "clerical_religious_congregation": {
-    "en": "Clerical Religious Congregation",
-    "zh": "神职人员宗教会",
-    "tw": "神職人員宗教會"
-  },
-  "order_of_clerics_regular": {
-    "en": "Order of Clerics Regular",
-    "zh": "正常的神职人员秩序",
-    "tw": "常規教士團"
-  },
-  "religious_institute_of_consecrated_life": {
-    "en": "Religious Institute of Consecrated Life",
-    "zh": "献身生活宗教学院",
-    "tw": "獻身生活宗教學院"
-  },
-  "mission_organization": {
-    "en": "Mission Organization",
-    "zh": "宣教组织",
-    "tw": "宣教組織"
-  }
-
+"ecclesial": {"en": "Ecclesial", "zh": "教会", "tw": "教會"},
+"education": {"en": "Education", "zh": "教育", "tw": "教育"},
+"mission": {"en": "Mission", "zh": "差会", "tw": "差會"},
+"residence": {"en": "Residence", "zh": "修会宿舍", "tw": "修會宿舍"},
+"church": {"en": "Church", "zh": "教会", "tw": "教會"},
+"school": {"en": "School", "zh": "学校", "tw": "學校"},
+"seminary": {"en": "Seminary", "zh": "神学院", "tw": "神學院"},
+"internment_camp": {"en": "Internment Camp", "zh": "拘留营", "tw": "拘留營"},
+"journey": {"en": "Journey", "zh": "游历", "tw": "遊歷"},
+"religious_body": {"en": "Religious Body", "zh": "宗教团体", "tw": "宗教團體"},
+"administrative_subunit": {"en": "Administrative Subunit", "zh": "次级教会行政单位", "tw": "次級教會行政單位"},
+"all": {"en": "All", "zh": "全部", "tw": "全部"},
+"n_a": {"en": "N_A", "zh": "不适用", "tw": "不適用"},
+"itinerant_uncertain_work": {"en": "Itinerant (Uncertain Work)", "zh": "巡回/不定事工", "tw": "巡回/不定事工"},
+"higher_educational_facility": {"en": "Higher Educational Facility", "zh": "高等教育机构", "tw": "高等教育機構"},
+"boat_embarkment": {"en": "Boat Embarkment", "zh": "乘船", "tw": "乘船"},
+"governmental_body": {"en": "Governmental Body", "zh": "政府机构", "tw": "政府機構"},
+"administrative_unit": {"en": "Administrative Unit", "zh": "教会行政单位", "tw": "教會行政單位"},
+"notable_family": {"en": "Notable Family", "zh": "著名家族", "tw": "著名家族"},
+"clerical_religious_congregation": {"en": "Clerical Religious Congregation", "zh": "教牧团体", "tw": "教牧團體"},
+"order_of_clerics_regular": {"en": "Order of Clerics Regular", "zh": "教士修会", "tw": "教士修會"},
+"religious_institute_of_consecrated_life": {"en": "Religious Institute of Consecrated Life", "zh": "修士机构", "tw": "修士機構"},
+"mission_organization": {"en": "Mission Organization", "zh": "宣教组织", "tw": "宣教組織"},
+"medical": {"en": "Medical", "zh": "医疗的", "tw": "醫療的"},
+"other": {"en": "Other", "zh": "其他", "tw": "其他"},
+"rescue": {"en": "Rescue", "zh": "救援", "tw": "救援"},
+"press": {"en": "Press", "zh": "按", "tw": "按"},
+"general_area": {"en": "General Area", "zh": "一般区域", "tw": "一般區域"},
+"scientific": {"en": "Scientific", "zh": "科学的", "tw": "科學的"},
+"government": {"en": "Government", "zh": "政府", "tw": "政府"},
+"science": {"en": "Science", "zh": "科学", "tw": "科學"},
+"hospital": {"en": "Hospital", "zh": "医院", "tw": "醫院"},
+"community_center": {"en": "Community Center", "zh": "社区中心", "tw": "社區中心"},
+"recreation_club": {"en": "Recreation Club", "zh": "休闲俱乐部", "tw": "休閒俱樂部"},
+"higher_education": {"en": "Higher Education", "zh": "高等教育", "tw": "高等教育"},
+"missionary_training_home": {"en": "Missionary Training Home", "zh": "传教士培训之家", "tw": "傳教士培訓之家"},
+"missionary_training": {"en": "Missionary Training", "zh": "传教士训练", "tw": "傳教士訓練"},
+"orphanage": {"en": "Orphanage", "zh": "孤儿院", "tw": "孤兒院"},
+"missionary_home": {"en": "Missionary Home", "zh": "传教士之家", "tw": "傳教士之家"},
+"bible_school": {"en": "Bible School", "zh": "圣经学校", "tw": "聖經學校"},
+"museum": {"en": "Museum", "zh": "博物馆", "tw": "博物館"},
+"blind_school": {"en": "Blind School", "zh": "盲人学校", "tw": "盲人學校"},
+"orphanage_for_blind": {"en": "Orphanage for Blind", "zh": "盲人孤儿院", "tw": "盲人孤兒院"},
+"mission_press": {"en": "Mission Press", "zh": "使命出版社", "tw": "使命出版社"},
+"military": {"en": "Military", "zh": "军队", "tw": "軍隊"},
+"general_work": {"en": "General Work", "zh": "一般工作", "tw": "一般工作"},
+"missionary_hostel": {"en": "Missionary Hostel", "zh": "传教士旅舍", "tw": "傳教士旅舍"},
+"leperosy_asylum": {"en": "Leperosy Asylum", "zh": "麻风病院", "tw": "麻風病院"},
+"women's_home": {"en": "Women's Home", "zh": "妇女之家", "tw": "婦女之家"},
+"sanitarium": {"en": "Sanitarium", "zh": "疗养院", "tw": "療養院"},
+"children's_work": {"en": "Children's Work", "zh": "儿童作品", "tw": "兒童作品"},
+"industrial_home": {"en": "Industrial Home", "zh": "工业之家", "tw": "工業之家"},
+"governmental": {"en": "Governmental", "zh": "政府的", "tw": "政府的"},
+"leprosy_asylum": {"en": "Leprosy Asylum", "zh": "麻风病院", "tw": "麻風病院"},
+"clinic": {"en": "Clinic", "zh": "诊所", "tw": "診所"},
+"dispensary": {"en": "Dispensary", "zh": "药房", "tw": "藥房"},
+"missionary_training_institute": {"en": "Missionary Training Institute", "zh": "传教士训练学院", "tw": "傳教士訓練學院"},
+"research": {"en": "Research", "zh": "研究", "tw": "研究"},
+"non-christian_site": {"en": "Non-Christian Site", "zh": "非基督教网站", "tw": "非基督教網站"},
+"business": {"en": "Business", "zh": "商业", "tw": "商業"},
+"nursing_school": {"en": "Nursing School", "zh": "护理学院", "tw": "護理學院"},
+"political_embassy": {"en": "Political Embassy", "zh": "政治使馆", "tw": "政治使館"},
+"sea_voyage": {"en": "Sea Voyage", "zh": "海上航行", "tw": "海上航行"},
+"ecclesial_mission": {"en": "Ecclesial Mission", "zh": "教会使命", "tw": "教會使命"},
+"medical_body": {"en": "Medical Body", "zh": "医疗机构", "tw": "醫療機構"},
+"educational_body": {"en": "Educational Body", "zh": "教育机构", "tw": "教育機構"},
+"publishing_body": {"en": "Publishing Body", "zh": "出版机构", "tw": "出版機構"},
+"medical_association": {"en": "Medical Association", "zh": "医学会", "tw": "醫學會"},
+"missionary_society": {"en": "Missionary Society", "zh": "传道会", "tw": "傳道會"},
+"chinese_movement": {"en": "Chinese Movement", "zh": "中国运动", "tw": "中國運動"},
+"publication_society": {"en": "Publication Society", "zh": "出版协会", "tw": "出版協會"},
+"educational_association": {"en": "Educational Association", "zh": "教育协会", "tw": "教育協會"},
+"auxiliary_organization": {"en": "Auxiliary Organization", "zh": "辅助机构", "tw": "輔助機構"},
+"religious_community_of_women": {"en": "Religious Community of Women", "zh": "妇女宗教团体", "tw": "婦女宗教團體"},
+"religious_community_of_men": {"en": "Religious Community of Men", "zh": "男性宗教团体", "tw": "男性宗教團體"},
+"association_of_diocesan_right_chinese_religious_community_of_women": {"en": "Association of Diocesan Right (Chinese Religious Community of Women)", "zh": "教区权利协会（中国妇女宗教团体）", "tw": "教區權利協會（中國婦女宗教團體）"},
+"roman_curial_body": {"en": "Roman Curial Body", "zh": "罗马棺材", "tw": "羅馬棺材"},
+"archdiocese": {"en": "Archdiocese", "zh": "大主教管区", "tw": "大主教管區"},
+"diocese": {"en": "Diocese", "zh": "教区", "tw": "教區"},
+"vicariate_apostolic": {"en": "Vicariate Apostolic", "zh": "代理使徒", "tw": "代理使徒"},
+"prefecture_apostolic": {"en": "Prefecture Apostolic", "zh": "地方宗座", "tw": "地方宗座"},
+"mission_sui_iuris_": {"en": "Mission Sui Iuris ", "zh": "任务“Sui Iuris”", "tw": "任務“Sui Iuris”"},
+"mission_sui_iuris": {"en": "Mission Sui Iuris", "zh": "任务“Sui Iuris”", "tw": "任務“Sui Iuris”"},
+"apostolic_exarchate": {"en": "Apostolic Exarchate", "zh": "使徒总督", "tw": "使徒總督"},
+"apostolic_administration": {"en": "Apostolic Administration", "zh": "使徒管理", "tw": "使徒管理"},
+"missionary_journal": {"en": "Missionary Journal", "zh": "传教士杂志", "tw": "傳教士雜誌"},
+"geographic_division": {"en": "Geographic Division", "zh": "地理司", "tw": "地理司"},
+"committee": {"en": "Committee", "zh": "委员会", "tw": "委員會"},
+"department": {"en": "Department", "zh": "部门", "tw": "部門"}
 }]

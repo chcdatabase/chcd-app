@@ -15,11 +15,11 @@ render() {
     return (
       <div className="App">
         <main className="App-header" role="main">
-            <Route path="/" exact component={HomeView}/>
-            <Route path="/search" component={SearchView} />
-            <Route path="/map" component={MapView} />
-            <Route path="/network" component={NetworkView} />
-            <Route path="/data" component={DataView} />
+            <Route path="/" exact render={(props) => <HomeView {...props} key={Math.random()}/>} />
+            <Route path="/search" render={(props) => <SearchView {...props} key={Math.random()}/>} />
+            <Route path="/map" render={(props) => <MapView {...props} key={Math.random()}/>} />
+            <Route path="/network" render={(props) => <NetworkView {...props} key={Math.random()}/>} />
+            <Route path="/data" render={(props) => <DataView {...props} key={Math.random()}/>} />
         </main>
       </div>
     );
