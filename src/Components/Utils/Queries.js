@@ -98,6 +98,7 @@ export function fetchResults() {
     let personNameFilter2;
     if (this.state.sent_id !== "init" && this.state.kind === "People") {personNameFilter2 = " AND " + personNameFilter }
     else if (this.state.start_year !== "" && this.state.end_year !== "") {personNameFilter2 = " AND " + personNameFilter }
+    else if (personNameFilter === "" ) {personNameFilter2 = "" }
     else {personNameFilter2 = " WHERE " + personNameFilter }
 
     let nameFilter2; if (this.state.name_western !== "") {nameFilter2 = 'AND (toLower(r.name_western)= "(?i)' + this.state.name_western.replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]") + '" OR toLower(r.name_western)=~ "(?i)' + this.state.name_western.replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]") + '.*")'} else { nameFilter2 = ""};
@@ -133,6 +134,14 @@ export function fetchResults() {
     const instFilterStatic = [icatFilter, isubcatFilter]
     const instFilterStaticClean = instFilterStatic.filter(value => value.length > 1).join();
 
+    let unAffFilter;
+    if (this.state.sent_id !== "init" && this.state.kind === "People" && this.state.affiliation === "All") {
+      unAffFilter = `UNION MATCH (n:Person {`+ filterStaticClean +`})-[t]-(r:Institution)`+ timeFilter + keyFilter + personNameFilter2 +`
+      WITH n,r,t MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)
+      RETURN {key:id(n),properties:properties(n),inst:properties(r),aff:properties(r),locat:properties(l),rel:properties(t),locat_name:properties(l).name_wes} AS Nodes`
+    }
+    else {unAffFilter = ""}
+
     //CONSTRUCT QUERY WITH VARIABLES
     let query;
     if (this.state.kind === "People") {
@@ -140,12 +149,9 @@ export function fetchResults() {
           MATCH (n:Person {`+ filterStaticClean +`})-[t]-(r:Institution)-[]-(e:CorporateEntity {`+ affFilter +`})`+ timeFilter + keyFilter + personNameFilter2 +`
           WITH n,r,e,t MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)
           RETURN {key:id(n),properties:properties(n),inst:properties(r),aff:properties(e),locat:properties(l),rel:properties(t),locat_name:properties(l).name_wes} AS Nodes
-          UNION MATCH (n:Person {`+ filterStaticClean +`})-[t]-(r:Institution)`+ timeFilter + keyFilter + personNameFilter2 +`
-          WITH n,r,t MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)
-          RETURN {key:id(n),properties:properties(n),inst:properties(r),aff:properties(r),locat:properties(l),rel:properties(t),locat_name:properties(l).name_wes} AS Nodes
+          `+ unAffFilter +`
           UNION MATCH (e:CorporateEntity {`+ affFilter +`})-[]-(n:Person {`+ filterStaticClean +`})-[t]-(r:Institution)`+ timeFilter + keyFilter + personNameFilter2 +`
-          WITH n,r,e,t MATCH (r)-[]->(l)
-          WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)
+          WITH n,r,e,t MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)
           RETURN {key:id(n),properties:properties(n),inst:properties(r),aff:properties(e),locat:properties(l),rel:properties(t),locat_name:properties(l).name_wes} AS Nodes
 
           `
