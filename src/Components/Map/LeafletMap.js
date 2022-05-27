@@ -163,7 +163,7 @@ function LeafletMap(props) {
          if (node.properties.event_subcategory === undefined) {let na = "N/A"; subcategory = translate[0][na.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
          else if (cat_trans[0][node.properties.event_subcategory.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined ) {subcategory = node.properties.event_subcategory}
          else {subcategory = cat_trans[0][node.properties.event_subcategory.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
-    
+
        return (
        <Popup className="map_popup"><Row><Col className="col-12">
         <p className="mb-2 mt-0">

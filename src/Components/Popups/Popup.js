@@ -52,8 +52,8 @@ function Popup(props) {
               <li className="list-group-item pt-0 pb-0 border-0">
                 <div className="card-body px-0 p-1 border-0">
                 <Row>
-                  <Col className="text-left"><span className="popup_link" onClick={() =>  props.selectSwitchAppend((node.key2))}>{rel_name}</span></Col>
-                  <Col className="text-center">{relcheck}</Col>
+                  <Col className="text-left">{relcheck}</Col>
+                  <Col className="text-center"><span className="popup_link" onClick={() =>  props.selectSwitchAppend((node.key2))}>{rel_name}</span></Col>
                   <Col className="text-end">{node.rel.start_year}-{node.rel.end_year}</Col>
                 </Row>
                 </div>
@@ -68,9 +68,9 @@ function Popup(props) {
           <div className="card">
             <div className="popup_card_header card-header">
               <Row>
-                <Col className="text-left">{translate[0]["name"][props.language]}</Col>
-                <Col className="text-center">{translate[0]["relationship"][props.language]}</Col>
-                <Col className="text-end">{translate[0]["years"][props.language]}</Col>
+              <Col className="text-left">{translate[0]["relationship"][props.language]}</Col>
+              <Col className="text-center">{translate[0]["name"][props.language]}</Col>
+              <Col className="text-end">{translate[0]["years"][props.language]}</Col>
               </Row>
             </div>
             {persList}
@@ -112,8 +112,8 @@ function Popup(props) {
           <li className="list-group-item pt-0 pb-0 border-0">
             <div className="card-body px-0 p-1 border-0">
               <Row>
-                <Col className="text-left"><span className="popup_link" onClick={() =>  props.selectSwitchAppend((node.key2))}>{rel_name}</span></Col>
-                <Col className="text-center">{relcheck}</Col>
+                <Col className="text-left">{relcheck}</Col>
+                <Col className="text-center"><span className="popup_link" onClick={() =>  props.selectSwitchAppend((node.key2))}>{rel_name}</span></Col>
                 <Col className="text-end">{node.rel.start_year}-{node.rel.end_year}</Col>
               </Row>
             </div>
@@ -128,9 +128,9 @@ function Popup(props) {
           <div className="card">
             <div className="popup_card_header card-header">
               <Row>
-                <Col className="text-left">{translate[0]["name"][props.language]}</Col>
-                <Col className="text-center">{translate[0]["relationship"][props.language]}</Col>
-                <Col className="text-end">{translate[0]["years"][props.language]}</Col>
+              <Col className="text-left">{translate[0]["relationship"][props.language]}</Col>
+              <Col className="text-center">{translate[0]["institution"][props.language]}</Col>
+              <Col className="text-end">{translate[0]["years"][props.language]}</Col>
               </Row>
             </div>
             {instList}
@@ -172,8 +172,8 @@ function Popup(props) {
           <li className="list-group-item pt-0 pb-0 border-0">
             <div className="card-body px-0 p-1 border-0">
               <Row>
-                <Col className="text-left"><span className="popup_link" onClick={() =>  props.selectSwitchAppend((node.key2))}>{rel_name}</span></Col>
-                <Col className="text-center">{relcheck}</Col>
+                <Col className="text-left">{relcheck}</Col>
+                <Col className="text-center"><span className="popup_link" onClick={() =>  props.selectSwitchAppend((node.key2))}>{rel_name}</span></Col>
                 <Col className="text-end">{node.rel.start_year}-{node.rel.end_year}</Col>
               </Row>
             </div>
@@ -188,8 +188,8 @@ function Popup(props) {
         <div className="card">
           <div className="popup_card_header card-header">
             <Row>
-              <Col className="text-left">{translate[0]["name"][props.language]}</Col>
-              <Col className="text-center">{translate[0]["relationship"][props.language]}</Col>
+              <Col className="text-left">{translate[0]["relationship"][props.language]}</Col>
+              <Col className="text-center">{translate[0]["corporate_entity"][props.language]}</Col>
               <Col className="text-end">{translate[0]["years"][props.language]}</Col>
             </Row>
           </div>
@@ -232,8 +232,8 @@ function Popup(props) {
           <li className="list-group-item pt-0 pb-0 border-0">
             <div className="card-body px-0 p-1 border-0">
               <Row>
-                <Col className="text-left"><span className="popup_link" onClick={() =>  props.selectSwitchAppend((node.key2))}>{rel_name}</span></Col>
-                <Col className="text-center">{relcheck}</Col>
+                <Col className="text-left">{relcheck}</Col>
+                <Col className="text-center"><span className="popup_link" onClick={() =>  props.selectSwitchAppend((node.key2))}>{rel_name}</span></Col>
                 <Col className="text-end">{node.rel.start_year}-{node.rel.end_year}</Col>
               </Row>
             </div>
@@ -248,8 +248,8 @@ function Popup(props) {
         <div className="card">
           <div className="popup_card_header card-header">
             <Row>
-              <Col className="text-left">{translate[0]["name"][props.language]}</Col>
-              <Col className="text-center">{translate[0]["relationship"][props.language]}</Col>
+              <Col className="text-left">{translate[0]["relationship"][props.language]}</Col>
+              <Col className="text-center">{translate[0]["event"][props.language]}</Col>
               <Col className="text-end">{translate[0]["years"][props.language]}</Col>
             </Row>
           </div>
@@ -283,12 +283,23 @@ function Popup(props) {
         let alt_name_rom;
           if (info.select_node.alternative_chinese_name_romanized) { alt_name_rom = info.select_node.alternative_chinese_name_romanized }
           else { alt_name_rom = translate[0]["n_a"][props.language] }
+
         let gender;
-          if (info.select_node.gender) { gender = translate[0][info.select_node.gender.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language] }
+          if (info.select_node.select_node) {
+            let check = info.select_node.select_node;
+            if (translate[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {gender = check}
+            else (gender = translate[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language])
+          }
           else { gender = translate[0]["n_a"][props.language] }
+
         let nation;
-          if (info.select_node.nationality) { nation = nationality[0][info.select_node.nationality.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language] }
+          if (info.select_node.nationality) {
+            let check = info.select_node.nationality;
+            if (nationality[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {nation = check}
+            else (nation = nationality[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language])
+          }
           else { nation = translate[0]["n_a"][props.language] }
+
         let birth_year;
           if (info.select_node.birth_year) { birth_year = info.select_node.birth_year }
           else { birth_year = translate[0]["n_a"][props.language] }
@@ -374,23 +385,59 @@ function Popup(props) {
           let alt_name_rom;
             if (info.select_node.alternative_chinese_name_romanized) { alt_name_rom = info.select_node.alternative_chinese_name_romanized }
             else { alt_name_rom = translate[0]["n_a"][props.language] }
+
           let trad;
-            if (info.select_node.christian_tradition) {trad = info.select_node.christian_tradition}
-            else {trad = "N/A"}
+            if (info.select_node.christian_tradition) {
+              let check = info.select_node.christian_tradition;
+              if (translate[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {trad = check}
+              else {trad = translate[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+              }
+              else {trad = "N/A"}
 
           let rel_fam;
-            if (info.select_node.religious_family) {rel_fam = info.select_node.religious_family}
+            if (info.select_node.religious_family) {
+              let check = info.select_node.religious_family;
+              if (family_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {rel_fam = check}
+              else {rel_fam = family_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+              }
               else {rel_fam = "N/A"}
+
           let cat;
-           if (info.select_node.corporate_entity_category) {cat = info.select_node.corporate_entity_category}
-           else if (info.select_node.institution_category) {cat = info.select_node.institution_category}
-           else if (info.select_node.event_category) { cat = info.select_node.event_category}
+           if (info.select_node.corporate_entity_category) {
+             let check = info.select_node.corporate_entity_category;
+             if (cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {cat = check}
+             else {cat = cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+             }
+           else if (info.select_node.institution_category) {
+             let check = info.select_node.institution_category;
+             if (cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {cat = check}
+             else {cat = cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+             }
+           else if (info.select_node.event_category) {
+             let check = info.select_node.event_category;
+             if (cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {cat = check}
+             else {cat = cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+             }
            else {cat = "N/A"}
+
           let subcat;
-           if (info.select_node.corporate_entity_subcategory) {subcat = info.select_node.corporate_entity_subcategory}
-           else if (info.select_node.institution_subcategory) {subcat = info.select_node.institution_subcategory}
-           else if (info.select_node.event_subcategory) { subcat = info.select_node.event_subcategory}
+           if (info.select_node.corporate_entity_subcategory) {
+             let check = info.select_node.corporate_entity_subcategory;
+             if (cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {subcat = check}
+             else {subcat = cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+             }
+           else if (info.select_node.institution_subcategory) {
+             let check = info.select_node.institution_subcategory;
+             if (cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {subcat = check}
+             else {subcat = cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+             }
+           else if (info.select_node.event_subcategory) {
+             let check = info.select_node.event_subcategory;
+             if (cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {subcat = check}
+             else {subcat = cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+             }
            else {subcat = "N/A"}
+
          let note;
            if (info.select_node.notes) { note = info.select_node.notes }
            else { note = translate[0]["n_a"][props.language] }
@@ -425,10 +472,10 @@ function Popup(props) {
                     </Col>
                     <Col>
                     <ul className="list-group list-group-flush">
-                     <li className="list-group-item"><b>{translate[0]["christian_tradition"][props.language]}:</b> {translate[0][trad.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}</li>
-                     <li className="list-group-item"><b>{translate[0]["religious_family"][props.language]}:</b> {family_trans[0][rel_fam.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}</li>
-                     <li className="list-group-item"><b>{translate[0]["category"][props.language]}:</b> {cat_trans[0][cat.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}</li>
-                     <li className="list-group-item"><b>{translate[0]["subcategory"][props.language]}:</b> {cat_trans[0][subcat.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}</li>
+                     <li className="list-group-item"><b>{translate[0]["christian_tradition"][props.language]}:</b> {trad}</li>
+                     <li className="list-group-item"><b>{translate[0]["religious_family"][props.language]}:</b> {rel_fam}</li>
+                     <li className="list-group-item"><b>{translate[0]["category"][props.language]}:</b> {cat}</li>
+                     <li className="list-group-item"><b>{translate[0]["subcategory"][props.language]}:</b> {subcat}</li>
                    </ul>
                    </Col>
                  </Row>

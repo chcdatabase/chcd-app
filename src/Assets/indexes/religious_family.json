@@ -26,9 +26,12 @@
 "carmelite": {"en": "Carmelite", "zh": "加尔默罗", "tw": "加爾默羅"},
 "cistercian": {"en": "Cistercian", "zh": "西多会", "tw": "西多會"},
 "ursuline": {"en": "Ursuline", "zh": "乌尔苏林", "tw": "烏爾蘇林"},
+"russian_orthodoxy": {"en": "Russian Orthodoxy", "zh": "俄罗斯东正教", "tw": "俄羅斯東正教"},
+"maryknoll": {"en": "Maryknoll", "zh": "玛利诺", "tw": "瑪利諾"},
+"latter_day_saints": {"en": "Latter Day Saints", "zh": "后期圣徒", "tw": "後期聖徒"},
+"passionist": {"en": "Passionist", "zh": "热情主义者", "tw": "熱情主義者"},
 "salesian": {"en": "Salesian", "zh": "慈幼", "tw": "慈幼"},
 "all": {"en": "All", "zh": "全部", "tw": "全部"},
 "n_a": {"en": "N/A", "zh": "不适用", "tw": "不適用"},
-"evangelical": {"en": "Evangelical", "zh": "福音派", "tw": "福音派"},
-"russian_orthodoxy": {"en": "Russian Orthodoxy", "zh": "俄罗斯东正教", "tw": "俄羅斯東正教"}
+"evangelical": {"en": "Evangelical", "zh": "福音派", "tw": "福音派"}
 }]

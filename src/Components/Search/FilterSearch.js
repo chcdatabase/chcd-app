@@ -82,15 +82,20 @@ function FilterSearch(props) {
       <Form.Label className="filter_label mb-0" data-tip data-for="type">{translate[0]["type"][props.language]}</Form.Label>
         <ReactTooltip id="type" place="right" effect="solid">{translate[0]["select_start"][props.language]} {translate[0]["type"][props.language]}</ReactTooltip>
         <div key="default-checkbox1" className="mb-1 filter-checkbox-list">
-        {props.labelList.filter(i => (i !== undefined && i !== "County" && i !== "Village" && i !== "Township" && i !== "Prefecture" && i !== "Province")).map(i => (
+        {props.labelList.filter(i => (i !== undefined && i !== "County" && i !== "Village" && i !== "Township" && i !== "Prefecture" && i !== "Province")).map(i => {
+          let labeltrans;
+          let check = translate[0][i.replace(/([A-Z])/g, '_$1').replace(/\s+$/, '').replace(/\s|\//g, '_').substring(1).toLowerCase()]
+            if (check === undefined) { labeltrans = i }
+            else {labeltrans = translate[0][i.replace(/([A-Z])/g, '_$1').replace(/\s+$/, '').replace(/\s|\//g, '_').substring(1).toLowerCase()][props.language]}
+          return (
           <Form.Check
             type="checkbox"
             name="label"
-            label={translate[0][i.replace(/([A-Z])/g, '_$1').replace(/\s+$/, '').replace(/\s|\//g, '_').substring(1).toLowerCase()][props.language]}
-            aria-label={translate[0][i.replace(/([A-Z])/g, '_$1').replace(/\s+$/, '').replace(/\s|\//g, '_').substring(1).toLowerCase()][props.language]}
+            label={labeltrans}
+            aria-label={labeltrans}
             value={i}
             onChange={(e) =>  props.handleFilterCheck(e)}
-          />))}
+          />)})}
         </div>
       </Col></Row></Form.Group>
     )} else { return null }
@@ -102,15 +107,20 @@ function FilterSearch(props) {
       <Form.Label className="filter_label mb-0" data-tip data-for="religious_family">{translate[0]["religious_family"][props.language]}</Form.Label>
         <ReactTooltip id="religious_family" place="right" effect="solid">{translate[0]["select_start"][props.language]} {translate[0]["religious_family"][props.language]}</ReactTooltip>
         <div key="default-checkbox1" className="mb-1 filter-checkbox-list">
-        {props.relFamList.filter(i => i !== undefined).map(i => (
+        {props.relFamList.filter(i => i !== undefined).map(i => {
+          let labeltrans;
+          let check = family_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()]
+            if (check === undefined) { labeltrans = i }
+            else {labeltrans = family_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+          return (
           <Form.Check
             type="checkbox"
             name="religious_family"
-            label={family_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
-            aria-label={family_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+            label={labeltrans}
+            aria-label={labeltrans}
             value={i}
             onChange={(e) =>  props.handleFilterCheck(e)}
-          />))}
+          />)})}
         </div>
       </Col></Row></Form.Group>
     )} else { return null }
@@ -122,15 +132,20 @@ function FilterSearch(props) {
       <Form.Label className="filter_label mb-0" data-tip data-for="christian_tradition">{translate[0]["christian_tradition"][props.language]}</Form.Label>
         <ReactTooltip id="christian_tradition" place="right" effect="solid">{translate[0]["select_start"][props.language]} {translate[0]["christian_tradition"][props.language]}</ReactTooltip>
         <div key="default-checkbox1" className="mb-1 filter-checkbox-list">
-        {props.christTradList.filter(i => i !== undefined).map(i => (
+        {props.christTradList.filter(i => i !== undefined).map(i => {
+          let labeltrans;
+          let check = translate[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()]
+            if (check === undefined) { labeltrans = i }
+            else {labeltrans = translate[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+          return (
           <Form.Check
             type="checkbox"
             name="christian_tradition"
-            aria-label={translate[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
-            label={translate[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+            aria-label={labeltrans}
+            label={labeltrans}
             value={i}
             onChange={(e) =>  props.handleFilterCheck(e)}
-          />))}
+          />)})}
         </div>
       </Col></Row></Form.Group>
     )} else { return null }
@@ -154,15 +169,20 @@ function FilterSearch(props) {
     <Form.Label className="filter_label mb-0" data-tip data-for="gender">{translate[0]["gender"][props.language]}</Form.Label>
         <ReactTooltip id="gender" place="right" effect="solid">{translate[0]["select_start"][props.language]} {translate[0]["gender"][props.language]}</ReactTooltip>
       <div key="default-checkbox1" className="mb-1 filter-checkbox-list">
-      {props.genderList.filter(i => i !== undefined).map(i => (
+      {props.genderList.filter(i => i !== undefined).map(i => {
+        let labeltrans;
+        let check = translate[0][i.toLowerCase()]
+          if (check === undefined) { labeltrans = i }
+          else {labeltrans = translate[0][i.toLowerCase()][props.language]}
+        return (
         <Form.Check
           type="checkbox"
           name="gender"
-          label={translate[0][i.toLowerCase()][props.language]}
-          aria-label={translate[0][i.toLowerCase()][props.language]}
+          label={labeltrans}
+          aria-label={labeltrans}
           value={i}
           onChange={(e) =>  props.handleFilterCheck(e)}
-        />))}
+        />)})}
       </div>
     </Col></Row></Form.Group>
   )} else { return null }
@@ -174,15 +194,20 @@ function FilterSearch(props) {
     <Form.Label className="filter_label mb-0" data-tip data-for="nationality">{translate[0]["nationality"][props.language]}</Form.Label>
         <ReactTooltip id="nationality" place="right" effect="solid">{translate[0]["select_start"][props.language]} {translate[0]["nationality"][props.language]}</ReactTooltip>
       <div key="default-checkbox1" className="mb-1 filter-checkbox-list">
-      {props.nationalityList.filter(i => i !== undefined).map(i => (
+      {props.nationalityList.filter(i => i !== undefined).map(i => {
+        let labeltrans;
+        let check = nationality[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()]
+          if (check === undefined) { labeltrans = i }
+          else {labeltrans = nationality[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+        return (
         <Form.Check
           type="checkbox"
           name="nationality"
-          label={nationality[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
-          aria-label={nationality[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+          label={labeltrans}
+          aria-label={labeltrans}
           value={i}
           onChange={(e) =>  props.handleFilterCheck(e)}
-        />))}
+        />)})}
       </div>
     </Col></Row></Form.Group>
    )} else { return null }
@@ -226,17 +251,20 @@ function FilterSearch(props) {
       <Form.Label className="filter_label mb-0" data-tip data-for="inst_category">{translate[0]["inst_category"][props.language]}</Form.Label>
         <ReactTooltip id="inst_category" place="right" effect="solid">{translate[0]["select_start"][props.language]} {translate[0]["inst_category"][props.language]}</ReactTooltip>
         <div key="default-checkbox1" className="mb-1 filter-checkbox-list">
-        {props.instCatList.filter(i => i !== undefined).map(i => (
+        {props.instCatList.filter(i => i !== undefined).map(i => {
+          let labeltrans;
+          let check = cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()]
+            if (check === undefined) { labeltrans = i }
+            else {labeltrans = cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+          return (
           <Form.Check
             type="checkbox"
             name="institution_category"
-            label={cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
-            aria-label={cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+            label={labeltrans}
+            aria-label={labeltrans}
             value={i}
             onChange={(e) =>  props.handleFilterCheck(e)}
-          />
-          )
-        )}
+          />)})}
         </div>
       </Col></Row></Form.Group>
     )} else { return null }
@@ -248,15 +276,20 @@ function FilterSearch(props) {
       <Form.Label className="filter_label mb-0" data-tip data-for="inst_subcategory">{translate[0]["inst_subcategory"][props.language]}</Form.Label>
         <ReactTooltip id="inst_subcategory" place="right" effect="solid">{translate[0]["select_start"][props.language]} {translate[0]["inst_subcategory"][props.language]}</ReactTooltip>
         <div key="default-checkbox1" className="mb-1 filter-checkbox-list">
-        {props.instSubCatList.filter(i => i !== undefined).map(i => (
+        {props.instSubCatList.filter(i => i !== undefined).map(i => {
+          let labeltrans;
+          let check = cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()]
+            if (check === undefined) { labeltrans = i }
+            else {labeltrans = cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+          return (
           <Form.Check
             type="checkbox"
             name="institution_subcategory"
-            label={cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
-            aria-label={cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+            label={labeltrans}
+            aria-label={labeltrans}
             value={i}
             onChange={(e) =>  props.handleFilterCheck(e)}
-          />))}
+          />)})}
         </div>
       </Col></Row></Form.Group>
     )} else { return null }
@@ -281,15 +314,20 @@ function FilterSearch(props) {
       <Form.Label className="filter_label mb-0" data-tip data-for="corp_category">{translate[0]["corp_category"][props.language]}</Form.Label>
         <ReactTooltip id="corp_category" place="right" effect="solid">{translate[0]["select_start"][props.language]} {translate[0]["corp_category"][props.language]}</ReactTooltip>
         <div key="default-checkbox1" className="mb-1 filter-checkbox-list">
-        {props.corpCatList.filter(i => i !== undefined).map(i => (
+        {props.corpCatList.filter(i => i !== undefined).map(i => {
+          let labeltrans;
+          let check = cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()]
+            if (check === undefined) { labeltrans = i }
+            else {labeltrans = cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+          return (
           <Form.Check
             type="checkbox"
             name="corporate_entity_category"
-            label={cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
-            aria-label={cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+            label={labeltrans}
+            aria-label={labeltrans}
             value={i}
             onChange={(e) =>  props.handleFilterCheck(e)}
-          />))}
+          />)})}
         </div>
       </Col></Row></Form.Group>
     )} else { return null }
@@ -301,15 +339,20 @@ function FilterSearch(props) {
       <Form.Label className="filter_label mb-0" data-tip data-for="corp_subcategory">{translate[0]["corp_subcategory"][props.language]}</Form.Label>
         <ReactTooltip id="corp_subcategory" place="right" effect="solid">{translate[0]["select_start"][props.language]} {translate[0]["corp_subcategory"][props.language]}</ReactTooltip>
         <div key="default-checkbox1" className="mb-1 filter-checkbox-list">
-        {props.corpSubCatList.filter(i => i !== undefined).map(i => (
+        {props.corpSubCatList.filter(i => i !== undefined).map(i => {
+          let labeltrans;
+          let check = cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()]
+            if (check === undefined) { labeltrans = i }
+            else {labeltrans = cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+          return (
           <Form.Check
             type="checkbox"
             name="corporate_entity_subcategory"
-            label={cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
-            aria-label={cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+            label={labeltrans}
+            aria-label={labeltrans}
             value={i}
             onChange={(e) =>  props.handleFilterCheck(e)}
-          />))}
+          />)})}
         </div>
       </Col></Row></Form.Group>
     )} else { return null }
@@ -333,15 +376,20 @@ function FilterSearch(props) {
       <Form.Label className="filter_label mb-0" data-tip data-for="event_category">{translate[0]["event_category"][props.language]}</Form.Label>
         <ReactTooltip id="event_category" place="right" effect="solid">{translate[0]["select_start"][props.language]} {translate[0]["event_category"][props.language]}</ReactTooltip>
         <div key="default-checkbox1" className="mb-1 filter-checkbox-list">
-        {props.eventCatList.filter(i => i !== undefined).map(i => (
+        {props.eventCatList.filter(i => i !== undefined).map(i => {
+          let labeltrans;
+          let check = cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()]
+            if (check === undefined) { labeltrans = i }
+            else {labeltrans = cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+          return (
           <Form.Check
             type="checkbox"
             name="event_category"
-            label={cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
-            aria-label={cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+            label={labeltrans}
+            aria-label={labeltrans}
             value={i}
             onChange={(e) =>  props.handleFilterCheck(e)}
-          />))}
+          />)})}
         </div>
       </Col></Row></Form.Group>
     )} else { return null }
@@ -353,15 +401,20 @@ function FilterSearch(props) {
       <Form.Label className="filter_label mb-0" data-tip data-for="event_subcategory">{translate[0]["event_subcategory"][props.language]}</Form.Label>
         <ReactTooltip id="event_subcategory" place="right" effect="solid">{translate[0]["select_start"][props.language]} {translate[0]["event_subcategory"][props.language]}</ReactTooltip>
         <div key="default-checkbox1" className="mb-1 filter-checkbox-list">
-        {props.eventSubCatList.filter(i => i !== undefined).map(i => (
+        {props.eventSubCatList.filter(i => i !== undefined).map(i => {
+          let labeltrans;
+          let check = cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()]
+            if (check === undefined) { labeltrans = i }
+            else {labeltrans = cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+          return (
           <Form.Check
             type="checkbox"
             name="event_subcategory"
-            label={cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
-            aria-label={cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+            label={labeltrans}
+            aria-label={labeltrans}
             value={i}
             onChange={(e) =>  props.handleFilterCheck(e)}
-          />))}
+          />)})}
         </div>
       </Col></Row></Form.Group>
     )} else { return null }
