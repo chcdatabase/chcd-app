@@ -11,7 +11,6 @@ import React, { useState } from 'react'
 export default class App extends React.Component {
 
 render() {
-
     return (
       <div className="App">
         <main className="App-header" role="main">
@@ -22,6 +21,7 @@ render() {
             <Route path="/data" render={(props) => <DataView {...props} key={Math.random()}/>} />
         </main>
       </div>
+
     );
   }
 }
