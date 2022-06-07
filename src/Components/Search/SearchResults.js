@@ -7,6 +7,7 @@ import { Row, Col, Spinner, InputGroup, FormControl, Button } from 'react-bootst
 import { FaSearch } from 'react-icons/fa';
 import Pagination from "react-js-pagination";
 import translate from "../../Assets/indexes/translate.json"
+import nationality from "../../Assets/indexes/nationality.json"
 import family_trans from "../../Assets/indexes/religious_family.json"
 import cat_trans from "../../Assets/indexes/categories.json"
 import relationships from "../../Assets/indexes/relationships.json"
@@ -104,7 +105,7 @@ function SearchResults(props) {
       //SET NAME
       let nameVal;
       if (node.label === "Person") {
-        if ((props.language == "zh" || props.language == "tw") && node.properties.chinese_given_name_hanzi) {nameVal = `${node.properties.chinese_family_name_hanzi} ${node.properties.chinese_given_name_hanzi}`}
+        if ((props.language == "zh" || props.language == "tw") && node.properties.chinese_given_name_hanzi) {nameVal = `${node.properties.chinese_family_name_western} ${node.properties.chinese_given_name_western}`}
         else {nameVal = `${node.properties.given_name_western} ${node.properties.family_name_western}`}
         }
       else {
@@ -123,16 +124,12 @@ function SearchResults(props) {
         if (node.rel) { rel = node.rel }
         else {rel = "N/A"}
 
-      let relcheck;
-        if (relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined ) {relcheck = rel}
-        else {relcheck = relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
-
       return (
       <li className="list-group-item pt-1 pb-1"><div className="card-body px-1 p-1"><Row>
         <Col className="col-7">
           <Row><Col className="text-start"><span className="popup_link" data-prop="popupcontainer" onClick={() => props.selectSwitchInitial((node.key))}>{nameVal}</span></Col></Row>
           {altDisp}
-          <Row><Col className="card_sources pt-1">{relcheck} - {otherVal}</Col></Row>
+          <Row><Col className="card_sources pt-1">{relationships[0][rel.replace(/\s|\//g, '_').toLowerCase()][props.language]} - {otherVal}</Col></Row>
         </Col>
         <Col className="col-5 text-end">
           {props.linkCheck(props, node)}

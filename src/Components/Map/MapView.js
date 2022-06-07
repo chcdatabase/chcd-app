@@ -36,33 +36,25 @@ class MapView extends Component {
       religious_family: "All",
       institution_category: "All",
       institution_subcategory: "All",
-      event_category: "All",
-      event_subcategory: "All",
       gender: "All",
       nationality: "All",
       location: "All",
       affiliation: "All",
       start_year: "",
       end_year: "",
-      key: Math.random(),
       // DATA ARRAYS & SELECT NODE
       nodeArray: [],
       selectArray: [],
       breadCrumb: [],
       nodeSelect: "",
-      inputValuePAff: "",
-      inputValueAff: "",
-      inputValueNat: "",
       // DISPLAY CONTROLS
       popupcontainer: "popupcontainer hide",
       filterDisplay: "filter_container",
       addinfo: "addinfo hide",
       noresults: "noresults hide",
       nosend: "nosend hide",
-      addinfortext: "additional_info",
       // FORM SELECTS
       instCatsIndex: [],
-      eventsCatsIndex: [],
       relFamIndex: [],
       affIndex: [],
       pAffIndex: [],
@@ -70,7 +62,6 @@ class MapView extends Component {
       placeIndex: [],
       // LOAD STATES
       content: "loaded",
-      natIsLoading: true,
       //MAP BOUNDS
       mapBounds: [[54.31,137.28],[18.312,71.63],],
     };
@@ -92,13 +83,7 @@ class MapView extends Component {
     this.filterHide = helper.filterHide.bind(this);
     this.resetFilter = helper.resetFilter.bind(this);
     this.handleFormChange = helper.handleFormChange.bind(this);
-    this.handleMapInputChange = helper.handleMapInputChange.bind(this);
-    this.handleMapAffInputChange = helper.handleMapAffInputChange.bind(this);
-    this.handleMapNatInputChange = helper.handleMapNatInputChange.bind(this);
     this.fetchMapIndexes = query.fetchMapIndexes.bind(this);
-    this.fetchPAffIndex = query.fetchPAffIndex.bind(this);
-    this.fetchAffIndex = query.fetchAffIndex.bind(this);
-    this.fetchNatIndex = query.fetchNatIndex.bind(this);
     this.toggleDisplay = helper.toggleDisplay.bind(this);
     this.langSwitch = helper.langSwitch.bind(this);
     this.linkCheck = helper.linkCheck.bind(this);
@@ -136,14 +121,6 @@ class MapView extends Component {
 //RENDER ////////////////////////////////////////////////////////////////////////////////////////////
   render() {
 
-    const linkTarget = {
-    pathname: "/map",
-    key: Math.random(),
-    state: {
-      applied: true
-      }
-    };
-
     return (
       <div>
         <Helmet>
@@ -166,12 +143,6 @@ class MapView extends Component {
           handleChange={this.handleChange}
           resetFilter={this.resetFilter}
           fetchResults={this.fetchResults}
-          fetchPAffIndex={this.fetchPAffIndex}
-          fetchAffIndex={this.fetchAffIndex}
-          fetchNatIndex={this.fetchNatIndex}
-          handleMapInputChange={this.handleMapInputChange}
-          handleMapNatInputChange={this.handleMapNatInputChange}
-          handleMapAffInputChange={this.handleMapAffInputChange}
           filterHide={this.filterHide}
           handleFormChange={this.handleFormChange}
           handleChangeData={this.handleChangeData}
