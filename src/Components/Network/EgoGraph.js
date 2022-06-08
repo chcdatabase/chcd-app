@@ -23,6 +23,7 @@ export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial, lan
 // HOOK TO CREATE GRAPH & UPDATE  ON STATE CHANGE ////////////////////////////////////////////////////
   useEffect(() => {
     if (nodeArray.length !== 0 && d3Container.current) {
+
       //USE NODEARRAY TO CREATE NEW ARRAY WITH CONNECTION COUNT INCLUDED IN NODE SUBARRAYS
       const nodes2 = nodeArray[0].nodes;
       const rels2 = nodeArray[0].links;
@@ -204,6 +205,19 @@ export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial, lan
 
 // PRE-RENDER CONSTRUCTORS //////////////////////////////////////////////////////////////////////////
 
+   // CHECKS & CONSTRUCTS LOADING STATE RETURN
+   function checkLoad() {
+    if (content === "loading") { return (
+        <div className="graph_container">
+          <div className="graph_float d-flex align-items-center justify-content-center">
+            <Row><Col>
+              <Spinner animation="border" role="status" variant="light"><span className="visually-hidden hide">Loading...</span></Spinner>
+            </Col></Row>
+          </div>
+        </div>
+     )} else {return null}
+  };
+
   // CHECKS & CONSTRUCTS GRAPH CONTAINER
   let containerCheck;
     if (filterDisplay == "filter_container") {containerCheck = "graph_float"}
@@ -211,18 +225,8 @@ export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial, lan
 
 // RETURNS ////////////////////////////////////////////////////////////////////////////////////////
 
-  // LOADING STATE RETURN IF LOADING
-  if (nodeArray.length === 0 && content == "loading") {return (
-      <div className="graph_container">
-        <div className="graph_float d-flex align-items-center justify-content-center">
-          <Row><Col>
-            <Spinner animation="border" role="status" variant="light"><span className="visually-hidden hide">Loading...</span></Spinner>
-          </Col></Row>
-        </div>
-      </div>
-   )}
-  // LOADING STATE RETURN IF NO NETWORK
-  else if (nodeArray.length === 0) { return (
+  // LOADING STATE RETURN
+  if (nodeArray.length === 0) { return (
     <div className="graph_container">
       <div className={containerCheck + " d-flex align-items-center justify-content-center"} id="main">
         <Row><Col>
@@ -236,6 +240,7 @@ export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial, lan
   // NETWORK GRAPH RETURN
   else { return (
     <div>
+      {checkLoad()}
       <h1 className="aria-only">{translate[0]["network"][language]}</h1>
       <div className="graph_container" id="main">
         <div id="graph-float" className={containerCheck}>

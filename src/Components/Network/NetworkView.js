@@ -39,15 +39,11 @@ class NetworkView extends Component {
       degree: 1,
       start_year: "",
       end_year: "",
-      time_disable: true,
-      addinfortext: "additional_info",
       // DATA ARRAYS & SELECT NODE
       nodeArray: [],
       selectArray: [],
       nodeSelect: "",
       breadCrumb: [],
-      selectedOption: "",
-      inputValue: '',
       // DISPLAY CONTROLS
       popupcontainer: "popupcontainer hide",
       filterDisplay: "filter_container",
@@ -69,7 +65,6 @@ class NetworkView extends Component {
     );
 // BIND UTILITY FUNCTIONS TO THIS CONTEXT ///////////////////////////////////////////////////////////
     this.fetchNetworkResults = query.fetchNetworkResults.bind(this);
-    this.fetchNetworkConfines = query.fetchNetworkConfines.bind(this);
     this.handleChange = helper.handleChange.bind(this);
     this.handleCheck = helper.handleCheck.bind(this);
     this.selectSwitchInitial = query.selectSwitchInitial.bind(this);
@@ -81,8 +76,6 @@ class NetworkView extends Component {
     this.breadCrumbReducer = helper.breadCrumbReducer.bind(this);
     this.fetchNetworkIndexes = query.fetchNetworkIndexes.bind(this);
     this.handleChangeData = helper.handleChangeData.bind(this);
-    this.handleOptionChange = helper.handleOptionChange.bind(this);
-    this.handleInputChange  = helper.handleInputChange .bind(this);
     this.toggleDisplay = helper.toggleDisplay.bind(this);
     this.langSwitch = helper.langSwitch.bind(this);
     this.linkCheck = helper.linkCheck.bind(this);
@@ -92,20 +85,20 @@ class NetworkView extends Component {
 //RUN ON COMPONENT MOUNT /////////////////////////////////////////////////////////////////////////
   componentDidMount() {
 
+    this.fetchNetworkIndexes();
+
     let receivedLang = this.props.location.langGive;
     let receivedId = this.props.location.sent_id;
-    let receivedType = this.props.location.selectedOption;
-    let receivedInput = this.props.location.inputValue;
     if (receivedLang) {this.setState({ language: receivedLang })};
     if (receivedId) {
       this.setState({ sent_id: receivedId });
       this.setState({ node_id: receivedId });
-      this.setState({ degree: 1 });
+      this.setState({ degree: 2 });
       this.setState({ people_include: true });
       this.setState({ inst_include: true });
-      this.setState({ selectedOption: receivedType });
-      this.setState({ inputValue: receivedInput });
+      this.setState({ corp_include: true });
     };
+
     setTimeout(() => {
       if (this.state.sent_id === "init") {return null}
       else {this.fetchNetworkResults()}
@@ -133,8 +126,6 @@ class NetworkView extends Component {
           {...this.state}
           selectSwitchInitial={this.selectSwitchInitial}
           handleChange={this.handleChange}
-          handleOptionChange={this.handleOptionChange}
-          handleInputChange ={this.handleInputChange }
           handleCheck={this.handleCheck}
           resetFilter={this.resetFilter}
           fetchNetworkResults={this.fetchNetworkResults}

@@ -77,7 +77,6 @@ class SearchView extends Component {
       filterDisplay: "filter_container",
       addinfo: "addinfo hide",
       noresults: "noresults hide",
-      addinfortext: "additional_info",
       // FORM SELECTS
       instCatsIndex: [],
       relFamIndex: [],
