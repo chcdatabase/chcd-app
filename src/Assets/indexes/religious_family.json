@@ -1,89 +1,37 @@
 [{
-
-  "_COMMENT": "RELIGIOUS FAMILY TRANSLATIONS ==========================================",
-
-  "all": {
-    "en": "All",
-    "zh": "都",
-    "tw": "都"
-  },
-
-  "n_a": {
-    "en": "N/A",
-    "zh": "不适用",
-    "tw": "不適用"
-  },
-
-  "adventist": {
-    "en": "Adventist",
-    "zh": "复临信徒",
-    "tw": "复臨信徒"
-  },
-
-  "anglican": {
-    "en": "Anglican",
-    "zh": "英国国教",
-    "tw": "英國國教"
-  },
-
-  "baptist": {
-    "en": "Baptist",
-    "zh": "浸信会",
-    "tw": "浸信會"
-  },
-
-  "congregational": {
-    "en": "Congregational",
-    "zh": "公理会",
-    "tw": "公理會"
-  },
-
-  "evangelical": {
-    "en": "Evangelical",
-    "zh": "福音",
-    "tw": "福音"
-  },
-
-  "franciscan": {
-    "en": "Franciscan",
-    "zh": "方济各会",
-    "tw": "方濟各會"
-  },
-
-  "holiness": {
-    "en": "Holiness",
-    "zh": "圣洁",
-    "tw": "聖潔"
-  },
-
-  "ignatian": {
-    "en": "Ignatian",
-    "zh": "伊格纳先",
-    "tw": "伊格納先"
-  },
-
-  "independent": {
-    "en": "Independent",
-    "zh": "独立的",
-    "tw": "獨立的"
-  },
-
-  "interdenominational": {
-    "en": "Interdenominational",
-    "zh": "跨宗派",
-    "tw": "跨宗派"
-  },
-
-  "mennonite": {
-    "en": "Mennonite",
-    "zh": "门诺派",
-    "tw": "門諾派"
-  },
-
-  "pentecostal": {
-    "en": "Pentecostal",
-    "zh": "五旬节",
-    "tw": "五旬節"
-  }
-
+"adventist": {"en": "Adventist", "zh": "再临宗", "tw": "再臨宗"},
+"anglican": {"en": "Anglican", "zh": "圣公宗", "tw": "聖公宗"},
+"baptist": {"en": "Baptist", "zh": "浸礼宗", "tw": "浸禮宗"},
+"congregational": {"en": "Congregational", "zh": "公理宗", "tw": "公理宗"},
+"franciscan": {"en": "Franciscan", "zh": "方济各会", "tw": "方濟各會"},
+"holiness": {"en": "Holiness", "zh": "圣洁会", "tw": "聖潔會"},
+"ignatian": {"en": "Ignatian", "zh": "耶稣会", "tw": "耶穌會"},
+"independent": {"en": "Independent", "zh": "独立教会", "tw": "獨立教會"},
+"interdenominational": {"en": "Interdenominational", "zh": "跨宗派", "tw": "跨宗派"},
+"mennonite": {"en": "Mennonite", "zh": "门诺会", "tw": "門諾會"},
+"pentecostal": {"en": "Pentecostal", "zh": "五旬宗", "tw": "五旬宗"},
+"non-religious": {"en": "Non-Religious", "zh": "非宗教", "tw": "非宗教"},
+"quaker": {"en": "Quaker", "zh": "贵格会", "tw": "貴格會"},
+"lutheran": {"en": "Lutheran", "zh": "路德会", "tw": "路德會"},
+"presbyterian": {"en": "Presbyterian", "zh": "长老会", "tw": "長老會"},
+"methodist": {"en": "Methodist", "zh": "卫理公会", "tw": "衛理公會"},
+"nondenominational": {"en": "Nondenominational", "zh": "非宗派", "tw": "非宗派"},
+"brethren": {"en": "Brethren", "zh": "弟兄们", "tw": "弟兄們"},
+"reformed": {"en": "Reformed", "zh": "改革宗", "tw": "改革宗"},
+"restorationist": {"en": "Restorationist", "zh": "修复主义者", "tw": "修復主義者"},
+"dominican": {"en": "Dominican", "zh": "多米尼加", "tw": "多米尼加"},
+"claretian": {"en": "Claretian", "zh": "克莱里安", "tw": "克萊里安"},
+"augustinian": {"en": "Augustinian", "zh": "奥古斯丁", "tw": "奧古斯丁"},
+"benedictine": {"en": "Benedictine", "zh": "本笃会", "tw": "本篤會"},
+"carmelite": {"en": "Carmelite", "zh": "加尔默罗", "tw": "加爾默羅"},
+"cistercian": {"en": "Cistercian", "zh": "西多会", "tw": "西多會"},
+"ursuline": {"en": "Ursuline", "zh": "乌尔苏林", "tw": "烏爾蘇林"},
+"russian_orthodoxy": {"en": "Russian Orthodoxy", "zh": "俄罗斯东正教", "tw": "俄羅斯東正教"},
+"maryknoll": {"en": "Maryknoll", "zh": "玛利诺", "tw": "瑪利諾"},
+"latter_day_saints": {"en": "Latter Day Saints", "zh": "后期圣徒", "tw": "後期聖徒"},
+"passionist": {"en": "Passionist", "zh": "热情主义者", "tw": "熱情主義者"},
+"salesian": {"en": "Salesian", "zh": "慈幼", "tw": "慈幼"},
+"all": {"en": "All", "zh": "全部", "tw": "全部"},
+"n_a": {"en": "N/A", "zh": "不适用", "tw": "不適用"},
+"evangelical": {"en": "Evangelical", "zh": "福音派", "tw": "福音派"}
 }]
