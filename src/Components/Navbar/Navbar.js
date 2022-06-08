@@ -83,9 +83,6 @@ function Navbar(props) {
                     <li className='nav-item'>
                         <Link onClick={closeMobileMenu} className='nav_bar_link' to={{pathname:"/network", langGive: props.language }} >{translate[0].network[props.language]}</Link>
                     </li>
-                    <li className='nav-item'>
-                        <Link onClick={closeMobileMenu} className='nav_bar_link' to={{pathname:"/data", langGive: props.language }} >{translate[0].data[props.language]}</Link>
-                    </li>
                     <li>
                       <DropdownButton
                         align="end"

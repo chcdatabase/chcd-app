@@ -26,9 +26,14 @@ function Popup(props) {
       const persList = persRels.map(function(node) {
 
         function sourceCheck(node) { if (node.rel.source) {
-          return (<li className="card_sources list-group-item px-3 py-0 mb-2"><span className="popup_card_header sources">{translate[0]["sources"][props.language]}:</span> {node.rel.source}</li>)
+          return (<li className="card_sources list-group-item px-3 py-0 mb-2 border-0 border-bottom-0"><span className="popup_card_header sources">{translate[0]["sources"][props.language]}:</span> {node.rel.source}</li>)
         }}
         let source = sourceCheck(node)
+
+        function noteCheck(node) { if (node.rel_locat && node.rel_locat != "none") {
+          return (<li className="card_sources list-group-item px-3 py-0 mb-2 border-0 border-bottom-0"><span className="popup_card_header sources">{translate[0]["note"][props.language]}:</span> {node.rel_locat}</li>)
+        }}
+        let note = noteCheck(node)
 
         let rel_name;
            if ((props.language == "zh" || props.language == "tw") && node.node2.chinese_family_name_hanzi) { rel_name = `${node.node2.chinese_family_name_hanzi} ${node.node2.chinese_given_name_hanzi}` }
@@ -38,18 +43,22 @@ function Popup(props) {
           if (node.rel.rel_type) { rel = node.rel.rel_type }
           else {rel = "N/A"}
 
+          let relcheck;
+            if (relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined ) {relcheck = rel}
+            else {relcheck = relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+
           return (
-            <ul className="list-group list-group-flush">
-              <li className="list-group-item pt-0 pb-0 border-bottom-0">
-                <div className="card-body px-0 p-1">
+            <ul className="list-group list-group-flush border-bottom-1">
+              <li className="list-group-item pt-0 pb-0 border-0">
+                <div className="card-body px-0 p-1 border-0">
                 <Row>
-                  <Col className="text-left"><span className="popup_link" onClick={() =>  props.selectSwitchAppend((node.key2))}>{rel_name}</span></Col>
-                  <Col className="text-center">{relationships[0][rel.replace(/\s|\//g, '_').toLowerCase()][props.language]}</Col>
+                  <Col className="text-left">{relcheck}</Col>
+                  <Col className="text-center"><span className="popup_link" onClick={() =>  props.selectSwitchAppend((node.key2))}>{rel_name}</span></Col>
                   <Col className="text-end">{node.rel.start_year}-{node.rel.end_year}</Col>
                 </Row>
                 </div>
               </li>
-              {source}
+              {source}{note}
             </ul>
       )
     })
@@ -59,9 +68,9 @@ function Popup(props) {
           <div className="card">
             <div className="popup_card_header card-header">
               <Row>
-                <Col className="text-left">{translate[0]["name"][props.language]}</Col>
-                <Col className="text-center">{translate[0]["relationship"][props.language]}</Col>
-                <Col className="text-end">{translate[0]["years"][props.language]}</Col>
+              <Col className="text-left">{translate[0]["relationship"][props.language]}</Col>
+              <Col className="text-center">{translate[0]["name"][props.language]}</Col>
+              <Col className="text-end">{translate[0]["years"][props.language]}</Col>
               </Row>
             </div>
             {persList}
@@ -77,9 +86,14 @@ function Popup(props) {
     const instList = instRels.map(function(node) {
 
       function sourceCheck(node) { if (node.rel.source) {
-        return (<li className="card_sources list-group-item px-3 py-0 mb-2"><span className="popup_card_header sources">{translate[0]["sources"][props.language]}:</span> {node.rel.source}</li>)
+        return (<li className="card_sources list-group-item px-3 py-0 mb-2 border-0 border-bottom-0"><span className="popup_card_header sources">{translate[0]["sources"][props.language]}:</span> {node.rel.source}</li>)
       }}
       let source = sourceCheck(node)
+
+      function noteCheck(node) { if (node.rel_locat && node.rel_locat != "none") {
+        return (<li className="card_sources list-group-item px-3 py-0 mb-2 border-0 border-bottom-0"><span className="popup_card_header sources">{translate[0]["note"][props.language]}:</span> {node.rel_locat}</li>)
+      }}
+      let note = noteCheck(node)
 
       let rel_name;
          if ((props.language == "zh" || props.language == "tw") && node.node2.chinese_name_hanzi) { rel_name = node.node2.chinese_name_hanzi }
@@ -89,18 +103,22 @@ function Popup(props) {
          if (node.rel.rel_type) { rel = node.rel.rel_type }
          else {rel = "N/A"}
 
+         let relcheck;
+           if (relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined ) {relcheck = rel}
+           else {relcheck = relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+
       return (
-        <ul className="list-group list-group-flush">
-          <li className="list-group-item pt-0 pb-0 border-bottom-0">
-            <div className="card-body px-0 p-1">
+        <ul className="list-group list-group-flush border-bottom-1">
+          <li className="list-group-item pt-0 pb-0 border-0">
+            <div className="card-body px-0 p-1 border-0">
               <Row>
-                <Col className="text-left"><span className="popup_link" onClick={() =>  props.selectSwitchAppend((node.key2))}>{rel_name}</span></Col>
-                <Col className="text-center">{relationships[0][rel.replace(/\s|\//g, '_').toLowerCase()][props.language]}</Col>
+                <Col className="text-left">{relcheck}</Col>
+                <Col className="text-center"><span className="popup_link" onClick={() =>  props.selectSwitchAppend((node.key2))}>{rel_name}</span></Col>
                 <Col className="text-end">{node.rel.start_year}-{node.rel.end_year}</Col>
               </Row>
             </div>
           </li>
-          {source}
+          {source}{note}
         </ul>
     )
     })
@@ -110,9 +128,9 @@ function Popup(props) {
           <div className="card">
             <div className="popup_card_header card-header">
               <Row>
-                <Col className="text-left">{translate[0]["name"][props.language]}</Col>
-                <Col className="text-center">{translate[0]["relationship"][props.language]}</Col>
-                <Col className="text-end">{translate[0]["years"][props.language]}</Col>
+              <Col className="text-left">{translate[0]["relationship"][props.language]}</Col>
+              <Col className="text-center">{translate[0]["institution"][props.language]}</Col>
+              <Col className="text-end">{translate[0]["years"][props.language]}</Col>
               </Row>
             </div>
             {instList}
@@ -128,9 +146,14 @@ function Popup(props) {
   const corpList = corpRels.map(function(node) {
 
       function sourceCheck(node) { if (node.rel.source) {
-        return (<li className="card_sources list-group-item px-3 py-0 mb-2"><span className="popup_card_header sources">{translate[0]["sources"][props.language]}:</span> {node.rel.source}</li>)
+        return (<li className="card_sources list-group-item px-3 py-0 mb-2 border-0 border-bottom-0"><span className="popup_card_header sources">{translate[0]["sources"][props.language]}:</span> {node.rel.source}</li>)
       }}
       let source = sourceCheck(node)
+
+      function noteCheck(node) { if (node.rel_locat && node.rel_locat != "none") {
+        return (<li className="card_sources list-group-item px-3 py-0 mb-2 border-0 border-bottom-0"><span className="popup_card_header sources">{translate[0]["note"][props.language]}:</span> {node.rel_locat}</li>)
+      }}
+      let note = noteCheck(node)
 
       let rel_name;
          if ((props.language == "zh" || props.language == "tw") && node.node2.chinese_name_hanzi) { rel_name = node.node2.chinese_name_hanzi }
@@ -140,18 +163,22 @@ function Popup(props) {
         if (node.rel.rel_type) { rel = node.rel.rel_type }
         else {rel = "N/A"}
 
+        let relcheck;
+          if (relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined ) {relcheck = rel}
+          else {relcheck = relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+
       return (
-        <ul className="list-group list-group-flush">
-          <li className="list-group-item pt-0 pb-0 border-bottom-0">
-            <div className="card-body px-0 p-1">
+        <ul className="list-group list-group-flush border-bottom-1">
+          <li className="list-group-item pt-0 pb-0 border-0">
+            <div className="card-body px-0 p-1 border-0">
               <Row>
-                <Col className="text-left"><span className="popup_link" onClick={() =>  props.selectSwitchAppend((node.key2))}>{rel_name}</span></Col>
-                <Col className="text-center">{relationships[0][rel.replace(/\s|\//g, '_').toLowerCase()][props.language]}</Col>
+                <Col className="text-left">{relcheck}</Col>
+                <Col className="text-center"><span className="popup_link" onClick={() =>  props.selectSwitchAppend((node.key2))}>{rel_name}</span></Col>
                 <Col className="text-end">{node.rel.start_year}-{node.rel.end_year}</Col>
               </Row>
             </div>
           </li>
-          {source}
+          {source}{note}
         </ul>
       )
     })
@@ -161,8 +188,8 @@ function Popup(props) {
         <div className="card">
           <div className="popup_card_header card-header">
             <Row>
-              <Col className="text-left">{translate[0]["name"][props.language]}</Col>
-              <Col className="text-center">{translate[0]["relationship"][props.language]}</Col>
+              <Col className="text-left">{translate[0]["relationship"][props.language]}</Col>
+              <Col className="text-center">{translate[0]["corporate_entity"][props.language]}</Col>
               <Col className="text-end">{translate[0]["years"][props.language]}</Col>
             </Row>
           </div>
@@ -179,9 +206,14 @@ function Popup(props) {
     const eventList = eventRels.map(function(node) {
 
       function sourceCheck(node) { if (node.rel.source) {
-        return (<li className="card_sources list-group-item px-3 py-0 mb-2"><span className="popup_card_header sources">{translate[0]["sources"][props.language]}:</span> {node.rel.source}</li>)
+        return (<li className="card_sources list-group-item px-3 py-0 mb-2 border-0 border-bottom-0"><span className="popup_card_header sources">{translate[0]["sources"][props.language]}:</span> {node.rel.source}</li>)
       }}
       let source = sourceCheck(node)
+
+      function noteCheck(node) { if (node.rel_locat && node.rel_locat != "none") {
+        return (<li className="card_sources list-group-item px-3 py-0 mb-2 border-0 border-bottom-0"><span className="popup_card_header sources">{translate[0]["note"][props.language]}:</span> {node.rel_locat}</li>)
+      }}
+      let note = noteCheck(node)
 
       let rel_name;
          if ((props.language == "zh" || props.language == "tw") && node.node2.chinese_name_hanzi) { rel_name = node.node2.chinese_name_hanzi }
@@ -191,18 +223,22 @@ function Popup(props) {
        if (node.rel.rel_type) { rel = node.rel.rel_type }
        else {rel = "N/A"}
 
+       let relcheck;
+         if (relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined ) {relcheck = rel}
+         else {relcheck = relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+
       return (
-        <ul className="list-group list-group-flush">
-          <li className="list-group-item pt-0 pb-0 border-bottom-0">
-            <div className="card-body px-0 p-1">
+        <ul className="list-group list-group-flush border-bottom-1">
+          <li className="list-group-item pt-0 pb-0 border-0">
+            <div className="card-body px-0 p-1 border-0">
               <Row>
-                <Col className="text-left"><span className="popup_link" onClick={() =>  props.selectSwitchAppend((node.key2))}>{rel_name}</span></Col>
-                <Col className="text-center">{relationships[0][rel.replace(/\s|\//g, '_').toLowerCase()][props.language]}</Col>
+                <Col className="text-left">{relcheck}</Col>
+                <Col className="text-center"><span className="popup_link" onClick={() =>  props.selectSwitchAppend((node.key2))}>{rel_name}</span></Col>
                 <Col className="text-end">{node.rel.start_year}-{node.rel.end_year}</Col>
               </Row>
             </div>
           </li>
-          {source}
+          {source}{note}
         </ul>
   )
   })
@@ -212,8 +248,8 @@ function Popup(props) {
         <div className="card">
           <div className="popup_card_header card-header">
             <Row>
-              <Col className="text-left">{translate[0]["name"][props.language]}</Col>
-              <Col className="text-center">{translate[0]["relationship"][props.language]}</Col>
+              <Col className="text-left">{translate[0]["relationship"][props.language]}</Col>
+              <Col className="text-center">{translate[0]["event"][props.language]}</Col>
               <Col className="text-end">{translate[0]["years"][props.language]}</Col>
             </Row>
           </div>
@@ -247,12 +283,23 @@ function Popup(props) {
         let alt_name_rom;
           if (info.select_node.alternative_chinese_name_romanized) { alt_name_rom = info.select_node.alternative_chinese_name_romanized }
           else { alt_name_rom = translate[0]["n_a"][props.language] }
+
         let gender;
-          if (info.select_node.gender) { gender = translate[0][info.select_node.gender.replace(/\s|\//g, '_').toLowerCase()][props.language] }
+          if (info.select_node.select_node) {
+            let check = info.select_node.select_node;
+            if (translate[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {gender = check}
+            else (gender = translate[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language])
+          }
           else { gender = translate[0]["n_a"][props.language] }
+
         let nation;
-          if (info.select_node.nationality) { nation = nationality[0][info.select_node.nationality.replace(/\s|\//g, '_').toLowerCase()][props.language] }
+          if (info.select_node.nationality) {
+            let check = info.select_node.nationality;
+            if (nationality[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {nation = check}
+            else (nation = nationality[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language])
+          }
           else { nation = translate[0]["n_a"][props.language] }
+
         let birth_year;
           if (info.select_node.birth_year) { birth_year = info.select_node.birth_year }
           else { birth_year = translate[0]["n_a"][props.language] }
@@ -265,6 +312,13 @@ function Popup(props) {
         let death_place;
           if (info.select_node.death_place) { death_place = info.select_node.death_place }
           else { death_place = translate[0]["n_a"][props.language] }
+        let note;
+          if (info.select_node.notes) { note = info.select_node.notes }
+          else { note = translate[0]["n_a"][props.language] }
+        let static_source;
+          if (info.select_node.source) { static_source = info.select_node.source }
+          else { static_source = translate[0]["n_a"][props.language] }
+
 
          return (
            <div>
@@ -274,30 +328,40 @@ function Popup(props) {
             </Col></Row>
 
               <Row><Col>
-                <Button className="add_info_button btn btn-danger" data-prop="addinfo" onClick={(i) =>  props.toggleDisplay(i)} role="button" >{translate[0]["additional_info"][props.language]}</Button>
+                <Button className="add_info_button btn btn-danger" data-prop="addinfo" onClick={(i) =>  props.toggleDisplay(i)} role="button" >{translate[0][props.addinfortext][props.language]}</Button>
                </Col></Row>
              <div className={props.addinfo}>
-               <Row className="pt-2">
-                 <Col>
-                 <ul className="list-group list-group-flush">
-                   <li className="list-group-item"><b>{translate[0]["alternate_western_names"][props.language]}:</b> {alt_name_west}</li>
-                   <li className="list-group-item"><b>{translate[0]["chinese_name"][props.language]}:</b> {name_hanzi}</li>
-                   <li className="list-group-item"><b>{translate[0]["alternate_chinese_names"][props.language]}:</b> {alt_name_hanzi}</li>
-                   <li className="list-group-item"><b>{translate[0]["chinese_name_romanization"][props.language]}:</b> {name_rom}</li>
-                   <li className="list-group-item"><b>{translate[0]["alternate_chinese_name_romanizations"][props.language]}:</b> {alt_name_rom}</li>
-                  </ul>
-                  </Col>
-                  <Col>
-                  <ul className="list-group list-group-flush">
-                   <li className="list-group-item"><b>{translate[0]["gender"][props.language]}:</b> {gender}</li>
-                   <li className="list-group-item"><b>{translate[0]["nationality"][props.language]}:</b> {nation}</li>
-                   <li className="list-group-item"><b>{translate[0]["birth_year"][props.language]}:</b> {birth_year}</li>
-                   <li className="list-group-item"><b>{translate[0]["birth_place"][props.language]}:</b> {birth_place}</li>
-                   <li className="list-group-item"><b>{translate[0]["death_place"][props.language]}:</b> {death_place}</li>
-                   <li className="list-group-item"><b>{translate[0]["death_year"][props.language]}:</b> {death_year}</li>
-                 </ul>
-                 </Col>
-               </Row>
+               <Col className="mt-2 p-2 bg-danger rounded">
+                 <Row>
+                   <Col>
+                   <ul className="list-group list-group-flush">
+                     <li className="list-group-item"><b>{translate[0]["alternate_western_names"][props.language]}:</b> {alt_name_west}</li>
+                     <li className="list-group-item"><b>{translate[0]["chinese_name"][props.language]}:</b> {name_hanzi}</li>
+                     <li className="list-group-item"><b>{translate[0]["alternate_chinese_names"][props.language]}:</b> {alt_name_hanzi}</li>
+                     <li className="list-group-item"><b>{translate[0]["chinese_name_romanization"][props.language]}:</b> {name_rom}</li>
+                     <li className="list-group-item"><b>{translate[0]["alternate_chinese_name_romanizations"][props.language]}:</b> {alt_name_rom}</li>
+                    </ul>
+                    </Col>
+                    <Col>
+                    <ul className="list-group list-group-flush">
+                     <li className="list-group-item"><b>{translate[0]["gender"][props.language]}:</b> {gender}</li>
+                     <li className="list-group-item"><b>{translate[0]["nationality"][props.language]}:</b> {nation}</li>
+                     <li className="list-group-item"><b>{translate[0]["birth_year"][props.language]}:</b> {birth_year}</li>
+                     <li className="list-group-item"><b>{translate[0]["birth_place"][props.language]}:</b> {birth_place}</li>
+                     <li className="list-group-item"><b>{translate[0]["death_place"][props.language]}:</b> {death_place}</li>
+                     <li className="list-group-item"><b>{translate[0]["death_year"][props.language]}:</b> {death_year}</li>
+                   </ul>
+                   </Col>
+                 </Row>
+                 <Row className="pt-2">
+                   <Col>
+                   <ul className="list-group list-group-flush">
+                     <li className="list-group-item"><b>{translate[0]["note"][props.language]}:</b> {note}</li>
+                     <li className="list-group-item"><b>{translate[0]["sources"][props.language]}:</b> {static_source}</li>
+                   </ul>
+                   </Col>
+                 </Row>
+               </Col>
              </div>
            </div>
        )}
@@ -321,23 +385,65 @@ function Popup(props) {
           let alt_name_rom;
             if (info.select_node.alternative_chinese_name_romanized) { alt_name_rom = info.select_node.alternative_chinese_name_romanized }
             else { alt_name_rom = translate[0]["n_a"][props.language] }
+
           let trad;
-            if (info.select_node.christian_tradition) {trad = info.select_node.christian_tradition}
-            else {trad = "N/A"}
+            if (info.select_node.christian_tradition) {
+              let check = info.select_node.christian_tradition;
+              if (translate[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {trad = check}
+              else {trad = translate[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+              }
+              else {trad = "N/A"}
 
           let rel_fam;
-            if (info.select_node.religious_family) {rel_fam = info.select_node.religious_family}
+            if (info.select_node.religious_family) {
+              let check = info.select_node.religious_family;
+              if (family_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {rel_fam = check}
+              else {rel_fam = family_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+              }
               else {rel_fam = "N/A"}
+
           let cat;
-           if (info.select_node.corporate_entity_category) {cat = info.select_node.corporate_entity_category}
-           else if (info.select_node.institution_category) {cat = info.select_node.institution_category}
-           else if (info.select_node.event_category) { cat = info.select_node.event_category}
+           if (info.select_node.corporate_entity_category) {
+             let check = info.select_node.corporate_entity_category;
+             if (cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {cat = check}
+             else {cat = cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+             }
+           else if (info.select_node.institution_category) {
+             let check = info.select_node.institution_category;
+             if (cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {cat = check}
+             else {cat = cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+             }
+           else if (info.select_node.event_category) {
+             let check = info.select_node.event_category;
+             if (cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {cat = check}
+             else {cat = cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+             }
            else {cat = "N/A"}
+
           let subcat;
-           if (info.select_node.corporate_entity_subcategory) {subcat = info.select_node.corporate_entity_subcategory}
-           else if (info.select_node.institution_subcategory) {subcat = info.select_node.institution_subcategory}
-           else if (info.select_node.event_subcategory) { subcat = info.select_node.event_subcategory}
+           if (info.select_node.corporate_entity_subcategory) {
+             let check = info.select_node.corporate_entity_subcategory;
+             if (cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {subcat = check}
+             else {subcat = cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+             }
+           else if (info.select_node.institution_subcategory) {
+             let check = info.select_node.institution_subcategory;
+             if (cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {subcat = check}
+             else {subcat = cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+             }
+           else if (info.select_node.event_subcategory) {
+             let check = info.select_node.event_subcategory;
+             if (cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {subcat = check}
+             else {subcat = cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+             }
            else {subcat = "N/A"}
+
+         let note;
+           if (info.select_node.notes) { note = info.select_node.notes }
+           else { note = translate[0]["n_a"][props.language] }
+         let static_source;
+           if (info.select_node.source) { static_source = info.select_node.source }
+           else { static_source = translate[0]["n_a"][props.language] }
 
          return (
 
@@ -349,30 +455,39 @@ function Popup(props) {
               </Col></Row>
 
                <Row><Col>
-                <Button className="add_info_button btn btn-danger" data-prop="addinfo" onClick={(i) =>  props.toggleDisplay(i)} role="button" >{translate[0]["additional_info"][props.language]}</Button>
+                <Button className="add_info_button btn btn-danger" data-prop="addinfo" onClick={(i) =>  props.toggleDisplay(i)} role="button" >{translate[0][props.addinfortext][props.language]}</Button>
                </Col></Row>
              </Row>
              <div className={props.addinfo}>
-               <Row className="pt-2">
-                 <Col>
-                 <ul className="list-group list-group-flush">
-                   <li className="list-group-item"><b>{translate[0]["alternate_western_names"][props.language]}:</b> {alt_name_west}</li>
-                   <li className="list-group-item"><b>{translate[0]["chinese_name"][props.language]}:</b> {name_hanzi}</li>
-                   <li className="list-group-item"><b>{translate[0]["alternate_chinese_names"][props.language]}:</b> {alt_name_hanzi}</li>
-                   <li className="list-group-item"><b>{translate[0]["chinese_name_romanization"][props.language]}:</b> {name_rom}</li>
-                   <li className="list-group-item"><b>{translate[0]["alternate_chinese_name_romanizations"][props.language]}:</b> {name_rom}</li>
-                  </ul>
-                  </Col>
-                  <Col>
-                  <ul className="list-group list-group-flush">
-                   <li className="list-group-item"><b>{translate[0]["christian_tradition"][props.language]}:</b> {translate[0][trad.replace(/\s|\//g, '_').toLowerCase()][props.language]}</li>
-                   <li className="list-group-item"><b>{translate[0]["religious_family"][props.language]}:</b> {family_trans[0][rel_fam.replace(/\s|\//g, '_').toLowerCase()][props.language]}</li>
-                   <li className="list-group-item"><b>{translate[0]["category"][props.language]}:</b> {cat_trans[0][cat.replace(/\s|\//g, '_').toLowerCase()][props.language]}</li>
-                   <li className="list-group-item"><b>{translate[0]["subcategory"][props.language]}:</b> {cat_trans[0][subcat.replace(/\s|\//g, '_').toLowerCase()][props.language]}</li>
-
-                 </ul>
-                 </Col>
-               </Row>
+               <Col className="mt-2 p-2 bg-danger rounded">
+                 <Row>
+                   <Col>
+                   <ul className="list-group list-group-flush">
+                     <li className="list-group-item"><b>{translate[0]["alternate_western_names"][props.language]}:</b> {alt_name_west}</li>
+                     <li className="list-group-item"><b>{translate[0]["chinese_name"][props.language]}:</b> {name_hanzi}</li>
+                     <li className="list-group-item"><b>{translate[0]["alternate_chinese_names"][props.language]}:</b> {alt_name_hanzi}</li>
+                     <li className="list-group-item"><b>{translate[0]["chinese_name_romanization"][props.language]}:</b> {name_rom}</li>
+                     <li className="list-group-item"><b>{translate[0]["alternate_chinese_name_romanizations"][props.language]}:</b> {name_rom}</li>
+                    </ul>
+                    </Col>
+                    <Col>
+                    <ul className="list-group list-group-flush">
+                     <li className="list-group-item"><b>{translate[0]["christian_tradition"][props.language]}:</b> {trad}</li>
+                     <li className="list-group-item"><b>{translate[0]["religious_family"][props.language]}:</b> {rel_fam}</li>
+                     <li className="list-group-item"><b>{translate[0]["category"][props.language]}:</b> {cat}</li>
+                     <li className="list-group-item"><b>{translate[0]["subcategory"][props.language]}:</b> {subcat}</li>
+                   </ul>
+                   </Col>
+                 </Row>
+                 <Row className="pt-2">
+                   <Col>
+                   <ul className="list-group list-group-flush">
+                     <li className="list-group-item"><b>{translate[0]["note"][props.language]}:</b> {note}</li>
+                     <li className="list-group-item"><b>{translate[0]["sources"][props.language]}:</b> {static_source}</li>
+                   </ul>
+                   </Col>
+                 </Row>
+               </Col>
              </div>
            </div>
        )}
