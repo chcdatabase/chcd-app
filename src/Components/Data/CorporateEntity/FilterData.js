@@ -11,34 +11,36 @@ function FilterData(props) {
      <div className="filter_header">Data Parameters</div>
      <div className="filter_scroll_area mb-4">
      <Form>
-
      <Row className="mb-2">
      <Col>
        <Form.Group>
          <Row><Col>
-           <Form.Label className="filter_label mb-0">Start Year</Form.Label>
-           <Form.Control type="text" name="start_time" value={props.start_time} onChange={(i) =>  props.handleChange(i)}/>
+           {/* <Form.Label className="filter_label mb-0">Start Year</Form.Label> */}
+           {/* <Form.Control type="text" name="start_time" value={props.start_time} onChange={(i) =>  props.handleChange(i)}/> */}
          </Col></Row>
        </Form.Group>
      </Col>
        <Col>
          <Form.Group>
            <Row><Col>
-             <Form.Label className="filter_label mb-0">End Year</Form.Label>
-             <Form.Control type="text" name="end_time" value={props.end_time} onChange={(i) =>  props.handleChange(i)}/>
+             {/* <Form.Label className="filter_label mb-0">End Year</Form.Label> */}
+             {/* <Form.Control type="text" name="end_time" value={props.end_time} onChange={(i) =>  props.handleChange(i)}/> */}
            </Col></Row>
          </Form.Group>
        </Col>
      </Row>
 
        <Form.Group className="mb-2"><Row><Col>
-           <Row><Col><Form.Label className="filter_label mb-0">Person</Form.Label></Col></Row>
+           { <Row><Col><Form.Label className="filter_label mb-0">Corporate Entity</Form.Label></Col></Row>}
            <Row><Col>
-           <Select
-           options={props.netPersonIndex}
-           value={props.netPersonIndex.value}
-           onChange={(option) =>  props.handleChangeData(option)}
-           />
+           {<Form.Select size="sm">
+            {
+              Array.from(props.corporateEntitiesWesternNames).map((item) => {
+                return[
+                  <option>{item}</option>
+                ]
+              })}
+            </Form.Select>}
              </Col></Row>
        </Col></Row></Form.Group>
 
@@ -48,7 +50,7 @@ function FilterData(props) {
      <div classname="filter-buttons">
      <Row className="mb-2">
        <Col>
-         <Button className="mb-2 col-12" variant="danger" onClick={() =>  props.fetchNetworkResults()}>Submit</Button>
+         <Button className="mb-2 col-12" variant="danger" onClick={() =>  props.fetchDataResults()}>Submit</Button>
        </Col>
        <Col>
          <Button className="mb-2 col-12" variant="outline-danger" onClick={() => window.location.reload(false)}>Reset</Button>

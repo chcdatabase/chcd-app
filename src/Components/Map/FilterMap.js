@@ -239,6 +239,11 @@ const loadNatIndex = ( inputValueNat: string, callback: (options: props.natIndex
 // INSTITUTION FORM CONSTRUCTOR ////////////////////////////////////////////////////////////////////////////////
 
   else if (props.kind === "Institutions"){
+
+      let defaultInput;
+        if (props.inputValueAff !== "") { defaultInput = props.inputValueAff }
+        else {defaultInput = translate[0]["type_to"][props.language] }
+
       return (
         <div className="filter_area">
         <div className={props.filterDisplay}>
@@ -301,13 +306,14 @@ const loadNatIndex = ( inputValueNat: string, callback: (options: props.natIndex
               <AsyncSelect
                 loadOptions={loadAffIndex}
                 onInputChange={props.handleMapAffInputChange}
-                placeholder={translate[0]["type_to"][props.language]}
+                placeholder={defaultInput}
                 defaultInputValue={props.inputValueAff}
                 getOptionLabel={option => option[props.language]}
                 onChange={(option) =>  props.handleChangeData(option)}
                 components={{ DropdownIndicator:() => null, IndicatorSeparator:() => null }}
               />
           </Col></Row></Form.Group>
+
 
           {/* RELIGIOUS FAMILY SELECT ////////////////////////////////////////////////////////////////// */}
           <Form.Group className="mb-1"><Row><Col>

@@ -11,6 +11,7 @@ import NoResults from "../Popups/NoResults.js";
 import NoSend from "../Popups/NoSend.js";
 import Navbar from "../Navbar/Navbar.js";
 import NetworkKey from './NetworkKey.js'
+import Citation from "../Popups/Citation.js";
 import {Helmet} from "react-helmet";
 import translate from "../../Assets/indexes/translate.json"
 import credentials from "../../credentials.json";
@@ -28,6 +29,7 @@ class NetworkView extends Component {
     super(props);
     this.state = {
       language: "en",
+      cite: "cite hide",
       //FILTER INPUTS
       sent_id: "init",
       people_include: false,
@@ -40,7 +42,6 @@ class NetworkView extends Component {
       start_year: "",
       end_year: "",
       time_disable: true,
-      addinfortext: "additional_info",
       // DATA ARRAYS & SELECT NODE
       nodeArray: [],
       selectArray: [],
@@ -51,7 +52,16 @@ class NetworkView extends Component {
       // DISPLAY CONTROLS
       popupcontainer: "popupcontainer hide",
       filterDisplay: "filter_container",
-      addinfo: "addinfo hide",
+      addinfo: "addinfo",
+      addpers: "addpers",
+      addinst: "addinst",
+      addevent: "addevent",
+      addcorp: "addcorp",
+      addinfortext: "hide_additional_info",
+      addperstext: "hide_additional_info",
+      addinsttext: "hide_additional_info",
+      addeventtext: "hide_additional_info",
+      addcorptext: "hide_additional_info",
       noresults: "noresults hide",
       nosend: "nosend hide",
       networkKey: "addinfo hide",
@@ -59,7 +69,7 @@ class NetworkView extends Component {
       // FORM SELECTS
       netPersonIndex: [],
       // LOAD STATES
-      content: "loaded"
+      content: "loaded",
     }
 //INITIATE NEO4J INSTANCE ///////////////////////////////////////////////////////////////////////////
     this.driver = neo4j.driver(
@@ -84,6 +94,7 @@ class NetworkView extends Component {
     this.handleOptionChange = helper.handleOptionChange.bind(this);
     this.handleInputChange  = helper.handleInputChange .bind(this);
     this.toggleDisplay = helper.toggleDisplay.bind(this);
+    this.toggleCite = helper.toggleCite.bind(this);
     this.langSwitch = helper.langSwitch.bind(this);
     this.linkCheck = helper.linkCheck.bind(this);
     this.hideKey = helper.hideKey.bind(this);
@@ -120,7 +131,16 @@ class NetworkView extends Component {
           <html lang={this.state.language} />
           <title>{translate[0]["chcd_name"][this.state.language]} - {translate[0]["network"][this.state.language]}</title>
         </Helmet>
-        <Navbar language={this.state.language} langSwitch={this.langSwitch}/>
+        <Navbar
+          language={this.state.language}
+          langSwitch={this.langSwitch}
+          toggleCite = {this.toggleCite}
+        />
+        <Citation
+          cite={this.state.cite}
+          language={this.state.language}
+          toggleCite = {this.toggleCite}
+        />
         <NoSend
           nosend={this.state.nosend}
           toggleDisplay = {this.toggleDisplay}

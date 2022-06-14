@@ -3,9 +3,9 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import React, { useState } from 'react'
-import { FaBars, FaTimes } from 'react-icons/fa'
+import { FaBars, FaTimes, FaQuoteRight } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
-import { DropdownButton, Dropdown } from 'react-bootstrap';
+import { DropdownButton, Dropdown, Button } from 'react-bootstrap';
 import translate from "../../Assets/indexes/translate.json";
 import nationality from "../../Assets/indexes/nationality.json";
 import family_trans from "../../Assets/indexes/religious_family.json";
@@ -29,9 +29,17 @@ function Navbar(props) {
     const closeMobileMenu = () => {setClick(false)};
 
 // RESPONSIVE STYLING ///////////////////////////////////////////////////////////////////////////////
+
     let navSet;
-      if (props.home === "home") { navSet = "nav_bar_trans container-fluid row" }
-      else { navSet = "nav_bar container-fluid row" }
+    let linkcolor;
+      if (props.home === "home") {
+        navSet = "nav_bar_trans container-fluid row";
+        linkcolor = "#ffffff";
+      }
+      else {
+        navSet = "nav_bar container-fluid row";
+        linkcolor = "#500000";
+      }
 
     let logoSet;
       if (props.home === "home") {
@@ -83,6 +91,9 @@ function Navbar(props) {
                     <li className='nav-item'>
                         <Link onClick={closeMobileMenu} className='nav_bar_link' to={{pathname:"/network", langGive: props.language }} >{translate[0].network[props.language]}</Link>
                     </li>
+                    {/* <li className='nav-item'>
+                        <Link onClick={closeMobileMenu} className='nav_bar_link' to={{pathname:"/data", langGive: props.language }} >{translate[0].data[props.language]}</Link>
+                    </li> */}
                     <li>
                       <DropdownButton
                         align="end"
@@ -94,6 +105,18 @@ function Navbar(props) {
                         <Dropdown.Item href="#" value="zh" onClick={e => props.langSwitch(e)}>简体</Dropdown.Item>
                         <Dropdown.Item href="#" value="tw" onClick={e => props.langSwitch(e)}>繁體</Dropdown.Item>
                       </DropdownButton>
+                    </li>
+                    <li className='nav-item'>
+                      <Link className='lang-switch-button' data-prop="cite" onClick={(i) =>  props.toggleCite(i)} >
+                        <Button
+                          align="end"
+                          variant="secondary"
+                          className="mt-2 mx-2"
+                          style={{background: 'none'}}
+                        >
+                            <FaQuoteRight className="lang-switch-button pb-1"/>
+                        </Button>
+                      </Link>
                     </li>
                 </ul>
             </div>

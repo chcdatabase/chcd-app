@@ -11,22 +11,38 @@
     color: $gray;
   }
 }
-
-.popupcontainer {
-  background-color: $light-gray;
+.top-popupcontainer {
   display: block;
-  overflow: auto;
+  background: #a9a9a9;
+  overflow: hidden;
   color: $gray;
   position: relative;
   left: 335px;
-  padding: 20px;
+  top: 20px;
+  z-index: 1001;
+  height: 40px;
+  width: calc(100% - 360px);
+  &.hide {
+    display:none;
+  }
+}
+
+.popupcontainer {
+  background-color: $light-gray;
+  font-size: .85rem;
+  display: block;
+  overflow-y: auto;
+  overflow-x: hidden;
+  color: $gray;
+  position: relative;
+  left: 335px;
   top: 20px;
   z-index: 1000;
-  height: calc(100vh - 120px);
+  height: calc(100vh - 160px);
   width: calc(100% - 360px);
   box-shadow: 0px 2px 10px grey;
   &.hide {
-    display: none;
+    display:none;
   }
   &::-webkit-scrollbar {
     width: 15px;
@@ -43,13 +59,20 @@
   }
 }
 
+.popupbody {
+  display: block;
+  height: 100%;
+  width: 100%;
+  padding:20px;
+}
+
 .popup_close {
   width: 25px;
   height: 25px;
   color: $gray;
   display: block;
-  position: absolute;
-  right: 25px;
+  position: relative;
+  float: right;
   &:hover {
     color: $red;
   }
@@ -90,9 +113,30 @@
 .addinfo {
   display: block;
   &.hide {
-    display: none;
+    display:none;
   }
 }
+
+.addpers{
+  display: block;
+}
+
+.addinst {
+  display: block;
+}
+
+.addcorp {
+  display: block;
+}
+
+.addevent {
+  display: block;
+}
+
+.hide {
+  display: none;
+}
+
 .breadcrumb_link {
   color: $red;
   &:hover {
@@ -105,6 +149,22 @@
   height: 1em;
 }
 
+.top-popupcontainer-full {
+  display: block;
+  background: #a9a9a9;
+  overflow: hidden;
+  color: $gray;
+  position: relative;
+  left: 30px;
+  top: 20px;
+  z-index: 1001;
+  height: 40px;
+  width: calc(100% - 55px);
+  &.hide {
+    display:none;
+  }
+}
+
 .popupcontainer-full {
   background-color: $light-gray;
   display: block;
@@ -112,7 +172,6 @@
   color: $gray;
   position: relative;
   left: 30px;
-  padding: 20px;
   top: 20px;
   z-index: 1000;
   height: calc(100vh - 120px);

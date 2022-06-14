@@ -23,6 +23,14 @@ export function hideKey(){
 }
 
 //TOGGLE DISPLAYS
+export function toggleCite(event) {
+  if (this.state.cite === "cite hide" ) { this.setState({ cite: "cite" }) }
+  else if (this.state.cite === "cite" ) { this.setState({ cite: "cite hide" }) }
+  else { this.setState({ cite: "cite" }) }
+  console.log(this.state.cite)
+};
+
+//TOGGLE DISPLAYS
 export function toggleDisplay(event) {
   let v = event.target.dataset.prop;
   let h = event.target.dataset.prop + " hide";
@@ -30,30 +38,35 @@ export function toggleDisplay(event) {
   let v2 = event.target.dataset.prop + "-full";
   let h2 = event.target.dataset.prop + "-full hide";
   let f ="popupcontainer-full";
+  let t;
+
+  if (event.target.dataset.prop === "addinfo") { t = "addinfortext"}
+  else if (event.target.dataset.prop === "addpers") { t = "addperstext"}
+  else if (event.target.dataset.prop === "addinst") { t = "addinsttext"}
+  else if (event.target.dataset.prop === "addevent") { t = "addeventtext"}
+  else if (event.target.dataset.prop === "addcorp") { t = "addcorptext"}
 
   if ((this.state[v] === v && v === p) || (this.state[v] === v2 && v2 === f)) {
     let hidden = this.state[v] + " hide";
     this.setState ({ [v]: hidden });
-    this.setState ({ addinfo: "addinfo hide" });
-    this.setState ({addinfortext: "additional_info"})
-    this.setState ({ breadCrumb: [] });
-  }
+    this.setState ({[t]: "additional_info"});
+    this.setState ({ breadCrumb: [] });}
+
   else if (this.state[v] === v) {
     let hidden = v + " hide";
     this.setState ({ [v]: hidden });
-    this.setState ({addinfortext: "additional_info"})
-    return this.state[v];
-  }
-  else if (this.state[v] === h)  {
+    this.setState ({[t]: "additional_info"});
+    return this.state[v]; }
+
+  else if (this.state[v] === h) {
     this.setState ({ [v]: v });
-    this.setState ({addinfortext: "hide_additional_info"})
-    return this.state[v];
-  }
-  else if (this.state[v] === h2)  {
-    this.setState ({ [v]: v2 });
-    this.setState ({addinfortext: "hide_additional_info"})
-    return this.state[v];
-  }
+    this.setState ({[t]: "hide_additional_info"});
+    return this.state[v]; }
+
+  else if (this.state[v] === h2)
+    {this.setState ({ [v]: v2 });
+    this.setState ({[t]: "hide_additional_info"});
+    return this.state[v]; }
 };
 
 //TOGGLE FILTER STATE
@@ -82,8 +95,13 @@ export function langSwitch(event) {
 // FILTER HANDLERS  /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
+export function reFilterSet() {
+  this.setState({ refilter: "no" })
+};
+
 // HANDLE CHECKS IN SEARCH FILTER
 export function filterResults() {
+  this.setState({ refilter: "yes" })
   // GENERAL FILTERS
   let label; if (this.state.label.length > 0) {label = this.state.label} else { label = this.state.labelList };
   let religious_family; if (this.state.religious_family.length > 0) {religious_family = this.state.religious_family} else { religious_family = this.state.relFamList };
@@ -156,16 +174,16 @@ export function filterResults() {
     this.setState({ filterArray });
     if (filterArray.length === 0) {this.setState ({ noresults: "noresults" });}
 
-    console.log(filterArray)
-
   } else {
     let filterArray = this.state.nodeArray;
     this.setState({ filterArray })
   }
+
 };
 
 // HANDLE FORM CHANGE IN FILTER
 export function handleFormChange(event) {
+    this.resetFilter() 
     this.setState({[event.target.name]: event.target.value});
     if (this.state.kind === "People") {
       this.setState ({
@@ -187,7 +205,7 @@ export function handleFormChange(event) {
 
 // HANDLE CHANGES IN FILTER
 export function handleChange(event) {
-    this.setState({
+  this.setState({
       [event.target.name]: event.target.value}
     );
 };
@@ -251,6 +269,22 @@ export function handleFilterCheck(event) {
 export function clearFilters() {
   let filterArray = this.state.nodeArray;
   this.setState({ filterArray })
+  this.setState ({label: ""});
+  this.setState ({nationality: ""});
+  this.setState ({gender: ""});
+  this.setState ({religious_family: ""});
+  this.setState ({christian_tradition: ""});
+  this.setState ({institution_category: ""});
+  this.setState ({institution_subcategory: ""});
+  this.setState ({corporate_entity_category: ""});
+  this.setState ({corporate_entity_subcategory: ""});
+  this.setState ({event_category: ""});
+  this.setState ({event_subcategory: ""});
+  this.setState ({name_western: ""});
+  this.setState ({inst_name_western: ""});
+  this.setState ({province: ""});
+  this.setState ({prefecture: ""});
+  this.setState ({county: ""});
 };
 
 //RESET FILTER AND RELOAD PAGE
@@ -270,6 +304,14 @@ export function resetFilter() {
   this.setState ({affiliation: "All"});
   this.setState ({start_year: ""});
   this.setState ({end_year: ""});
+  this.setState ({relFamIndex: []});
+  this.setState ({affIndex: []});
+  this.setState ({pAffIndex: []});
+  this.setState ({natIndex: []});
+  this.setState ({placeIndex: []});
+  this.setState ({inputValuePAff: ""});
+  this.setState ({inputValueAff: ""});
+  this.setState ({inputValueNat: ""});
 };
 
 export function handleKeyPress(e) {
@@ -366,3 +408,10 @@ export function linkCheck(props, node) {
   )}
   else { return null }
 };
+
+
+// Renames property (key) name of object
+export function renameProperty(obj, oldName, newName) {
+  obj[newName] = obj[oldName];
+  delete obj[oldName];
+}

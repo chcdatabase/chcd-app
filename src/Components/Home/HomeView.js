@@ -8,6 +8,7 @@ import neo4j from "neo4j-driver/lib/browser/neo4j-web";
 import {Helmet} from "react-helmet";
 import HomeStatic from "./HomeStatic.js"
 import Navbar from "../Navbar/Navbar.js";
+import Citation from "../Popups/Citation.js";
 import * as helper from "../Utils/Helpers.js";
 import * as query from "../Utils/Queries.js";
 import translate from "../../Assets/indexes/translate.json"
@@ -23,9 +24,11 @@ class HomeView extends Component {
   super(props);
   this.state = {
     language: "en",
+    cite: "cite hide"
   }
 // BIND UTILITY FUNCTIONS TO THIS CONTEXT ///////////////////////////////////////////////////////////
   this.toggleDisplay = helper.toggleDisplay.bind(this);
+  this.toggleCite = helper.toggleCite.bind(this);
   this.langSwitch = helper.langSwitch.bind(this);
   };
 
@@ -56,8 +59,19 @@ class HomeView extends Component {
       </Helmet>
       <div style={backgroundStyle}>
       <div className="gradient-back text-light bg-opacity-50" >
-        <Navbar home="home" language={this.state.language} langSwitch={this.langSwitch}/>
+        <Navbar
+          home="home"
+          language={this.state.language}
+          langSwitch={this.langSwitch}
+          toggleCite = {this.toggleCite}
+        />
+        <Citation
+          cite={this.state.cite}
+          language={this.state.language}
+          toggleCite = {this.toggleCite}
+        />
         <HomeStatic language={this.state.language} />
+
       </div>
       </div>
     </div>

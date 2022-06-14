@@ -11,6 +11,7 @@ import Popup from "../Popups/Popup.js";
 import NoResults from "../Popups/NoResults.js";
 import NoSend from "../Popups/NoSend.js";
 import Navbar from "../Navbar/Navbar.js";
+import Citation from "../Popups/Citation.js";
 import credentials from "../../credentials.json";
 import * as helper from "../Utils/Helpers.js";
 import * as query from "../Utils/Queries.js";
@@ -27,6 +28,7 @@ class MapView extends Component {
     super(props);
     this.state = {
       language: "en",
+      cite: "cite hide",
       //FILTER INPUTS
       sent_id: "init",
       kind: "People",
@@ -56,10 +58,18 @@ class MapView extends Component {
       // DISPLAY CONTROLS
       popupcontainer: "popupcontainer hide",
       filterDisplay: "filter_container",
-      addinfo: "addinfo hide",
+      addinfo: "addinfo",
+      addpers: "addpers",
+      addinst: "addinst",
+      addevent: "addevent",
+      addcorp: "addcorp",
+      addinfortext: "hide_additional_info",
+      addperstext: "hide_additional_info",
+      addinsttext: "hide_additional_info",
+      addeventtext: "hide_additional_info",
+      addcorptext: "hide_additional_info",
       noresults: "noresults hide",
       nosend: "nosend hide",
-      addinfortext: "additional_info",
       // FORM SELECTS
       instCatsIndex: [],
       eventsCatsIndex: [],
@@ -72,7 +82,7 @@ class MapView extends Component {
       content: "loaded",
       natIsLoading: true,
       //MAP BOUNDS
-      mapBounds: [[54.31,137.28],[18.312,71.63],],
+      mapBounds: [[54.31,137.28],[18.312,71.63],]
     };
 
 //INITIATE NEO4J INSTANCE ///////////////////////////////////////////////////////////////////////////
@@ -100,6 +110,7 @@ class MapView extends Component {
     this.fetchAffIndex = query.fetchAffIndex.bind(this);
     this.fetchNatIndex = query.fetchNatIndex.bind(this);
     this.toggleDisplay = helper.toggleDisplay.bind(this);
+    this.toggleCite = helper.toggleCite.bind(this);
     this.langSwitch = helper.langSwitch.bind(this);
     this.linkCheck = helper.linkCheck.bind(this);
     this.handleChangeData = helper.handleChangeData.bind(this);
@@ -124,7 +135,7 @@ class MapView extends Component {
     if (receivedFamName) {this.setState({ family_name_western: receivedFamName })};
     if (receivedName) {this.setState({ name_western: receivedName })};
     if (receivedId) {this.setState({ sent_id: receivedId })};
-    if (receivedAff) {this.setState({ affiliation: receivedAff })};
+    if (receivedAff) {this.setState({ affiliation: receivedAff }); this.setState({ inputValueAff: receivedAff });};
 
     setTimeout(() => {
       if (this.state.sent_id === "init" && this.state.affiliation === "All" ) {return null}
@@ -150,7 +161,16 @@ class MapView extends Component {
           <html lang={this.state.language} />
           <title>{translate[0]["chcd_name"][this.state.language]} - {translate[0]["map"][this.state.language]}</title>
         </Helmet>
-        <Navbar language={this.state.language} langSwitch={this.langSwitch}/>
+        <Navbar
+          language={this.state.language}
+          langSwitch={this.langSwitch}
+          toggleCite = {this.toggleCite}
+        />
+        <Citation
+          cite={this.state.cite}
+          language={this.state.language}
+          toggleCite = {this.toggleCite}
+        />
         <NoSend
           nosend={this.state.nosend}
           language={this.state.language}

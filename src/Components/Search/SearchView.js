@@ -11,6 +11,7 @@ import SearchResults from "./SearchResults.js"
 import Popup from "../Popups/Popup.js";
 import NoResults from "../Popups/NoResults.js";
 import Navbar from "../Navbar/Navbar.js";
+import Citation from "../Popups/Citation.js";
 import credentials from "../../credentials.json";
 import * as helper from "../Utils/Helpers.js";
 import * as query from "../Utils/Queries.js";
@@ -27,6 +28,7 @@ class SearchView extends Component {
     super(props);
     this.state = {
       language: "en",
+      cite: "cite hide",
       //FILTER INPUTS
       search: "",
       searchSet: "",
@@ -75,9 +77,17 @@ class SearchView extends Component {
       // DISPLAY CONTROLS
       popupcontainer: "popupcontainer hide",
       filterDisplay: "filter_container",
-      addinfo: "addinfo hide",
+      addinfo: "addinfo",
+      addpers: "addpers",
+      addinst: "addinst",
+      addevent: "addevent",
+      addcorp: "addcorp",
+      addinfortext: "hide_additional_info",
+      addperstext: "hide_additional_info",
+      addinsttext: "hide_additional_info",
+      addeventtext: "hide_additional_info",
+      addcorptext: "hide_additional_info",
       noresults: "noresults hide",
-      addinfortext: "additional_info",
       // FORM SELECTS
       instCatsIndex: [],
       relFamIndex: [],
@@ -109,11 +119,13 @@ class SearchView extends Component {
     this.handleFormChange = helper.handleFormChange.bind(this);
     this.fetchMapIndexes = query.fetchMapIndexes.bind(this);
     this.toggleDisplay = helper.toggleDisplay.bind(this);
+    this.toggleCite = helper.toggleCite.bind(this);
     this.handleKeyPress = helper.handleKeyPress.bind(this);
     this.filterResults = helper.filterResults.bind(this);
     this.clearFilters = helper.clearFilters.bind(this);
     this.langSwitch = helper.langSwitch.bind(this);
     this.linkCheck = helper.linkCheck.bind(this);
+    this.reFilterSet = helper.reFilterSet.bind(this);
   };
 
 //RUN ON COMPONENT MOUNT /////////////////////////////////////////////////////////////////////////
@@ -132,7 +144,16 @@ class SearchView extends Component {
           <html lang={this.state.language} />
           <title>{translate[0]["chcd_name"][this.state.language]} - {translate[0]["explore"][this.state.language]}</title>
         </Helmet>
-        <Navbar language={this.state.language} langSwitch={this.langSwitch}/>
+        <Navbar
+          language={this.state.language}
+          langSwitch={this.langSwitch}
+          toggleCite = {this.toggleCite}
+        />
+        <Citation
+          cite={this.state.cite}
+          language={this.state.language}
+          toggleCite = {this.toggleCite}
+        />
         <NoResults
           noresults={this.state.noresults}
           language={this.state.language} l
@@ -158,6 +179,7 @@ class SearchView extends Component {
           breadCrumbChainer={this.breadCrumbChainer}
           selectSwitchInitial={this.selectSwitchInitial}
           linkCheck={this.linkCheck}
+          reFilterSet={this.reFilterSet}
         />
         <Popup
           {...this.state}

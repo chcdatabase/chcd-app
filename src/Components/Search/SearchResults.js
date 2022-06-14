@@ -23,6 +23,7 @@ function SearchResults(props) {
       return x.key === e.key
     }) === i;
   });
+  console.log(unfiltArray)
 
   //CONSTRUCT PAGINATION
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,15 +34,18 @@ function SearchResults(props) {
   // HANDLE PAGE CHANGE
   const handlePageChange = pageNumber => {
     setCurrentPage(pageNumber);
+    props.reFilterSet();
   }
 
   //CONSTRUCT PAGES
   let uniqueArray;
   if (currentPage === 1) {uniqueArray = unfiltArray.slice(0, recordPerPage)}
+  else if (props.refilter === "yes") {uniqueArray = unfiltArray.slice(0, recordPerPage)}
   else {
     let start = (currentPage - 1) * recordPerPage
     let end = currentPage * recordPerPage
-    uniqueArray = unfiltArray.slice(start, end)};
+    uniqueArray = unfiltArray.slice(start, end)
+  };
 
   //CONSTRUCT SEARCH BAR
   function searchField(props) { return (

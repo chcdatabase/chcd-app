@@ -32,6 +32,18 @@
   "tw": "文檔"
   },
 
+"citation": {
+  "en": "Citation",
+  "zh": "引文",
+  "tw": "引文"
+  },
+
+"accessed": {
+  "en": "Accessed",
+  "zh": "已访问",
+  "tw": "已訪問"
+  },
+
 "download_data": {
   "en": "Download Data",
   "zh": "下载数据",
@@ -85,9 +97,9 @@
   },
 
 "explore": {
-  "en": "Explore",
-  "zh": "探索",
-  "tw": "探索"
+  "en": "Search",
+  "zh": "搜索",
+  "tw": "搜索"
   },
 
 "map": {
@@ -584,15 +596,33 @@
   "tw": "名稱"
 },
 
+"information": {
+  "en": "Information",
+  "zh": "信息",
+  "tw": "信息"
+},
+
+"additional_info_title": {
+  "en": "Basic Information",
+  "zh": "基本信息",
+  "tw": "基本信息"
+},
+
 "additional_info": {
-  "en": "Show Additional Information",
-  "zh": "显示更多信息",
-  "tw": "顯示更多信息"
+  "en": "Show",
+  "zh": "显示",
+  "tw": "显示"
 },
 "hide_additional_info": {
-  "en": "Hide Additional Information",
-  "zh": "隐藏更多信息",
-  "tw": "隱藏更多信息"
+  "en": "Hide",
+  "zh": "隐藏",
+  "tw": "隱藏"
+},
+
+"western_name" : {
+  "en": "Western Name",
+  "zh": "西方名字",
+  "tw": "西方名字"
 },
 
 "alternate_western_names" : {

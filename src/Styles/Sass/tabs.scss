@@ -1,0 +1,11 @@
+@import "mixins";
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    background-color: $red;
+    color: $white;
+    font-weight: 300;
+}
+
+.nav-pills .nav-link {
+    color: $red;
+}
