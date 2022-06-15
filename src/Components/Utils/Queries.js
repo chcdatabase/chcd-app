@@ -90,9 +90,9 @@ export function fetchResults() {
 
     let personNameFilter;
     if (this.state.family_name_western === "" && this.state.given_name_western === "") {personNameFilter = ""}
-    else if (this.state.family_name_western !== "" && this.state.given_name_western === "") {personNameFilter = '(toLower(n.family_name_western)=~ "(?i)' + this.state.family_name_western.replace(/[\(\)\[\]\{\}\.\\\/\-\_\^\~\`\|\^\*\^\"\"/'/']/g, " ") + '" OR toLower(n.family_name_western)=~ "(?i)' + this.state.family_name_western.replace(/[\(\)\[\]\{\}\.\\\/\-\_\^\~\`\|\^\*\^\"\"/'/']/g, " ") + '.*")'}
-    else if (this.state.family_name_western === "" && this.state.given_name_western !== "") {personNameFilter = '(toLower(n.given_name_western)=~ "(?i)' + this.state.given_name_western.replace(/[\(\)\[\]\{\}\.\\\/\-\_\^\~\`\|\^\*\^\"\"/'/']/g, " ") + '" OR toLower(n.given_name_western)=~ "(?i)' + this.state.given_name_western.replace(/[\(\)\[\]\{\}\.\\\/\-\_\^\~\`\|\^\*\^\"\"/'/']/g, " ") + '.*")'}
-    else if (this.state.family_name_western !== "" && this.state.given_name_western !== "") {personNameFilter = '(toLower(n.family_name_western)=~ "(?i)' + this.state.family_name_western.replace(/[\(\)\[\]\{\}\.\\\/\-\_\^\~\`\|\^\*\^\"\"/'/']/g, " ") + '" OR toLower(n.family_name_western)=~ "(?i)' + this.state.family_name_western.replace(/[\(\)\[\]\{\}\.\\\/\-\_\^\~\`\|\^\*\^\"\"/'/']/g, " ") + '.*") AND (toLower(n.given_name_western)=~ "(?i)' + this.state.given_name_western.replace(/[\(\)\[\]\{\}\.\\\/\-\_\^\~\`\|\^\*\^\"\"/'/']/g, " ") + '" OR toLower(n.given_name_western)=~ "(?i)' + this.state.given_name_western.replace(/[\(\)\[\]\{\}\.\\\/\-\_\^\~\`\|\^\*\^\"\"/'/']/g, " ") + '.*")'}
+    else if (this.state.family_name_western !== "" && this.state.given_name_western === "") {personNameFilter = '(toLower(n.family_name_western)=~ "(?i)' + this.state.family_name_western.replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]").replace(".", "\\.") + '" OR toLower(n.family_name_western)=~ "(?i)' + this.state.family_name_western.replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]").replace(".", "\\.") + '.*")'}
+    else if (this.state.family_name_western === "" && this.state.given_name_western !== "") {personNameFilter = '(toLower(n.given_name_western)=~ "(?i)' + this.state.given_name_western.replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]").replace(".", "\\.") + '" OR toLower(n.given_name_western)=~ "(?i)' + this.state.given_name_western.replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]").replace(".", "\\.") + '.*")'}
+    else if (this.state.family_name_western !== "" && this.state.given_name_western !== "") {personNameFilter = '(toLower(n.family_name_western)=~ "(?i)' + this.state.family_name_western.replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]").replace(".", "\\.") + '" OR toLower(n.family_name_western)=~ "(?i)' + this.state.family_name_western.replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]").replace(".", "\\.") + '.*") AND (toLower(n.given_name_western)=~ "(?i)' + this.state.given_name_western.replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]").replace(".", "\\.") + '" OR toLower(n.given_name_western)=~ "(?i)' + this.state.given_name_western.replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]").replace(".", "\\.") + '.*")'}
 
     let personNameFilter2;
     if (this.state.sent_id !== "init" && this.state.kind === "People") {personNameFilter2 = " AND " + personNameFilter }
@@ -101,7 +101,7 @@ export function fetchResults() {
     else {personNameFilter2 = " WHERE " + personNameFilter }
 
     let nameFilter2;
-    if (this.state.name_western !== "") {nameFilter2 = 'AND (toLower(r.name_western)= "(?i)' + this.state.name_western.replace(/[\(\)\[\]\{\}\.\\\/\-\_\^\~\`\|\^\*\^\"\"/'/']/g, " ") + '" OR toLower(r.name_western)=~ "(?i)' + this.state.name_western.replace(/[\(\)\[\]\{\}\.\\\/\-\_\^\~\`\|\^\*\^\"\"/'/']/g, " ") + '.*")'}
+    if (this.state.name_western !== "") {nameFilter2 = 'AND (toLower(r.name_western)= "(?i)' + this.state.name_western.replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]").replace(".", "\\.") + '" OR toLower(r.name_western)=~ "(?i)' + this.state.name_western.replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]").replace(".", "\\.") + '.*")'}
     else { nameFilter2 = ""};
 
     let icatFilter; if (this.state.institution_category === "All") { icatFilter = ""} else if (this.state.institution_category !== "All" || this.state.institution_category !== "" ) {icatFilter = 'institution_category: "' + this.state.institution_category + '"'} else { icatFilter = ""};
@@ -468,7 +468,7 @@ export function selectSwitchInitial(event) {
 //QUERY TO FETCH LISTS FOR NETWORK SELECTS
 export function fetchNetworkIndexes() {
     if (this.state.inputValue !== '') {
-      let value = this.state.inputValue.replace(/[\(\)\[\]\{\}\.\\\/\-\_\^\~\`\|\^\*\^\"\"/'/']/g, " ");;
+      let value = this.state.inputValue.replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]").replace(".", "\\.");;
       let nodeType = this.state.selectedOption
       if (nodeType === "Person") {
         const session = this.driver.session();
@@ -505,7 +505,7 @@ return (this.state.netPersonIndex)
 //PERSON AFFILIATION INDEX
 export function fetchPAffIndex() {
   if (this.state.inputValuePAff !== '') {
-    let value = this.state.inputValuePAff.replace(/[\(\)\[\]\{\}\.\\\/\-\_\^\~\`\|\^\*\^\"\"/'/']/g, " ");;
+    let value = this.state.inputValuePAff.replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]").replace(".", "\\.");;
     const session5 = this.driver.session();
     const query5 = `
       CALL db.index.fulltext.queryNodes("corpPropIndex", "`+ value +`~") YIELD node
@@ -528,7 +528,7 @@ export function fetchPAffIndex() {
 //INSTITUTION AFFILIATION INDEX
 export function fetchAffIndex() {
   if (this.state.inputValueAff !== '') {
-    let value = this.state.inputValueAff.replace(/[\(\)\[\]\{\}\.\\\/\-\_\^\~\`\|\^\*\^\"\"/'/']/g, " ");;
+    let value = this.state.inputValueAff.replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]").replace(".", "\\.");;
     const session5 = this.driver.session();
     const query5 = `
       CALL db.index.fulltext.queryNodes("corpPropIndex", "`+ value +`~") YIELD node
@@ -552,7 +552,7 @@ export function fetchAffIndex() {
 //PERSON NATIONALITY INDEX
 export function fetchNatIndex() {
   if (this.state.inputValueNat !== '') {
-    let value = this.state.inputValueNat.replace(/[\(\)\[\]\{\}\.\\\/\-\_\^\~\`\|\^\*\^\"\"/'/']/g, " ");;
+    let value = this.state.inputValueNat.replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]").replace(".", "\\.");;
     const session5 = this.driver.session();
     const query5 = `
       CALL db.index.fulltext.queryNodes("allPropIndex", "`+ value +`~") YIELD node

@@ -18,6 +18,7 @@
     "d3": "^5.16.0",
     "d3-force-boundary": "0.0.2",
     "d3-scale-chromatic": "^3.0.0",
+    "env-cmd": "^10.1.0",
     "git": "^0.1.5",
     "heatmap.js": "^2.0.5",
     "leaflet": "^1.7.1",
