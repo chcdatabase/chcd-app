@@ -1,4 +1,16 @@
-Options -MultiViews
 RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^ index.html [QSA,L]
+    RewriteCond %{HTTPS} off
+    RewriteCond %{REQUEST_URI} ^.$
+    RewriteRule ^(.*)$ https://data.chcdatabase.com/ [NC,L,R=301]
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-l
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [NC,L,R=301]
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-l
+    RewriteCond %{HTTPS} on
+    RewriteRule ^(.*)$ /index.html [NC,L,QSA]
