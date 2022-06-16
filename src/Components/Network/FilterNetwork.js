@@ -120,7 +120,7 @@ if (props.selectedOption !== "") {return (
    <Form.Group className="mb-1">
      <Row><Col>
        <Form.Label className="filter_label mb-0" data-tip data-for="degree">{translate[0]["degrees_of_connection"][props.language]}</Form.Label>
-          <ReactTooltip id="degree" place="right" effect="solid">{translate[0]["degree"][props.language]}</ReactTooltip>
+          <ReactTooltip id="degree" place="right" effect="solid">{translate[0]["degree_note"][props.language]}</ReactTooltip>
        <Form.Select className="g-2" name="degree" aria-label={translate[0]["degrees_of_connection"][props.language]} value={props.degree} onChange={(i) =>  props.handleChange(i)}>
          <option value="1">1</option>
          <option value="2">2</option>

@@ -361,7 +361,7 @@ export function fetchNetworkResults() {
     MATCH (y)-[k]-(j) WHERE id(y)=`+ nodeIdFilter +`
         CALL apoc.path.subgraphAll(y, {
                 maxLevel:`+degreeFilter+`,
-                labelFilter:"+Person|+Institution|-CorporateEntity|-Event|-Village|-Township|-County|-Prefecture|-Province",
+                labelFilter:"`+ peopleFilter +`Person|`+ instFilter +`Institution|`+ corpFilter +`CorporateEntity|`+ eventFilter +`Event|-Village|-Township|-County|-Prefecture|-Province",
                 blacklistNodes: endNodes
               })
         YIELD nodes, relationships
