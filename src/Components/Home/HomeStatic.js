@@ -41,19 +41,19 @@ function HomeStatic(props) {
             <p>{translate[0]["home_subheadline"][props.language]}</p>
           </Col>
           <Col lg={4}>
-            <a href="https://chcdatabase.com/" target="_blank">
+            <a href="https://chcdatabase.com/#about" target="_blank">
               <Card className={cardStyle}><Card.Body>
                 <div className="float-start"><FaReadme size='2em' /></div>
                 <div className="float-start ms-2 pt-1" >{translate[0]["about_the_project"][props.language]}</div>
               </Card.Body></Card>
             </a>
-            <a href="https://chcdatabase.github.io/data-collection/" target="_blank">
+            <a href="https://chcdatabase.github.io/data-documentation/" target="_blank">
               <Card className={cardStyle}><Card.Body>
                 <div className="float-start"><HiDocumentText size='2em' /></div>
                 <div className="float-start ms-2 pt-1" >{translate[0]["documentation"][props.language]}</div>
               </Card.Body></Card>
             </a>
-            <a href="https://github.com/chcdatabase/data-collection/" target="_blank">
+            <a href="https://github.com/chcdatabase/data" target="_blank">
               <Card className={cardStyle}><Card.Body>
                 <div className="float-start"><MdCloudDownload size='2em' /></div>
                 <div className="float-start ms-2 pt-1" >{translate[0]["download_data"][props.language]}</div>
