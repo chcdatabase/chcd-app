@@ -220,6 +220,7 @@ const loadNatIndex = ( inputValueNat: string, callback: (options: props.natIndex
           </Row>
         </div>
 
+
         {/* FILTER TOGGLE SELECT ////////////////////////////////////////////////////////////////// */}
         <div className="filter_button_container">
           <div onClick={() =>  props.filterHide()} className="filter_button" data-tip data-for="toggle">
@@ -383,10 +384,12 @@ const loadNatIndex = ( inputValueNat: string, callback: (options: props.natIndex
           </div>
 
           {/* BUTTONS SELECT ////////////////////////////////////////////////////////////////// */}
+          <div className="filter-buttons">
           <Row className="mb-1">
              <Col><Button className="mb-1 col-12" variant="danger" onClick={() =>  props.fetchResults()}>{translate[0]["submit"][props.language]}</Button></Col>
              <Col><Button className="mb-1 col-12" variant="outline-danger" onClick={() =>  props.resetFilter()}>{translate[0]["clear-all"][props.language]}</Button></Col>
           </Row>
+          </div>
 
           {/* FILTER TOGGLE SELECT ////////////////////////////////////////////////////////////////// */}
           <div className="filter_button_container">

@@ -312,6 +312,8 @@ export function resetFilter() {
   this.setState ({inputValuePAff: ""});
   this.setState ({inputValueAff: ""});
   this.setState ({inputValueNat: ""});
+  this.setState({nodeArray: []});
+
 };
 
 export function handleKeyPress(e) {
