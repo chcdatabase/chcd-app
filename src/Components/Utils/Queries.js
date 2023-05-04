@@ -127,7 +127,7 @@ export function fetchResults() {
 
 
     let timeFilter;
-      if (this.state.start_year !== "" && this.state.end_year !== "") {timeFilter = ' WHERE ((t.start_year <= ' + this.state.end_year + ') AND (t.end_year >=' + this.state.start_year + ')) OR t.start_year IS NULL'}
+      if (this.state.start_year !== "" && this.state.end_year !== "") {timeFilter = ' WHERE ((t.start_year <= ' + this.state.end_year + ') AND (t.end_year >=' + this.state.start_year + '))'}
       else if (this.state.start_year === "" && this.state.end_year !== "") {timeFilter = ' WHERE (t.start_year <= ' + this.state.end_year + ') OR t.start_year IS NULL'}
       else if (this.state.start_year !== "" && this.state.end_year === "") {timeFilter = ' WHERE (t.start_year >= ' + this.state.start_year + ') OR t.start_year IS NULL'}
       else { timeFilter = ""};

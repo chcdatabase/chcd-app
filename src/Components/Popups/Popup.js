@@ -37,7 +37,7 @@ function Popup(props) {
 
         let rel_name;
            if ((props.language == "zh" || props.language == "tw") && node.node2.chinese_family_name_hanzi) { rel_name = `${node.node2.chinese_family_name_hanzi} ${node.node2.chinese_given_name_hanzi}` }
-           else { rel_name = `${node.node2.given_name_western} ${node.node2.family_name_western}`  }
+           else { rel_name = `${node.node2.given_name_western} ${node.node2.family_name_western}` }
 
         let rel;
           if (node.rel.rel_type) { rel = node.rel.rel_type }
@@ -92,7 +92,17 @@ function Popup(props) {
 
 // INSTITUTION RELATIONSHIPS CONSTRUCTOR ///////////////////////////////////////////////////////////////////////////////
   const getInstRels = () => {
-    const instRels = props.selectArray.filter(type => type.rel_kind === "Institution")
+    const instRels = props.selectArray.filter(type => type.rel_kind === "Institution").sort((a, b) => {
+      if (a.rel.start_year && b.rel.start_year) {
+        return a.rel.start_year - b.rel.start_year;
+      } else if (a.rel.start_year) {
+        return -1;
+      } else if (b.rel.start_year) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
     if (instRels.length > 0) {
     const instList = instRels.map(function(node) {
 
@@ -327,6 +337,11 @@ function Popup(props) {
         let wes_name;
           if (info.select_node.given_name_western) {wes_name = `${info.select_node.given_name_western} ${info.select_node.family_name_western}`}
           else if (info.select_node.name_western)  { wes_name = info.select_node.name_western };
+
+        //Set Alternative Western Name
+        let alt_wes_name;
+          if (info.select_node.alternative_name_western) {alt_wes_name = `${info.select_node.alternative_name_western} ${info.select_node.alternative_name_western}`}
+          else { alt_wes_name = translate[0]["n_a"][props.language] };
 
         //Set Hanzi Name
         let hanzi_name;
@@ -604,6 +619,13 @@ function Popup(props) {
                    <Row>
                      <Col className="text-left">{translate[0]["western_name"][props.language]}</Col>
                      <Col className="text-left col-9">{wes_name}</Col>
+                    </Row>
+                  </div></li></ul>
+
+                  <ul className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1"><li className="list-group-item pt-0 pb-0 border-0"><div className="card-body px-0 p-1 border-0">
+                   <Row>
+                     <Col className="text-left">{translate[0]["alternate_western_names"][props.language]}</Col>
+                     <Col className="text-left col-9">{alt_wes_name}</Col>
                     </Row>
                   </div></li></ul>
 
