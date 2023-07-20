@@ -3,21 +3,36 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import { BsX } from 'react-icons/bs'
-import { Link } from 'react-router-dom'
-import { Row, Col, Button } from 'react-bootstrap';
-import { FaMapMarkedAlt } from 'react-icons/fa'
-import { BiNetworkChart } from 'react-icons/bi'
+import { Row, Col, Button, Card } from 'react-bootstrap';
+import { FaRegFileExcel, FaLink, FaQuoteRight } from 'react-icons/fa'
+import { BiDownload } from 'react-icons/bi'
 import translate from "../../Assets/indexes/translate.json"
 import nationality from "../../Assets/indexes/nationality.json"
 import family_trans from "../../Assets/indexes/religious_family.json"
 import cat_trans from "../../Assets/indexes/categories.json"
 import relationships from "../../Assets/indexes/relationships.json"
+import CsvDownloadButton from 'react-json-to-csv'
+import { ButtonExportExcel } from '@alckor127/react-button-export-excel'
+import ReactTooltip from "react-tooltip"
+import { useAlert } from 'react-alert'
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // COMPONENT ////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function Popup(props) {
+
+const alert = useAlert()
+const print = props.printArray;
+const basic = props.basicArray;
+const all = basic.concat(print);
+const printPers = print.filter(i => i.end_type === "Person");
+const printInst = print.filter(i => i.end_type === "Institution");
+const printCorp = print.filter(i => i.end_type === "CorporateEntity");
+const printEvent = print.filter(i => i.end_type === "Event");
+
+
 
 // PEOPLE RELATIONSHIPS CONSTRUCTOR ///////////////////////////////////////////////////////////////////////////////
   const getPersRels = () => {
@@ -36,7 +51,8 @@ function Popup(props) {
         let note = noteCheck(node)
 
         let rel_name;
-           if ((props.language == "zh" || props.language == "tw") && node.node2.chinese_family_name_hanzi) { rel_name = `${node.node2.chinese_family_name_hanzi} ${node.node2.chinese_given_name_hanzi}` }
+           if ((props.language == "zh" || props.language == "tw") && node.node2.chinese_family_name_hanzi && node.node2.chinese_given_name_hanzi) { rel_name = `${node.node2.chinese_family_name_hanzi} ${node.node2.chinese_given_name_hanzi}` }
+           if ((props.language == "zh" || props.language == "tw") && node.node2.chinese_family_name_hanzi) { rel_name = `${node.node2.chinese_family_name_hanzi} ${node.node2.given_name_western}` }
            else { rel_name = `${node.node2.given_name_western} ${node.node2.family_name_western}` }
 
         let rel;
@@ -70,12 +86,16 @@ function Popup(props) {
     })
       return (
           <div>
-          <div>
+          <div className="pb-3">
           <h2 className="popup_section_head mt-2">{translate[0]["pers_relationships"][props.language]}
           <Button className="btn btn-sm btn-danger mx-2" data-prop="addpers" onClick={(i) =>  props.toggleDisplay(i)} role="button" >{translate[0][props.addperstext][props.language]}</Button>
+          <CsvDownloadButton delimiter="*" data={printPers} style={{borderWidth:'0px', width:'0px', padding:'0px'}}> 
+            <BiDownload className="download-icons" data-tip data-for="pers_rels"/> 
+            <ReactTooltip id="pers_rels" place="bottom" effect="solid">{translate[0]["download_pers_rels"][props.language]}</ReactTooltip>
+          </CsvDownloadButton>
           </h2>
-           <div className={props.addpers}>
-            <div className="popup_card_header card-header">
+           <div className={props.addpers + ' card'}>
+            <div className="popup_card_header card-header bg-light">
               <Row>
                 <Col className="text-left">{translate[0]["relationship"][props.language]}</Col>
                 <Col className="text-center">{translate[0]["name"][props.language]}</Col>
@@ -151,11 +171,15 @@ function Popup(props) {
     })
       return (
           <div>
-          <div>
+          <div className="pb-3">
           <h2 className="popup_section_head mt-2">{translate[0]["inst_relationships"][props.language]}
           <Button className="btn btn-sm btn-danger mx-2" data-prop="addinst" onClick={(i) =>  props.toggleDisplay(i)} role="button" >{translate[0][props.addinsttext][props.language]}</Button>
+          <CsvDownloadButton delimiter="*" data={printInst} style={{borderWidth:'0px', width:'0px', padding:'0px'}}> 
+            <BiDownload className="download-icons" data-tip data-for="inst_rels"/> 
+            <ReactTooltip id="inst_rels" place="bottom" effect="solid">{translate[0]["download_inst_rels"][props.language]}</ReactTooltip>
+          </CsvDownloadButton>
           </h2>
-           <div className={props.addinst}>
+           <div className={props.addinst + ' card'}>
             <div className="popup_card_header card-header">
               <Row>
                 <Col className="text-left">{translate[0]["relationship"][props.language]}</Col>
@@ -222,11 +246,15 @@ function Popup(props) {
     })
     return (
         <div>
-        <div>
+        <div className="pb-3">
         <h2 className="popup_section_head mt-2">{translate[0]["corp_relationships"][props.language]}
         <Button className="btn btn-sm btn-danger mx-2" data-prop="addcorp" onClick={(i) =>  props.toggleDisplay(i)} role="button" >{translate[0][props.addcorptext][props.language]}</Button>
+        <CsvDownloadButton delimiter="*" data={printCorp} style={{borderWidth:'0px', width:'0px', padding:'0px'}}> 
+          <BiDownload className="download-icons" data-tip data-for="corp_rels"/> 
+          <ReactTooltip id="corp_rels" place="bottom" effect="solid">{translate[0]["download_corp_rels"][props.language]}</ReactTooltip>
+        </CsvDownloadButton>
         </h2>
-         <div className={props.addcorp}>
+         <div className={props.addcorp + ' card'}>
           <div className="popup_card_header card-header">
             <Row>
               <Col className="text-left">{translate[0]["relationship"][props.language]}</Col>
@@ -293,11 +321,15 @@ function Popup(props) {
   })
     return (
         <div>
-        <div>
+        <div className="pb-3">
         <h2 className="popup_section_head mt-2">{translate[0]["event_relationships"][props.language]}
         <Button className="btn btn-sm btn-danger mx-2" data-prop="addevent" onClick={(i) =>  props.toggleDisplay(i)} role="button" >{translate[0][props.addeventtext][props.language]}</Button>
+        <CsvDownloadButton delimiter="*" data={printEvent} style={{borderWidth:'0px', width:'0px', padding:'0px'}}> 
+          <BiDownload className="download-icons" data-tip data-for="event_rels"/> 
+          <ReactTooltip id="event_rels" place="bottom" effect="solid">{translate[0]["download_event_rels"][props.language]}</ReactTooltip>
+          </CsvDownloadButton>
         </h2>
-         <div className={props.addevent}>
+         <div className={props.addevent + ' card'}>
           <div className="popup_card_header card-header">
             <Row>
               <Col className="text-left">{translate[0]["relationship"][props.language]}</Col>
@@ -331,12 +363,17 @@ function Popup(props) {
           else if (info.select_node.name_western) {
             if ((props.language == "zh" || props.language == "tw") && info.select_node.chinese_name_hanzi) { name = info.select_node.chinese_name_hanzi }
             else { name = info.select_node.name_western }
+          }
+          else if (info.select_node.name_wes) {
+            if (props.language == "zh" || props.language == "tw") { name = info.select_node.name_zh }
+            else { name = info.select_node.name_wes }
           };
 
         //Set Western Name
         let wes_name;
           if (info.select_node.given_name_western) {wes_name = `${info.select_node.given_name_western} ${info.select_node.family_name_western}`}
-          else if (info.select_node.name_western)  { wes_name = info.select_node.name_western };
+          else if (info.select_node.name_western)  { wes_name = info.select_node.name_western }
+          else if (info.select_node.name_wes)  { wes_name = info.select_node.name_wes };
 
         //Set Alternative Western Name
         let alt_wes_name;
@@ -349,6 +386,7 @@ function Popup(props) {
           else if (info.select_node.chinese_family_name_hanzi) {hanzi_name = info.select_node.chinese_family_name_hanzi}
           else if (info.select_node.chinese_given_name_hanzi) {hanzi_name = info.select_node.chinese_given_name_hanzi}
           else if (info.select_node.chinese_name_hanzi) { hanzi_name = info.select_node.chinese_name_hanzi }
+          else if (info.select_node.name_zh) { hanzi_name = info.select_node.name_zh }
           else { hanzi_name = translate[0]["n_a"][props.language] }
 
         //Set Romanized Name
@@ -356,7 +394,7 @@ function Popup(props) {
           if (info.select_node.chinese_family_name_romanized && info.select_node.chinese_given_name_romanized) {rom_name = `${info.select_node.chinese_family_name_romanized} ${info.select_node.chinese_given_name_romanized}`}
           else if (info.select_node.chinese_family_name_romanized) {rom_name = info.select_node.chinese_family_name_romanized}
           else if (info.select_node.chinese_given_name_romanized) {rom_name = info.select_node.chinese_given_name_romanized}
-          else if (info.select_node.chinese_name_romanized) { rom_name = info.select_node.chinese_name_romanized }
+          else if (info.select_node.name_rom) { rom_name = info.select_node.name_rom }
           else { rom_name = translate[0]["n_a"][props.language] }
 
         //Set Gender
@@ -436,6 +474,9 @@ function Popup(props) {
            if (cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {cat = check}
            else {cat = cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
            }
+         else if (info.select_node.name_wes) {
+            cat = translate[0]["geography"][props.language] 
+          }
          else {cat = translate[0]["n_a"][props.language] }
 
         //Set Subcategory
@@ -455,6 +496,11 @@ function Popup(props) {
            if (cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {subcat = check}
            else {subcat = cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
            }
+         else if (info.select_node.name_wes) {
+          let check = info.select_kind;
+          let string = check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()
+           subcat = translate[0][string][props.language] 
+           }
          else {subcat = translate[0]["n_a"][props.language] }
 
         //Set Note
@@ -472,7 +518,7 @@ function Popup(props) {
 
          const selectNode = Object.entries(info.select_node)
 
-         const filter = ['id', 'given_name_western', 'family_name_western', 'name_western', 'chinese_family_name_hanzi', 'chinese_given_name_hanzi', 'chinese_name_hanzi', 'chinese_family_name_romanized', 'chinese_given_name_romanized', 'chinese_name_romanized', 'alternative_name_western', 'alternative_chinese_name_hanzi', 'alternative_chinese_name_romanized', 'notes', 'source', 'gender', 'nationality', 'birth_day', 'birth_month', 'birth_year', 'birth_place', 'death_day', 'death_month', 'death_year', 'death_place', 'christian_tradition', 'religious_family', 'corporate_entity_category', 'institution_category', 'event_category', 'corporate_entity_subcategory', 'institution_subcategory', 'event_subcategory'];
+         const filter = ['id', 'name_wes','name_rom','name_zh','given_name_western', 'family_name_western', 'name_western', 'chinese_family_name_hanzi', 'chinese_given_name_hanzi', 'chinese_name_hanzi', 'chinese_family_name_romanized', 'chinese_given_name_romanized', 'chinese_name_romanized', 'alternative_name_western', 'alternative_chinese_name_hanzi', 'alternative_chinese_name_romanized', 'notes', 'source', 'gender', 'nationality', 'birth_day', 'birth_month', 'birth_year', 'birth_place', 'death_day', 'death_month', 'death_year', 'death_place', 'christian_tradition', 'religious_family', 'corporate_entity_category', 'institution_category', 'event_category', 'corporate_entity_subcategory', 'institution_subcategory', 'event_subcategory'];
 
          const staticInfo = Array.from(selectNode).filter(x => !filter.includes(x[0])).map(function(node) {
            let key;
@@ -554,6 +600,25 @@ function Popup(props) {
                </div>
              )
            }
+           else if (info.select_node.name_wes) {
+            return (
+              <div>
+                 <ul className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1"><li className="list-group-item pt-0 pb-0 border-0"><div className="card-body px-0 p-1 border-0">
+                  <Row>
+                    <Col className="text-left">{translate[0]["category"][props.language]}</Col>
+                    <Col className="text-left col-9">{cat}</Col>
+                   </Row>
+                 </div></li></ul>
+
+                 <ul className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1"><li className="list-group-item pt-0 pb-0 border-0"><div className="card-body px-0 p-1 border-0">
+                   <Row>
+                     <Col className="text-left">{translate[0]["subcategory"][props.language]}</Col>
+                     <Col className="text-left col-9">{subcat}</Col>
+                    </Row>
+                  </div></li></ul>
+                </div>
+            )
+          }
            else {
              return (
                <div>
@@ -590,13 +655,43 @@ function Popup(props) {
         };
 
          return (
-           <div>
+          <div className="pb-3">
              <Row><Col>
                <h1 className="popup_title" >{name} </h1>
                {props.linkCheck(props, info)}
+               <ButtonExportExcel data={all} filename='export'>
+                  <FaRegFileExcel className="link-icons" data-tip data-for="all_rels"/> 
+                  <ReactTooltip id="all_rels" place="bottom" effect="solid">{translate[0]["download_all_data"][props.language]}</ReactTooltip>
+              </ButtonExportExcel>
+              <FaLink 
+                className="ms-3 link-icons" 
+                data-tip data-for="permalink"
+                onClick={() => { 
+                  const message = translate[0]["permalink_copied"][props.language];
+                  navigator.clipboard.writeText(window.location.origin + '/search?nodeSelect='+ props.nodeSelect);
+                  alert.show(message);
+                }}
+                />
+                <ReactTooltip id="permalink" place="bottom" effect="solid">{translate[0]["permalink"][props.language]}</ReactTooltip>
+                <FaQuoteRight 
+                  className="link-icons" 
+                  data-tip data-for="cite"
+                  onClick={() => { 
+                    const link = window.location.origin + '/search?nodeSelect='+ props.nodeSelect;
+                    const title = name;
+                    const message = props.getCitation(title, link);
+                    const header = translate[0]["citation"][props.language]
+                    alert.show(message, { closeCopy: 'X', title: header });
+                  }}
+                  />
+                <ReactTooltip id="cite" place="bottom" effect="solid">{translate[0]["citation"][props.language]}</ReactTooltip>
             </Col></Row>
             <h2 className="popup_section_head mt-2">{translate[0]["additional_info_title"][props.language]}
             <Button className="btn btn-sm btn-danger mx-2" data-prop="addinfo" onClick={(i) =>  props.toggleDisplay(i)} role="button" >{translate[0][props.addinfortext][props.language]}</Button>
+            <CsvDownloadButton delimiter="*" data={basic} style={{borderWidth:'0px', width:'0px', padding:'0px'}}> 
+              <BiDownload className="download-icons" data-tip data-for="basic"/> 
+              <ReactTooltip id="basic" place="bottom" effect="solid">{translate[0]["download_basic_data"][props.language]}</ReactTooltip>
+            </CsvDownloadButton>
             </h2>
              <div className={`animate__animated animate__fadeInDown `+props.addinfo}>
                  <div className="card mt-2">
@@ -673,18 +768,23 @@ function Popup(props) {
        if (props.selectArray.length > 0) {
          const info = props.selectArray[0]
          if (info.select_node.given_name_western) {
-           if ((props.language == "zh" || props.language == "tw") && info.select_node.chinese_given_name_hanzi) {return (`${info.select_node.chinese_family_name_hanzi}${info.select_node.chinese_given_name_hanzi} `)}
-           else {return (`${info.select_node.family_name_western}, ${info.select_node.given_name_western} `)}
+           if ((props.language == "zh" || props.language == "tw") && info.select_node.chinese_given_name_hanzi && info.select_node.chinese_family_name_hanzi) {return (<span className="ms-1"><span className="small">`{info.select_node.chinese_family_name_hanzi}, {info.select_node.chinese_given_name_hanzi}</span></span>)}
+           else if ((props.language == "zh" || props.language == "tw") && info.select_node.chinese_given_name_hanzi) {return (<span className="ms-1"><span className="small">`{info.select_node.chinese_family_name_hanzi}, {info.select_node.given_name_western}</span></span>)}
+           else {return (<span className="ms-1"><span className="small">{info.select_node.family_name_western}, {info.select_node.given_name_western}</span></span>)}
          }
-         else {
-           if (props.language == "zh" || props.language == "tw") {return (info.select_node.chinese_name_hanzi)}
-           else {return (info.select_node.name_western)}
+         else if (info.select_node.name_wes) {
+          if (props.language == "zh" || props.language == "tw") {return (<span><span className="small">{info.select_node.name_zh}</span></span>)}
+          else {return (<span className="ms-1"><span className="small">{info.select_node.name_wes}</span></span>)}
+        }
+        else {
+           if (props.language == "zh" || props.language == "tw") {return (<span><span className="small">{info.select_node.chinese_name_hanzi}</span></span>)}
+           else {return (<span className="ms-1"><span className="small">{info.select_node.name_western}</span></span>)}
          }
        } else {}
      }
      const ellipse  = () => {
        const measure = props.breadCrumb
-       if (measure.length > 4) {return (<span>... >  </span>)}
+       if (measure.length > 4) {return (<span className="small" >... /  </span>)}
        else {}
      }
     const breadList = props.breadCrumb
@@ -693,13 +793,18 @@ function Popup(props) {
         if (breadList.length - 1 === i) {}
         else if (crumb.family_name_western && (breadList.length - i) < 5){
           if ((props.language == "zh" || props.language == "tw") && crumb.chinese_given_name_hanzi ) {
-            return (<span><span className="breadcrumb_link" onClick={() =>  props.selectSwitchReduce((crumb.key), (crumb.order))}>{crumb.chinese_family_name_hanzi}{crumb.chinese_given_name_hanzi}</span> >  </span>)
-          } else {return (<span><span className="breadcrumb_link" onClick={() =>  props.selectSwitchReduce((crumb.key), (crumb.order))}>{crumb.family_name_western}, {crumb.given_name_western}</span> >  </span>)}
+            return (<span className="ms-1"><span className="small breadcrumb_link" onClick={() =>  props.selectSwitchReduce((crumb.key), (crumb.order))}>{crumb.chinese_family_name_hanzi}{crumb.chinese_given_name_hanzi}</span> /  </span>)
+          } else {return (<span className="ms-1"><span className="small breadcrumb_link" onClick={() =>  props.selectSwitchReduce((crumb.key), (crumb.order))}>{crumb.family_name_western}, {crumb.given_name_western}</span> /  </span>)}
         }
         else if (crumb.name_western && (breadList.length - i) < 5){
           if ((props.language == "zh" || props.language == "tw") && crumb.chinese_name_hanzi ) {
-            return (<span><span className="breadcrumb_link" onClick={() =>  props.selectSwitchReduce((crumb.key), (crumb.order))}>{crumb.chinese_name_hanzi}</span> >  </span>)
-          } else {return (<span><span className="breadcrumb_link" onClick={() =>  props.selectSwitchReduce((crumb.key), (crumb.order))}>{crumb.name_western}</span> >  </span>)}
+            return (<span className="ms-1"><span className="small breadcrumb_link" onClick={() =>  props.selectSwitchReduce((crumb.key), (crumb.order))}>{crumb.chinese_name_hanzi}</span> /  </span>)
+          } else {return (<span className="ms-1"><span className="small breadcrumb_link" onClick={() =>  props.selectSwitchReduce((crumb.key), (crumb.order))}>{crumb.name_western}</span> /  </span>)}
+        }
+        else if (crumb.name_wes && (breadList.length - i) < 5){
+          if ((props.language == "zh" || props.language == "tw") && crumb.name_zh ) {
+            return (<span className="ms-1"><span className="small breadcrumb_link" onClick={() =>  props.selectSwitchReduce((crumb.key), (crumb.order))}>{crumb.name_zh}</span> /  </span>)
+          } else {return (<span className="ms-1"><span className="small breadcrumb_link" onClick={() =>  props.selectSwitchReduce((crumb.key), (crumb.order))}>{crumb.name_wes}</span> /  </span>)}
         }
         else {}
       })
@@ -710,19 +815,19 @@ function Popup(props) {
 // RETURN ///////////////////////////////////////////////////////////////////////////////////////////////
   return (
     <div>
-      <div className={'p-2 top-' + props.popupcontainer}>
-          <BsX className="popup_close" data-prop="popupcontainer" onClick={(i) =>  props.toggleDisplay(i)}/>
-          {breadLine()}
-      </div>
-      <div className={props.popupcontainer}>
-        <div className="popupbody">
-          {getInfo()}
-          {getPersRels()}
-          {getInstRels()}
-          {getCorpRels()}
-          {getEventRels()}
+        <div className={'rounded-top border-1 border-bottom-0 p-2 top-' + props.popupcontainer} style={{border: 'solid 1px #a9a9a9'}}>
+            <BsX className="popup_close" data-prop="popupcontainer" onClick={(i) =>  props.toggleDisplay(i)}/>
+            {breadLine()}
         </div>
-      </div>
+        <div className={'border-1 border-top-0 rounded-bottom ' + props.popupcontainer} style={{border: 'solid 1px #a9a9a9'}}>
+          <div className="popupbody">
+            {getInfo()}
+            {getPersRels()}
+            {getInstRels()}
+            {getCorpRels()}
+            {getEventRels()}
+          </div>
+        </div>
     </div>
   )
 }

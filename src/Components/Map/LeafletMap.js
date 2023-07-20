@@ -14,6 +14,10 @@ import translate from "../../Assets/indexes/translate.json"
 import nationality from "../../Assets/indexes/nationality.json"
 import family_trans from "../../Assets/indexes/religious_family.json"
 import cat_trans from "../../Assets/indexes/categories.json"
+import CsvDownloadButton from 'react-json-to-csv'
+import ReactTooltip from "react-tooltip"
+import { FaFileCsv, FaQuoteRight } from 'react-icons/fa'
+import { useAlert } from 'react-alert'
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,6 +59,8 @@ const myIcon = L.icon({
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function LeafletMap(props) {
+
+  const alert = useAlert()
 
   //CONSTRUCT MAP
   const group = L.featureGroup();
@@ -209,11 +215,40 @@ function LeafletMap(props) {
     )}
    }
 
+   function getDownloadLink(props) {
+    if (props.printArray.length !== 0 ) { return ( 
+    <div>
+      <div className="d-flex justify-content-end position-relative" style={{zIndex: '1000', top:'4em', right:'.5em'}}>
+        <CsvDownloadButton delimiter="*" data={props.printArray} style={{borderWidth:'0px', background:'none'}}> 
+          <FaFileCsv className="link-icons" data-tip data-for="all"/> 
+          <ReactTooltip id="all" place="left" effect="solid">{translate[0]["download_all_data"][props.language]}</ReactTooltip>
+        </CsvDownloadButton>
+      </div>
+      <div className="d-flex justify-content-end position-relative" style={{zIndex: '1000', top:'4.5em', right:'.7em'}}>
+        <FaQuoteRight 
+          className="link-icons pt-1" 
+          data-tip data-for="cite"
+          onClick={() => { 
+            const link = window.location.href;
+            const title = translate[0]["custom_map"][props.language]
+            const message = props.getCitation(title, link);
+            const header = translate[0]["citation"][props.language]
+            alert.show(message, { closeCopy: 'X', title: header });
+          }}
+          />
+        <ReactTooltip id="cite" place="bottom" effect="solid">{translate[0]["citation"][props.language]}</ReactTooltip>
+      </div>
+    </div>
+    )}
+    else {}
+   };
+
    // MAP RETURN
    return (
      <div>
      <h1 className="aria-only">{translate[0]["map"][props.language]}</h1>
      {checkLoad(props)}
+     {getDownloadLink(props)}
      <Map bounds={props.bounds} zoom={7} zoomControl={false} id="main">
       <LayersControl position="topright">
         {/* LAYER CONTROLS - GRAY BASELAYER */}

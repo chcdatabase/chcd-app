@@ -5,14 +5,9 @@
 import React from 'react'
 import { Row, Col, Form, Button } from 'react-bootstrap'
 import { BsFilterLeft } from 'react-icons/bs'
-import Select from 'react-select'
 import AsyncSelect from 'react-select/async';
 import ReactTooltip from "react-tooltip"
 import translate from "../../Assets/indexes/translate.json"
-import nationality from "../../Assets/indexes/nationality.json"
-import family_trans from "../../Assets/indexes/religious_family.json"
-import cat_trans from "../../Assets/indexes/categories.json"
-import nodes from "../../Assets/indexes/network-nodes.json"
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -24,8 +19,9 @@ function FilterNetwork(props) {
 
 //NODE OPTIONS CALLBACK
 const loadOptions = ( inputValue: string, callback: (options: props.netPersonIndex) => void) => {
-  setTimeout(() => {callback(props.fetchNetworkIndexes(inputValue));}, 2000);
+  setTimeout(() => {callback(props.fetchNetworkIndexes(inputValue));}, 500);
 };
+
 
 // SELECT TYPE FILTER //////////////////////////////////////////////////////////////////////////////////////////
 function typeFilter(props) {
@@ -190,7 +186,7 @@ function submitButton(props) {
           <Button className="mb-1 col-12" variant="danger" onClick={() =>  props.fetchNetworkResults()}>{translate[0]["submit"][props.language]}</Button>
         </Col>
         <Col>
-          <Button className="mb-1 col-12" variant="outline-danger" onClick={() => window.location.reload(false)}>{translate[0]["reset"][props.language]}</Button>
+          <Button className="mb-1 col-12" variant="outline-danger" onClick={() => props.resetFilter()}>{translate[0]["reset"][props.language]}</Button>
         </Col>
       </Row>
     </div>

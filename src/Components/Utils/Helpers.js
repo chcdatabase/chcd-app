@@ -4,9 +4,10 @@
 
 import { Link } from 'react-router-dom';
 import { FaMapMarkedAlt } from 'react-icons/fa';
-import { BiNetworkChart } from 'react-icons/bi';
+import { BiNetworkChart, BiLineChart } from 'react-icons/bi';
 import ReactTooltip from "react-tooltip"
 import translate from "../../Assets/indexes/translate.json"
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // TOGGLES & HIDES  /////////////////////////////////////////////////////////////////////////////////
@@ -27,7 +28,6 @@ export function toggleCite(event) {
   if (this.state.cite === "cite hide" ) { this.setState({ cite: "cite" }) }
   else if (this.state.cite === "cite" ) { this.setState({ cite: "cite hide" }) }
   else { this.setState({ cite: "cite" }) }
-  console.log(this.state.cite)
 };
 
 //TOGGLE DISPLAYS
@@ -37,8 +37,12 @@ export function toggleDisplay(event) {
   let p ="popupcontainer";
   let v2 = event.target.dataset.prop + "-full";
   let h2 = event.target.dataset.prop + "-full hide";
+  let h3 = event.target.dataset.prop + "-full2";
   let f ="popupcontainer-full";
   let t;
+
+  if (this.state.nodeSelect !== "") {this.setState({ nodeSelect: "" })}
+  else {}
 
   if (event.target.dataset.prop === "addinfo") { t = "addinfortext"}
   else if (event.target.dataset.prop === "addpers") { t = "addperstext"}
@@ -67,15 +71,30 @@ export function toggleDisplay(event) {
     {this.setState ({ [v]: v2 });
     this.setState ({[t]: "hide_additional_info"});
     return this.state[v]; }
+
+  else if (this.state[v] === h3)
+    {this.setState ({ [v]: h });
+    this.setState ({[t]: "additional_info"});
+    this.setState ({ breadCrumb: [] });
+    return this.state[v]; }
+  
 };
 
 //TOGGLE FILTER STATE
 export function filterHide() {
   const test = "filter_container"
+  const testdata = "filter_data_container"
+  const testdata2 = "filter_data_container hide"
   if (this.state.filterDisplay === test) {
     this.setState ({filterDisplay: "filter_container2"})
       if (this.state.popupcontainer === "popupcontainer"){this.setState ({ popupcontainer: "popupcontainer-full" })}
       else if (this.state.popupcontainer === "popupcontainer hide"){this.setState ({ popupcontainer: "popupcontainer-full hide" })}
+    return this.state.filterDisplay
+  } else if (this.state.filterDisplay === testdata) {
+    this.setState ({filterDisplay: "filter_data_container hide"})
+    return this.state.filterDisplay
+  } else if (this.state.filterDisplay === testdata2) {
+    this.setState ({filterDisplay: "filter_data_container"})
     return this.state.filterDisplay
   } else if (this.state.filterDisplay !== test) {
     this.setState ({filterDisplay: "filter_container"})
@@ -213,11 +232,32 @@ export function handleChange(event) {
 // HANDLE CHANGES IN FILTER
 export function handleChangeData(event) {
   this.setState({ [event.type]: event.value });
+  this.setState({ sentInputValue: event.label });
+};
+
+// HANDLE CHANGES IN DD FILTER
+export function handleChangeDataDD(event) {
+  let node_id = event.value
+  let newInput = event.option
+  let selectedOption;
+  if (event.type === "Institution") {selectedOption = "Institution"}
+  if (event.type === "CorporateEntity") {selectedOption = "CorporateEntity"}
+  if (event.type === "Event") {selectedOption = "Event"}
+  if (event.type === "Geography") {selectedOption = "Geography" }
+  if (event.type === "Village") {selectedOption = "Geography" }
+  if (event.type === "Township") {selectedOption = "Geography" }
+  if (event.type === "County") {selectedOption = "Geography" }
+  if (event.type === "Prefecture") {selectedOption = "Geography" }
+  if (event.type === "Province") {selectedOption = "Geography" }
+  else {}
+  this.setState({ node_id });
+  this.setState({ selectedOption });
+  this.setState({ inputValue: newInput });
 };
 
 // HANDLE CHANGES IN RADIO BUUTTON FILTER
 export function handleOptionChange(event) {
-  this.setState({ selectedOption: event.target.value });
+  this.setState({ selectedOption: event.target.value }, () => {console.log(" ");});
 };
 
 export function handleInputChange(newValue: string) {
@@ -233,7 +273,6 @@ export function handleMapInputChange(newValue: string) {
 export function handleMapAffInputChange(newValue: string) {
   const inputValue = newValue;
   this.setState({ inputValueAff: inputValue });
-  console.log(this.state.inputValueAff)
 };
 
 export function handleMapNatInputChange(newValue: string) {
@@ -312,8 +351,19 @@ export function resetFilter() {
   this.setState ({inputValuePAff: ""});
   this.setState ({inputValueAff: ""});
   this.setState ({inputValueNat: ""});
-  this.setState({nodeArray: []});
+  this.setState ({nodeArray: []});
+  this.setState ({degree: 1});
+  this.setState ({ people_include: false });
+  this.setState ({ inst_include: false });
+  this.setState ({ corp_include: false });
+  this.setState ({ event_include: false });
+  this.setState({ inputValue: '' });
+  this.setState({ selectedOption: "All" });
+  this.setState ({node_id: ""});
+  this.setState ({nodeArray: []});
 
+  const del = this.props.searchParams.delete('sent_id','node_id','selectedOption','degree','node_id','selectedOption','sentInputValue','given_name_western','family_name_western','name_western','religious_family','institution_category','institution_subcategory','event_category','event_subcategory','gender','nationality','location','affiliation','start_year','end_year','people_include','corp_include','inst_include','event_include')
+  this.props.setSearchParams(del);
 };
 
 export function handleKeyPress(e) {
@@ -337,6 +387,8 @@ export function handleKeyPress(e) {
      chinese_given_name_hanzi: this.state.selectArray[0].select_node.chinese_given_name_hanzi,
      name_western: this.state.selectArray[0].select_node.name_western,
      chinese_name_hanzi: this.state.selectArray[0].select_node.chinese_name_hanzi,
+     name_wes: this.state.selectArray[0].select_node.name_wes,
+     name_zh: this.state.selectArray[0].select_node.name_zh,
      order: this.state.breadCrumb.length + 1
    };
    let breadCrumbArray = this.state.breadCrumb;
@@ -362,11 +414,25 @@ export function linkCheck(props, node) {
   let tester; if (node.label) {tester = node.properties} else if (node.select_kind) {tester = node.select_node}
   if (node.label === "Person" || node.select_kind === "Person") { return (
       <div className="d-inline-block">
-        <Link title="geographic map" to={{ pathname:"/map", langGive: props.language, kind: "People", given_name_western: tester.given_name_western, family_name_western: tester.family_name_western, sent_id: node.key }}>
+        <Link title="geographic map" 
+          to="/map" 
+          state={{ 
+            langgive: props.language, 
+            kind: "People",
+            given_name_western: tester.given_name_western, 
+            family_name_western: tester.family_name_western, 
+            sent_id: node.key
+            }}>
            <FaMapMarkedAlt className="link-icons" data-tip data-for="map" />
              <ReactTooltip id="map" place="bottom" effect="solid">{translate[0]["view_map"][props.language]}</ReactTooltip>
         </Link>
-        <Link title="network map" to={{ pathname:"/network", langGive: props.language, sent_id: node.key, selectedOption: "Person", inputValue: tester.given_name_western+' '+tester.family_name_western }}>
+        <Link title="network map" to="/network" 
+          state={{ 
+            langgive: props.language,
+            sent_id: node.key,
+            selected_option: "Person",
+            input_value: tester.given_name_western+' '+tester.family_name_western
+          }}>
            <BiNetworkChart className="link-icons" data-tip data-for="network"/>
               <ReactTooltip id="network" place="bottom" effect="solid">{translate[0]["view_network"][props.language]}</ReactTooltip>
         </Link>
@@ -374,35 +440,92 @@ export function linkCheck(props, node) {
   )}
   else if (node.label === "Institution" && node.properties.institution_category !== "General Area" || node.select_kind === "Institution" && node.select_node.institution_category !== "General Area" ) { return (
       <div className="d-inline-block">
-        <Link title="geographic map" to={{ pathname:"/map", langGive: props.language, kind: "Institutions", name_western: tester.name_western, sent_id: node.key }}>
+        <Link title="geographic map" 
+          to="/map" 
+          state={{ 
+            langgive: props.language, 
+            kind: "Institutions",
+            name_western: tester.name_western, 
+            sent_id: node.key
+            }}>
            <FaMapMarkedAlt className="link-icons" data-tip data-for="map" />
               <ReactTooltip id="map" place="bottom" effect="solid">{translate[0]["view_map"][props.language]}</ReactTooltip>
         </Link>
-        <Link title="network map" to={{ pathname:"/network", langGive: props.language, sent_id: node.key, selectedOption: "Institution", inputValue: tester.name_western }}>
+        <Link title="network map" to="/network" 
+          state={{ 
+            langgive: props.language,
+            sent_id: node.key,
+            selected_option: "Institution",
+            input_value: tester.name_western
+          }}>
            <BiNetworkChart className="link-icons" data-tip data-for="network"/>
               <ReactTooltip id="network" place="bottom" effect="solid">{translate[0]["view_network"][props.language]}</ReactTooltip>
+        </Link>
+        <Link title="data vis" to="/data" 
+          state={{ 
+            langgive: props.language,
+            kind: "Institution",
+            sent_id: node.key,
+          }}>
+           <BiLineChart className="link-icons" data-tip data-for="data"/>
+              <ReactTooltip id="network" place="bottom" effect="solid">{translate[0]["data"][props.language]}</ReactTooltip>
         </Link>
       </div>
   )}
   else if (tester.corporate_entity_category === "Religious Body" && (node.label === "CorporateEntity" || node.select_kind === "CorporateEntity")) { return (
       <div className="d-inline-block">
-      <Link title="geographic map" to={{ pathname:"/map", langGive: props.language, kind: "Institutions", corp_name_western: tester.name_western, sent_id: node.key }}>
+        <Link title="geographic map" 
+          to="/map" 
+          state={{ 
+            langgive: props.language, 
+            kind: "Institutions",
+            corp_name_western: tester.name_western, 
+            sent_id: node.key
+            }}>
            <FaMapMarkedAlt className="link-icons" data-tip data-for="map" />
               <ReactTooltip id="map" place="bottom" effect="solid">{translate[0]["view_map"][props.language]}</ReactTooltip>
         </Link>
-        <Link title="network map" to={{ pathname:"/network", langGive: props.language, sent_id: node.key, selectedOption: "CorporateEntity", inputValue: tester.name_western }}>
+        <Link title="network map" to="/network" 
+          state={{ 
+            langgive: props.language,
+            sent_id: node.key,
+            selected_option: "CorporateEntity",
+            input_value: tester.name_western
+          }}>
            <BiNetworkChart className="link-icons" data-tip data-for="network"/>
               <ReactTooltip id="network" place="bottom" effect="solid">{translate[0]["view_network"][props.language]}</ReactTooltip>
+        </Link>
+        <Link title="data vis" to="/data" 
+          state={{ 
+            langgive: props.language,
+            kind: "CorporateEntity",
+            sent_id: node.key,
+          }}>
+           <BiLineChart className="link-icons" data-tip data-for="data"/>
+              <ReactTooltip id="network" place="bottom" effect="solid">{translate[0]["data"][props.language]}</ReactTooltip>
         </Link>
       </div>
   )}
   else if (node.label === "Event" || node.select_kind === "Event") { return (
       <div className="d-inline-block">
-      <Link title="geographic map" to={{ pathname:"/map", langGive: props.language, kind: "Events", name_western: tester.name_western, sent_id: node.key }}>
+        <Link title="geographic map" 
+          to="/map" 
+          state={{ 
+            langgive: props.language, 
+            kind: "Events",
+            name_western: tester.name_western, 
+            sent_id: node.key
+            }}>
            <FaMapMarkedAlt className="link-icons" data-tip data-for="map" />
               <ReactTooltip id="map" place="bottom" effect="solid">{translate[0]["view_map"][props.language]}</ReactTooltip>
         </Link>
-        <Link title="network map" to={{ pathname:"/network", langGive: props.language, sent_id: node.key, selectedOption: "Event", inputValue: tester.name_western }}>
+        <Link title="network map" to="/network" 
+          state={{ 
+            langgive: props.language,
+            sent_id: node.key,
+            selected_option: "Event",
+            input_value: tester.name_western
+          }}>
            <BiNetworkChart className="link-icons" data-tip data-for="network"/>
               <ReactTooltip id="network" place="bottom" effect="solid">{translate[0]["view_network"][props.language]}</ReactTooltip>
         </Link>
@@ -416,4 +539,36 @@ export function linkCheck(props, node) {
 export function renameProperty(obj, oldName, newName) {
   obj[newName] = obj[oldName];
   delete obj[oldName];
-}
+};
+
+export function getCitation(title, link) {
+
+  let alex;
+  if (this.state.language === "en") {alex = "Alex Mayfield"}
+  else {alex = "马飞立"}
+
+  let daryl;
+  if (this.state.language === "en") {daryl = "Daryl Ireland"}
+  else {daryl = "艾德恩"}
+
+  let eugenio;
+  if (this.state.language === "en") {eugenio = ", and Eugenio Menegon"}
+  else {eugenio = "和梅欧金"}
+
+  const date = new Date();
+  let day = date.getDate();
+  let month = date.getMonth() + 1;
+  let year = date.getFullYear();
+
+  const monthlist = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+  let access_date;
+  if (this.state.language === "en") {access_date = monthlist[month] + " " + day + ", " + year }
+  else {access_date = year + " 年 " + month + "月" + day + " 日"}
+
+  let publish_date;
+  if (this.state.language === "en") { publish_date = "June 24, 2022" } 
+  else {publish_date = "2022 年 6 月 24 日" }
+
+  return (<div>{alex}, {daryl}{eugenio}. "{title}." <i>{translate[0].chcd_name[this.state.language]}.</i> V1. {publish_date}. {translate[0].accessed[this.state.language]} {access_date}. {link}.</div>)
+};

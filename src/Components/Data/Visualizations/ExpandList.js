@@ -1,8 +1,6 @@
 // Imports
-import { Card, Tab, Tabs, Table, Nav} from 'react-bootstrap/'
-import React, { useEffect, useState, useRef } from "react";
-import { TableBody } from 'semantic-ui-react';
-import { max } from 'd3';
+import { Card, Tab, Table, Nav, Spinner} from 'react-bootstrap/'
+import React from "react";
 
 const tableBody = document.getElementById("tableBody");
 
@@ -12,11 +10,11 @@ function ExpandableList (props) {
 
     // Display the table.
     return (
-        <Card className="w-100">
+        <Card className="h-100 w-100">
             <Card.Body>
-                <Card.Title className="fs-6 mb-4 mt-2 text-center fw-normal">{props.title}</Card.Title>
+                <Card.Title className="fs-6 mb-4 mt-4 text-center fw-normal">{props.title}</Card.Title>
                 <Tab.Container defaultActiveKey="provinces">
-                    <Nav variant="pills" className="mb-1">
+                    <Nav variant="pills" className="mb-3 justify-content-center">
                         <Nav.Item className="m-1 h-50 border border-1 border-danger rounded ">
                             <Nav.Link eventKey="provinces">Provinces</Nav.Link>
                         </Nav.Item >
@@ -28,8 +26,9 @@ function ExpandableList (props) {
                         </Nav.Item>
                     </Nav>
                     <Tab.Content>
-                        <Tab.Pane eventKey="provinces">
-                          <Table bordered hover className="table-responsive-sm mb-0">
+                        <Tab.Pane eventKey="provinces" style={{minWidth: '400px'}}>
+                        { props.queryResult
+                        ? <Table bordered hover className="table-responsive-sm mb-0 small">
                               <thead>
                                 <tr>
                                   <th>Province</th>
@@ -39,15 +38,18 @@ function ExpandableList (props) {
                               <tbody id="tableBody">
                                   {Array.from(props.queryResult[0]).map((item) => { return[
                                       <tr className="p-0">
-                                        <td>{item.Province}</td>
-                                        <td>{item.Activity}</td>
+                                        <td className="p-1">{item.Province}</td>
+                                        <td className="p-1">{item.Activity}</td>
                                       </tr>
                                     ]})}
                               </tbody>
                           </Table>
+                          : <Spinner animation="border" role="status" variant="danger"><span className="visually-hidden">Loading...</span></Spinner>
+                        }
                         </Tab.Pane>
-                        <Tab.Pane eventKey="prefectures">
-                          <Table bordered hover className="table-responsive-sm mb-0">
+                        <Tab.Pane eventKey="prefectures" style={{minWidth: '400px'}}>
+                        { props.queryResult
+                        ? <Table bordered hover className="table-responsive-sm mb-0 small">
                               <thead>
                                 <tr>
                                   <th>Prefecture</th>
@@ -59,16 +61,19 @@ function ExpandableList (props) {
                                       Array.from(props.queryResult[1]).map((item) => {
                                       return[
                                           <tr>
-                                              <td>{item.Prefecture}</td>
-                                              <td>{item.Activity}</td>
+                                              <td className="p-1">{item.Prefecture}</td>
+                                              <td className="p-1">{item.Activity}</td>
                                           </tr>
                                       ]
                                   })}
                               </tbody>
                           </Table>
+                          : <Spinner animation="border" role="status" variant="danger"><span className="visually-hidden">Loading...</span></Spinner>
+                        }
                         </Tab.Pane>
-                        <Tab.Pane eventKey="counties">
-                          <Table bordered hover className="table-responsive-sm mb-0">
+                        <Tab.Pane eventKey="counties" style={{minWidth: '400px'}}>
+                        { props.queryResult
+                        ? <Table bordered hover className="table-responsive-sm mb-0 small">
                               <thead>
                                 <tr>
                                   <th>County</th>
@@ -80,13 +85,15 @@ function ExpandableList (props) {
                                       Array.from(props.queryResult[2]).map((item) => {
                                       return[
                                           <tr>
-                                              <td>{item.County}</td>
-                                              <td>{item.Activity}</td>
+                                              <td className="p-1">{item.County}</td>
+                                              <td className="p-1">{item.Activity}</td>
                                           </tr>
                                       ]
                                   })}
                               </tbody>
                           </Table>
+                          : <Spinner animation="border" role="status" variant="danger"><span className="visually-hidden">Loading...</span></Spinner>
+                        }
                         </Tab.Pane>
                     </Tab.Content>
                 </Tab.Container>

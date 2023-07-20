@@ -8,23 +8,31 @@ import neo4j from "neo4j-driver/lib/browser/neo4j-web";
 import {Helmet} from "react-helmet";
 import HomeStatic from "./HomeStatic.js"
 import Navbar from "../Navbar/Navbar.js";
-import Citation from "../Popups/Citation.js";
 import * as helper from "../Utils/Helpers.js";
 import * as query from "../Utils/Queries.js";
 import translate from "../../Assets/indexes/translate.json"
+import { useLocation } from 'react-router-dom';
+
+export function withRouter(Children){
+  return(props)=>{
+     const match  = {params: useLocation()};
+     console.log(match)
+     return <Children {...props}  match = {match}/>
+ }
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // COMPONENT ////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class HomeView extends Component {
+class HomeView extends React.Component {
 
 //STATE CONSTRUCTOR ////////////////////////////////////////////////////////////////////////////////
   constructor(props) {
   super(props);
   this.state = {
     language: "en",
-    cite: "cite hide"
+    cite: "cite hide",
   }
 // BIND UTILITY FUNCTIONS TO THIS CONTEXT ///////////////////////////////////////////////////////////
   this.toggleDisplay = helper.toggleDisplay.bind(this);
@@ -34,9 +42,11 @@ class HomeView extends Component {
 
 //RUN ON COMPONENT MOUNT ////////////////////////////////////////////////////////////////////////////
   componentDidMount() {
-    let receivedLang = this.props.location.langGive
-    if (receivedLang) {this.setState({ language: receivedLang })}
-    console.log(this.props.history)
+    if (this.props.match.params.state == null ) {} else {
+      if (this.props.match.params.state.langgive) {
+      this.setState({ language: this.props.match.params.state.langgive }); 
+      }
+    };
   };
 
 
@@ -65,11 +75,6 @@ class HomeView extends Component {
           langSwitch={this.langSwitch}
           toggleCite = {this.toggleCite}
         />
-        <Citation
-          cite={this.state.cite}
-          language={this.state.language}
-          toggleCite = {this.toggleCite}
-        />
         <HomeStatic language={this.state.language} />
 
       </div>
@@ -84,4 +89,4 @@ class HomeView extends Component {
 // EXPORT //////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default HomeView
+export default withRouter(HomeView)

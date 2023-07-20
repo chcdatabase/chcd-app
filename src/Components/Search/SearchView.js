@@ -3,7 +3,6 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import React, { Component } from 'react'
-import PropTypes from "prop-types";
 import neo4j from "neo4j-driver/lib/browser/neo4j-web";
 import {Helmet} from "react-helmet";
 import FilterSearch from "./FilterSearch.js";
@@ -11,17 +10,32 @@ import SearchResults from "./SearchResults.js"
 import Popup from "../Popups/Popup.js";
 import NoResults from "../Popups/NoResults.js";
 import Navbar from "../Navbar/Navbar.js";
-import Citation from "../Popups/Citation.js";
 import credentials from "../../credentials.json";
 import * as helper from "../Utils/Helpers.js";
 import * as query from "../Utils/Queries.js";
 import translate from "../../Assets/indexes/translate.json"
+import { useLocation, useSearchParams } from 'react-router-dom';
+
+export function withRouter(Children){
+  return(props)=>{
+     const match  = {params: useLocation()};
+     const [searchParams, setSearchParams] = useSearchParams();
+     const searchGet = searchParams.get('search')
+     return <Children 
+      {...props}  
+      match = {match} 
+      searchParams = {searchParams} 
+      searchGet = {searchGet}
+      setSearchParams={setSearchParams} 
+    />
+ }
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // COMPONENT ////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class SearchView extends Component {
+class SearchView extends React.Component {
 
 //STATE CONSTRUCTOR ////////////////////////////////////////////////////////////////////////////////
   constructor(props) {
@@ -39,6 +53,8 @@ class SearchView extends Component {
       selectArray: [],
       breadCrumb: [],
       nodeSelect: "",
+      printArray: [],
+      basicArray: [],
       // AVAILABLE FILTERS
       labelList: [],
       genderList: [],
@@ -126,18 +142,60 @@ class SearchView extends Component {
     this.langSwitch = helper.langSwitch.bind(this);
     this.linkCheck = helper.linkCheck.bind(this);
     this.reFilterSet = helper.reFilterSet.bind(this);
+    this.getCitation = helper.getCitation.bind(this);
   };
 
 //RUN ON COMPONENT MOUNT /////////////////////////////////////////////////////////////////////////
   componentDidMount() {
-    let receivedLang = this.props.location.langGive
-    if (receivedLang) {this.setState({ language: receivedLang })}
+    if (this.props.match.params.search) {
+      const urlSearch = this.props.searchGet;
+      this.setState({ search: urlSearch });
+      this.setState({ searchSet: urlSearch });
+
+      if (this.props.searchParams.get('nodeSelect') !== "" ) {
+        const info = this.props.searchParams.get('nodeSelect');
+        this.setState({ nodeSelect: info }); 
+        if (this.props.searchParams.get('search')) {
+          this.selectSwitchInitial(info); 
+          this.setState({ filterDisplay: "filter_container" });
+          this.setState({ popupcontainer: "popupcontainer" });
+        }
+        else {
+          this.setState({ search: "" }); 
+          this.selectSwitchInitial(info); 
+          this.setState({ filterDisplay: "filter_container2" });
+          this.setState({ popupcontainer: "popupcontainer-full" });
+        } 
+      };
+    };
+
+    if (this.props.match.params.state == null ) {} else {
+      if (this.props.match.params.state.langgive) {
+      this.setState({ language: this.props.match.params.state.langgive }); 
+      }
+    };
+
+    setTimeout(() => {
+      if (this.state.search === "" && this.state.searchSet === "" ) {return null}
+      if (this.state.search === "null" && this.state.searchSet === "null" ) {return null}
+      else  {this.fetchSearch()}
+    } , 500);
 
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.content === "loaded" && this.state.searchSet !== null && (
+          this.state.searchSet !== prevState.searchSet ||
+          this.state.nodeSelect !== prevState.nodeSelect )
+    ) {this.props.setSearchParams({
+      search: this.state.searchSet,
+      nodeSelect: this.state.nodeSelect
+    });}
+  };
+
+  
 //RENDER ////////////////////////////////////////////////////////////////////////////////////////
   render() {
-
     return (
       <div>
         <Helmet>
@@ -149,11 +207,6 @@ class SearchView extends Component {
           langSwitch={this.langSwitch}
           toggleCite = {this.toggleCite}
         />
-        <Citation
-          cite={this.state.cite}
-          language={this.state.language}
-          toggleCite = {this.toggleCite}
-        />
         <NoResults
           noresults={this.state.noresults}
           language={this.state.language} l
@@ -161,6 +214,7 @@ class SearchView extends Component {
         />
         <FilterSearch
           {...this.state}
+          params={this.props.match.params}
           selectSwitchInitial={this.clickHandler}
           handleChange={this.handleChange}
           resetFilter={this.resetFilter}
@@ -190,6 +244,7 @@ class SearchView extends Component {
           selectSwitchReduce={this.selectSwitchReduce}
           selectSwitchInitial={this.selectSwitchInitial}
           linkCheck={this.linkCheck}
+          getCitation={this.getCitation}
         />
       </div>
     )
@@ -200,4 +255,4 @@ class SearchView extends Component {
 // EXPORT //////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default SearchView
+export default withRouter(SearchView)

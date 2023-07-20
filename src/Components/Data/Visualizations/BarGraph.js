@@ -1,8 +1,7 @@
 //bar chart
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
-import { select, axisBottom, axisRight, scaleLinear, scaleBand } from "d3";
-import { Card } from "react-bootstrap";
+import { Card, Spinner} from "react-bootstrap";
 
 
 function BarGraph(props) {
@@ -29,7 +28,7 @@ function BarGraph(props) {
       // X axis
       var x = d3.scaleBand()
         .range([ 0, width ])
-        .domain(data.map(function(d) { return d.nationality; }))
+        .domain(data.map(function(d) { return d.info; }))
         .padding(0.2);
       svg.append("g")
         .attr("transform", "translate(0," + height + ")")
@@ -45,17 +44,19 @@ function BarGraph(props) {
         .range([ height, 0]);
       svg.append("g")
         .call(d3.axisLeft(y));
-
-      // Bars
+      
+      const color = d3.scaleOrdinal(d3.schemeTableau10);
+      
+        // Bars
       svg.selectAll("mybar")
         .data(data)
         .enter()
         .append("rect")
-          .attr("x", function(d) { return x(d.nationality); })
+          .attr("x", function(d) { return x(d.info); })
           .attr("y", function(d) { return y(d.count); })
           .attr("width", x.bandwidth())
           .attr("height", function(d) { return height - y(d.count); })
-          .attr("fill", "#4e79a7")
+          .attr("fill", function(d, i) {return color(d.info);})
           .attr("class", "bar")
 
       // Numbers
@@ -65,7 +66,7 @@ function BarGraph(props) {
         .append("text")
           .text(function(d) { return d.count })
            .attr("font-family" , "sans-serif")
-           .attr("x", function(d) { return x(d.nationality) + x.bandwidth() / 2 })
+           .attr("x", function(d) { return x(d.info) + x.bandwidth() / 2 })
            .attr("y", function(d) { return y(d.count) - 6; })
            .attr("font-size" , "8px")
            .attr("fill" , "black")
@@ -76,15 +77,18 @@ function BarGraph(props) {
 
 
     return (
-      <Card>
+      <Card className="h-100" style={{minWidth: '500px'}}>
         <Card.Body>
           <Card.Title className="fs-6 mb-4 mt-4 text-center fw-normal">{props.title}</Card.Title>
-            <div ref={svgRef}> </div>
-            { props.queryResultNationalityNull > 0 && (
-              <p className="pt-2 mb-0">
-                * There are { props.queryResultNationalityNull } null values
-              </p>
-            )}
+          { props.queryResult
+            ? <div className="d-flex flex-wrap flex-row justify-content-center">
+                <div ref={svgRef}> </div>
+                {props.queryResultNationalityNull > 0 && (<p className="pt-2 mb-0" style={{ fontSize: '.75em'}} >
+                  * This graph excludes { props.queryResultNationalityNull } entities with 'null' or 'Unknown' values.
+                  </p>)}
+              </div>
+            : <Spinner animation="border" role="status" variant="danger"><span className="visually-hidden">Loading...</span></Spinner>
+          }
         </Card.Body>
        </Card>
     );

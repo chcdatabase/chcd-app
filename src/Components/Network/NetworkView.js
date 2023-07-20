@@ -11,18 +11,31 @@ import NoResults from "../Popups/NoResults.js";
 import NoSend from "../Popups/NoSend.js";
 import Navbar from "../Navbar/Navbar.js";
 import NetworkKey from './NetworkKey.js'
-import Citation from "../Popups/Citation.js";
 import {Helmet} from "react-helmet";
 import translate from "../../Assets/indexes/translate.json"
 import credentials from "../../credentials.json";
 import * as helper from "../Utils/Helpers.js";
 import * as query from "../Utils/Queries.js";
+import { useLocation, useSearchParams } from 'react-router-dom';
+
+export function withRouter(Children){
+  return(props)=>{
+     const match  = {params: useLocation()};
+     const [searchParams, setSearchParams] = useSearchParams();
+     return <Children 
+      {...props}  
+      match = {match} 
+      searchParams = {searchParams} 
+      setSearchParams={setSearchParams} 
+    />
+ }
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // COMPONENT ////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class NetworkView extends Component {
+class NetworkView extends React.Component {
 
 //STATE CONSTRUCTOR ////////////////////////////////////////////////////////////////////////////////
   constructor(props) {
@@ -42,13 +55,17 @@ class NetworkView extends Component {
       start_year: "",
       end_year: "",
       time_disable: true,
+      search: "",
       // DATA ARRAYS & SELECT NODE
       nodeArray: [],
       selectArray: [],
       nodeSelect: "",
       breadCrumb: [],
+      printArray: [],
+      basicArray: [],
       selectedOption: "",
-      inputValue: '',
+      inputValue: "",
+      sentInputValue: "",
       // DISPLAY CONTROLS
       popupcontainer: "popupcontainer hide",
       filterDisplay: "filter_container",
@@ -70,6 +87,7 @@ class NetworkView extends Component {
       netPersonIndex: [],
       // LOAD STATES
       content: "loaded",
+      append: 0,
     }
 //INITIATE NEO4J INSTANCE ///////////////////////////////////////////////////////////////////////////
     this.driver = neo4j.driver(
@@ -98,29 +116,105 @@ class NetworkView extends Component {
     this.langSwitch = helper.langSwitch.bind(this);
     this.linkCheck = helper.linkCheck.bind(this);
     this.hideKey = helper.hideKey.bind(this);
+    this.getCitation = helper.getCitation.bind(this);
+
   };
 
 //RUN ON COMPONENT MOUNT /////////////////////////////////////////////////////////////////////////
   componentDidMount() {
-
-    let receivedLang = this.props.location.langGive;
-    let receivedId = this.props.location.sent_id;
-    let receivedType = this.props.location.selectedOption;
-    let receivedInput = this.props.location.inputValue;
-    if (receivedLang) {this.setState({ language: receivedLang })};
-    if (receivedId) {
-      this.setState({ sent_id: receivedId });
-      this.setState({ node_id: receivedId });
-      this.setState({ degree: 1 });
-      this.setState({ people_include: true });
-      this.setState({ inst_include: true });
-      this.setState({ selectedOption: receivedType });
-      this.setState({ inputValue: receivedInput });
+    if (this.props.match.params.search) {
+      const urlSearch = "permalink";
+      this.setState({ search: urlSearch });
+      };
+    if (this.props.match.params.state == null ) {} else {
+      if (this.props.match.params.state.langgive) {
+        this.setState({ language: this.props.match.params.state.langgive }); 
+      };
+      if (this.props.match.params.state.sent_id) {
+        this.setState({ sent_id: this.props.match.params.state.sent_id }); 
+        this.setState({ node_id: this.props.match.params.state.sent_id }); 
+        this.setState({ degree: 1 });
+        this.setState({ people_include: true });
+        this.setState({ inst_include: true });
+        this.setState({ selectedOption: this.props.match.params.state.selected_option  });
+        this.setState({ inputValue: this.props.match.params.state.input_value  });
+      };
     };
+
+    if (this.props.match.params.search === "" ) {} else {
+      if (this.props.searchParams.get('sent_id') !== "" ) {
+        const info = this.props.searchParams.get('sent_id');
+        this.setState({ sent_id: info }); 
+      };
+      if (this.props.searchParams.get('node_id') !== "" ) {
+        const info = this.props.searchParams.get('node_id');
+        this.setState({ node_id: info });
+      };
+      if (this.props.searchParams.get('selectedOption') !== "" ) {
+        const info = this.props.searchParams.get('selectedOption');
+        this.setState({ selectedOption: info }); 
+      };
+      if (this.props.searchParams.get('node_id') !== "" ) {
+        const info = this.props.searchParams.get('node_id');
+        this.setState({ node_id: info }); 
+      };
+      if (this.props.searchParams.get('sentInputValue') !== "" ) {
+        const info = this.props.searchParams.get('sentInputValue');
+        this.setState({ inputValue: info })
+        this.setState({ sentInputValue: info })
+      };
+      if (this.props.searchParams.get('degree') !== "" ) {
+        const info = this.props.searchParams.get('degree');
+        this.setState({ degree: info }); 
+      };
+      if (this.props.searchParams.get('people_include') !== "" ) {
+        const info = this.props.searchParams.get('people_include');
+        if (info === 'false') {} else { this.setState({ people_include: Boolean(info) })}; 
+      };
+      if (this.props.searchParams.get('inst_include') !== "" ) {
+        const info = this.props.searchParams.get('inst_include');
+        if (info === 'false') {} else { this.setState({ inst_include: Boolean(info) })};
+      };
+      if (this.props.searchParams.get('corp_include') !== "" ) {
+        const info = this.props.searchParams.get('corp_include');
+        if (info === 'false') {} else { this.setState({ corp_include: Boolean(info) })}; 
+      };
+      if (this.props.searchParams.get('event_include') !== "" ) {
+        const info = this.props.searchParams.get('event_include');
+        if (info === 'false') {} else { this.setState({ event_include: Boolean(info) })}; 
+      };
+      if (this.props.searchParams.get('start_year') !== "" ) {
+        const info = this.props.searchParams.get('start_year');
+        this.setState({ start_year: info}); 
+      };
+      if (this.props.searchParams.get('end_year') !== "" ) {
+        const info = this.props.searchParams.get('end_year');
+        this.setState({ end_year: info }); 
+      };
+    };
+
     setTimeout(() => {
-      if (this.state.sent_id === "init") {return null}
+      if (this.state.search === "permalink") {this.fetchNetworkResults()}
+      else if (this.state.sent_id === "init") {return null}
       else {this.fetchNetworkResults()}
-    } , 1000)
+    } , 1500)
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.append !== prevState.append
+    ) {this.props.setSearchParams({
+        sent_id: this.state.sent_id,
+        node_id: this.state.node_id,
+        degree: this.state.degree,
+        selectedOption: this.state.selectedOption,
+        sentInputValue: this.state.sentInputValue,
+        start_year: this.state.start_year,
+        end_year: this.state.end_year,
+        people_include: this.state.people_include,
+        corp_include: this.state.corp_include,
+        inst_include: this.state.inst_include,
+        event_include: this.state.event_include,
+    });}
   };
 
 //RENDER ////////////////////////////////////////////////////////////////////////////////////////////
@@ -134,11 +228,6 @@ class NetworkView extends Component {
         <Navbar
           language={this.state.language}
           langSwitch={this.langSwitch}
-          toggleCite = {this.toggleCite}
-        />
-        <Citation
-          cite={this.state.cite}
-          language={this.state.language}
           toggleCite = {this.toggleCite}
         />
         <NoSend
@@ -163,6 +252,7 @@ class NetworkView extends Component {
           handleChangeData={this.handleChangeData}
         />
         <EgoGraph
+          {...this.state}
           content= {this.state.content}
           nodeArray={this.state.nodeArray}
           node_id={this.state.node_id}
@@ -170,6 +260,7 @@ class NetworkView extends Component {
           selectSwitchInitial={this.selectSwitchInitial}
           language={this.state.language}
           filterDisplay={this.state.filterDisplay}
+          getCitation={this.getCitation}
         />
         <NetworkKey
           networkKey={this.state.networkKey}
@@ -186,6 +277,7 @@ class NetworkView extends Component {
           selectSwitchReduce={this.selectSwitchReduce}
           selectSwitchInitial={this.selectSwitchInitial}
           linkCheck={this.linkCheck}
+          getCitation={this.getCitation}
         />
       </div>
     )
@@ -197,4 +289,4 @@ class NetworkView extends Component {
 // EXPORT //////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default NetworkView
+export default withRouter(NetworkView)

@@ -7,8 +7,7 @@ import { Row, Col, Spinner, InputGroup, FormControl, Button } from 'react-bootst
 import { FaSearch } from 'react-icons/fa';
 import Pagination from "react-js-pagination";
 import translate from "../../Assets/indexes/translate.json"
-import family_trans from "../../Assets/indexes/religious_family.json"
-import cat_trans from "../../Assets/indexes/categories.json"
+import { useSearchParams } from 'react-router-dom'
 import relationships from "../../Assets/indexes/relationships.json"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -17,13 +16,14 @@ import relationships from "../../Assets/indexes/relationships.json"
 
 function SearchResults(props) {
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
   // FILTERS NODES TO UNIQUE INDIVIDUALS (IGNORES RELATIONSHIPS)
   const unfiltArray = props.filterArray.filter((e, i) => {
     return props.filterArray.findIndex((x) => {
       return x.key === e.key
     }) === i;
   });
-  console.log(unfiltArray)
 
   //CONSTRUCT PAGINATION
   const [currentPage, setCurrentPage] = useState(1);
@@ -60,13 +60,13 @@ function SearchResults(props) {
           onChange={(value) =>  {value.preventDefault(); props.handleChange(value)}}
           onKeyPress={(e, value) =>  {if (e.key === "Enter") {e.preventDefault(); props.fetchSearch(value); setCurrentPage(1)} else {}}}
         />
-        <Button
-          variant="danger"
-          id="basic-search"
-          aria-label="basic-search-submit"
-          onClick={(value) => {props.fetchSearch(value); setCurrentPage(1)}}>
-          <FaSearch />
-        </Button>
+          <Button
+            variant="danger"
+            id="basic-search"
+            aria-label="basic-search-submit"
+            onClick={(value) => {props.fetchSearch(value); setCurrentPage(1)}}>
+            <FaSearch />
+          </Button>
       </InputGroup>
     </Col></Row>
   )}

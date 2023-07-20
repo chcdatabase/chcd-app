@@ -4,7 +4,6 @@
 import React from 'react'
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import { BsFilterLeft, BsSearch } from 'react-icons/bs'
-import Select from 'react-select'
 import ReactTooltip from "react-tooltip"
 import locations from "../../Assets/indexes/location-index.json"
 import translate from "../../Assets/indexes/translate.json"
@@ -94,7 +93,7 @@ function FilterSearch(props) {
             label={labeltrans}
             aria-label={labeltrans}
             value={i}
-            onChange={(e) =>  props.handleFilterCheck(e)}
+            onChange={(e) =>  props.handleFilterCheck(e)} 
           />)})}
         </div>
       </Col></Row></Form.Group>

@@ -76,6 +76,83 @@
   "tw": "搜索結果"
   },
 
+"download_pers_rels": {
+  "en": "Download Data on Personal Relationships",
+  "zh": "下载人际关系数据",
+  "tw": "下載人際關係數據"
+  },
+
+"download_inst_rels": {
+"en": "Download Data on Institutional Relationships",
+"zh": "下载机构关系数据",
+"tw": "下載機構關係數據"
+},
+
+"download_corp_rels": {
+  "en": "Download Data on Corporate Entity Relationships",
+  "zh": "下载组织关系数据",
+  "tw": "下載組織關係數據"
+  },
+
+"download_event_rels": {
+"en": "Download Data on Event Relationships",
+"zh": "下载事件关系数据",
+"tw": "下載事件關係數據"
+},
+
+"download_basic_data": {
+  "en": "Download Basic Data",
+  "zh": "下载基本数据",
+  "tw": "下載基本數據"
+  },
+
+"download_all_data": {
+  "en": "Download All Data",
+  "zh": "下载所有数据",
+  "tw": "下載所有數據"
+  },
+
+"download_rel_data": {
+  "en": "Download Relationship Data",
+  "zh": "下载关系数据",
+  "tw": "下載關係數據"
+  },
+
+"download_node_data": {
+  "en": "Download Node Data",
+  "zh": "下载节点数据",
+  "tw": "下載節點數據"
+  },
+
+"province": {
+  "en": "Province",
+  "zh": "省级",
+  "tw": "省級"
+  },
+
+"prefecture": {
+  "en": "Prefecture",
+  "zh": "地级",
+  "tw": "地級"
+  },
+
+"county": {
+  "en": "County",
+  "zh": "县级",
+  "tw": "縣級"
+  },
+
+"township": {
+  "en": "Township",
+  "zh": "乡级",
+  "tw": "鄉級"
+  },
+
+"village": {
+  "en": "Village",
+  "zh": "村级",
+  "tw": "村級"
+  },
 "_COMMENT": "NAVBAR TRANSLATIONS ==========================================",
 
 "language": {
@@ -283,7 +360,7 @@
 
 "corp-filter": {
   "en": "Corporate Entity Filters",
-  "zh": "组织筛选 耶稣会，非实体组织",
+  "zh": "组织筛选",
   "tw": "組織篩選"
 },
 
@@ -539,6 +616,12 @@
   "tw": "年份"
 },
 
+"custom_map": {
+  "en": "Customized Map",
+  "zh": "定制地图",
+  "tw": "定制地圖"
+},
+
 
 "_COMMENT": "POPUP TRANSLATIONS ==========================================",
 
@@ -586,6 +669,12 @@
 
 "relationship": {
   "en": "Relationship",
+  "zh": "关系",
+  "tw": "關係"
+},
+
+"relationships": {
+  "en": "Relationships",
   "zh": "关系",
   "tw": "關係"
 },
@@ -690,6 +779,18 @@
   "tw": "筆記"
 },
 
+"permalink": {
+  "en": "Permalink",
+  "zh": "永久链接",
+  "tw": "永久鏈接"
+},
+
+"permalink_copied": {
+  "en": "Permalink Copied to Clipboard",
+  "zh": "固定链接已复制到剪贴板",
+  "tw": "固定鏈接已復製到剪貼板"
+},
+
 
 "_COMMENT": "NETWORK KEY TRANSLATIONS ==========================================",
 
@@ -715,6 +816,12 @@
   "en": "Key",
   "zh": "图例",
   "tw": "圖例"
+},
+
+"custom_network_map": {
+  "en": "Customized Network Map",
+  "zh": "定制网络地图",
+  "tw": "定製網絡地圖"
 },
 
 "_COMMENT": "TOOLTIP TRANSLATIONS ==========================================",
@@ -801,6 +908,62 @@
   "en": "View a Network Graph of this Entity",
   "zh": "查看该实体的关系网",
   "tw": "查看該實體的關系網"
+},
+
+"_COMMENT": "DATAVIEW TRANSLATIONS ==========================================",
+
+"total": {
+  "en": "Total",
+  "zh": "所有",
+  "tw": "所有機構"
+},
+
+"geography": {
+  "en": "Geography",
+  "zh": "地理区域",
+  "tw": "地理區域"
+},
+
+"data_category": {
+  "en": "Data Category",
+  "zh": "数据类别",
+  "tw": "數據類別"
+},
+
+"option_select": {
+  "en": "Option Select",
+  "zh": "选项选择",
+  "tw": "選項選擇"
+},
+
+"descriptive_data": {
+  "en": "Descriptive Data",
+  "zh": "描述性数据",
+  "tw": "描述性數據"
+},
+
+"descriptive_data_chcd": {
+  "en": "Descriptive Data for the CHCD",
+  "zh": "CHCD 的描述性数据",
+  "tw": "CHCD 的描述性數據"
+},
+
+"more_info": {
+  "en": "See More Information",
+  "zh": "查看更多信息",
+  "tw": "查看更多信息"
+},
+
+"organizations": {
+  "en": "Organizations",
+  "zh": "组织",
+  "tw": "組織"
+},
+
+"long_load_message" : {
+  "en": "This query can take up to 30 seconds for larger entities. Thank you for your patience.",
+  "zh": "对于较大的实体，此查询最多可能需要 30 秒。 感谢您的耐心等待。",
+  "tw": "對於較大的實體，此查詢最多可能需要 30 秒。 感謝您的耐心等待。"
 },
 
 "_COMMENT": "END OF TRANSLATIONS =========================================="

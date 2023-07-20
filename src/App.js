@@ -3,12 +3,9 @@ import HomeView from './Components/Home/HomeView.js'
 import SearchView from './Components/Search/SearchView.js'
 import MapView from './Components/Map/MapView.js'
 import NetworkView from './Components/Network/NetworkView.js'
-import GeneralView from './Components/Data/General/GeneralView'
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
-import React, { useState } from 'react'
-import CorporateEntityView from './Components/Data/CorporateEntity/CorporateEntityView';
-import InstitutionView from './Components/Data/Institution/InstitutionView';
-import GeographicView from './Components/Data/Geographic/GeographicView';
+import DataView from './Components/Data/DataView.js'
+import { Route, Routes } from 'react-router-dom'
+import React from 'react'
 
 
 export default class App extends React.Component {
@@ -18,14 +15,13 @@ render() {
     return (
       <div className="App">
         <main className="App-header" role="main">
-            <Route path="/" exact component={HomeView}/>
-            <Route path="/search" component={SearchView} />
-            <Route path="/map" component={MapView} />
-            <Route path="/network" component={NetworkView} />
-            <Route path="/data" component={GeneralView} />
-            <Route path="/data-corporate-entity" component={CorporateEntityView} />
-            <Route path="/data-institution-view" component={InstitutionView} />
-            <Route path="/data-geographic-view" component={GeographicView} />
+              <Routes>
+                <Route path="/" exact Component={HomeView}/>
+                <Route path="/search" Component={SearchView} />
+                <Route path="/map" Component={MapView} />
+                <Route path="/network" Component={NetworkView} />
+                <Route path="/data" Component={DataView} />
+              </Routes>
         </main>
       </div>
     );

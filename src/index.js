@@ -4,10 +4,18 @@ import { BrowserRouter } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { Provider as AlertProvider } from 'react-alert'
+import AlertTemplate from 'react-alert-template-mui'
+
+const options = {
+  closeCopy: 'X'
+}
 
 ReactDOM.render(
   <BrowserRouter>
-    <App />
+    <AlertProvider template={AlertTemplate} {...options} >
+      <App />
+      </AlertProvider>
   </BrowserRouter>,
   document.getElementById('root')
 );

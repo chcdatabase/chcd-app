@@ -9,6 +9,14 @@
   font-size: $medium;
 }
 
+.filter_container_top {
+  font-family: $sans-serif;
+  padding: 1em;
+  background: $white;
+  z-index:900;
+  box-shadow: 0px 0px 8px -3px $gray;
+}
+
 .filter_container {
   display: block;
   font-family: $sans-serif;
@@ -102,6 +110,57 @@
   font-weight: bold;
 }
 
+.radio-label {
+
+}
+
+.radio-input {
+  margin: 0;
+  visibility: hidden;
+}
+
+.radio-input:checked + span {
+  border: 3px solid $red;
+  border-radius: 0.25em;
+  height: 2em;
+  width: 100%;
+  display: block;
+  float: left;
+  position: relative;
+  top: -1.75em;
+  left: 0.25em;
+  user-select: none;
+}
+
+.radio-input + span {
+  border: 2px solid $mid-gray;
+  border-radius: 0.25em;
+  height: 2em;
+  width: 100%;
+  display: block;
+  float: left;
+  position: relative;
+  top: -1.75em;
+  left: 0.25em;
+  user-select: none;
+}
+
+.radio-input:checked + span:after {
+  opacity: 1;
+}
+
+.custom-radio {
+  cursor: pointer;
+}
+
+/* for inner filled circle */
+.custom-radio::after {
+  content: '';
+  width: 0px;
+  height: 0px;
+}
+
+
 .filter-checkbox-list {
   max-height: 7.25em;
   overflow: auto;
@@ -143,7 +202,7 @@
 }
 
 @include media-breakpoint-down(lg) {
-  .filter_container {
+  .filter_container2 {
     display: block;
     font-family: $sans-serif;
     position: absolute;
@@ -166,7 +225,7 @@
     width: 100%;
   }
 
-  .filter_container2 {
+  .filter_container {
     display: block;
     font-family: "Lato", sans-serif;
     position: absolute;

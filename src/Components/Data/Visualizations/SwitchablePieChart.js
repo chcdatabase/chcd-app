@@ -1,6 +1,5 @@
 // IMPORTS ////////////////////////////////////////////////////////////////////
 import * as d3 from "d3";
-import { color } from "d3";
 
 // MAIN DEPENDENCIES
 import React, { useEffect, useState, useRef } from "react";
@@ -15,7 +14,7 @@ function SwitchablePieChart(props) {
   const chart2 = useRef();
   const legend1 = useRef();
   const legend2 = useRef();
-  const cardWidth = 600;
+  const cardWidth = 500;
 
   const drawChart = (data, ref) => {
 
@@ -26,7 +25,7 @@ function SwitchablePieChart(props) {
       .padAngle(.03);
 
     const w = cardWidth;
-    const h = 320;
+    const h = 300;
     const outerRadius = 250 / 2;
     const innerRadius = 50;
 
@@ -89,8 +88,32 @@ function SwitchablePieChart(props) {
   const drawLegend = (data, ref) => {
     // transform the value of each group to a radius that will be displayed on the chart
 
-    const w = 180;
-    const h = 320
+    function extractKeys(jsonElement) {
+      const keys = [];
+      function extractKeys(obj) {
+        for (const key in obj) {
+          if (typeof obj[key] === 'object') {
+            extractKeys(obj[key]);
+          } else if (key === 'key') {
+            keys.push(obj[key]);
+          }
+        }
+      }
+      extractKeys(jsonElement);
+      return keys;
+    }
+  
+    var keyArray = extractKeys(data)
+    var longest = keyArray.reduce(
+      function (a, b) {
+          return a.length > b.length ? a : b;
+      }
+  );
+
+    const w = longest.length*12;
+    let h
+    if (data.length > 5) {h = 18*data.length}
+    else { h = 300 }
 
     // Construct Invisibale Placeholder Piechart
     const color = d3.scaleOrdinal(d3.schemeTableau10);
@@ -98,14 +121,14 @@ function SwitchablePieChart(props) {
     const arc = d3.arc().outerRadius(0).innerRadius(0);
     const svg = d3.select(ref.current)
       .append("svg")
-      .attr("height", 22*data.length)
+      .attr("height", h)
       .attr("width", w)
       .append("g")
-      .attr("transform", 'translate(0,'+h/2+')');
+      .attr("transform", 'translate(0,'+(h/2.5)+')');
     const path = svg.selectAll('path').data(pie(data)).enter().append("path").attr("d", arc).attr("class", "shadow-filter section").attr("fill", function(d, i) {return color(d.data.key);});
 
     // add legend
-    const legendRectSize=15;
+    const legendRectSize=11;
     const legendSpacing=7;
     const legendHeight=legendRectSize+legendSpacing;
 
@@ -117,8 +140,8 @@ function SwitchablePieChart(props) {
       .attr("class", function(d, i) { return `legend ${data[i].key}`})
       //Just a calculation for x and y position
       .attr("transform", function(d,i) {
-        if (data.length > 4) {return 'translate(0,' + ((i*legendHeight) - 160) + ')';}
-        else { return 'translate(0,' + ((i*legendHeight) - 40) + ')';}
+        if (data.length > 5) {return 'translate(5,' + ((i*legendHeight) - 7*data.length) + ')';}
+        else { return 'translate(5,' + ((i*legendHeight) - 7*data.length) + ')';}
         })
 
     legend.append('rect')
@@ -131,8 +154,8 @@ function SwitchablePieChart(props) {
 
     legend.append('text')
         .attr("x", 20)
-        .attr("y", 12)
-        .attr("font-size" , "12px")
+        .attr("y", 11)
+        .attr("font-size" , "11px")
         .text(function(d, i){
           return `${d} (${data[i].value})`;
         })
@@ -150,7 +173,7 @@ function SwitchablePieChart(props) {
     <Card id="pie-chart-card" className="h-100">
         <Card.Body>
             <Tab.Container defaultActiveKey={props.title1}>
-                <Nav variant="pills" className="mb-4">
+                <Nav variant="pills" className="mb-4 d-flex justify-content-center">
                     <Nav.Item className="m-1 h-50 border border-1 border-danger rounded ">
                         <Nav.Link eventKey={props.title1}>{props.title1}</Nav.Link>
                     </Nav.Item >
@@ -160,22 +183,32 @@ function SwitchablePieChart(props) {
                 </Nav>
                 <Tab.Content>
                     <Tab.Pane eventKey={props.title1}>
-                        <div ref={chart1} style={{float: 'left', width: '360px', height: '320px'}}></div>
-                        <div ref={legend1} className="filter_scroll_area" style={{overflowX: 'hidden', overflowY: 'scroll', float: 'left', width: '200px', height: '320px'}}></div>
+                    { props.queryResult1
+                    ? <div className="d-flex flex-wrap flex-row justify-content-center">
+                        <div ref={chart1} style={{float: 'left', width: '300px', height: '320px'}}></div>
+                        <div ref={legend1} className="filter_scroll_area" style={{width: '250px', minHeight: '320px', maxHeight: '320px', height: ((18*props.queryResult1.length)+20), overflow: 'auto'}}></div>
                         { props.queryResult1NullValues > 0 && (
-                          <p className="pt-2 mb-0" style={{float: 'left', width: '100%'}}>
-                            * There are { props.queryResult1NullValues } null values. This chart only displays religious families that are recorded on 20 nodes or more.
+                          <p className="pt-3 mb-0" style={{ fontSize: '.75em', float: 'left', minWidth: '200px'}}>
+                            * This chart excludes { props.queryResult1NullValues } nodes with 'null' or 'unknown' values
                           </p>
                         )}
+                      </div>
+                    : <Spinner animation="border" role="status" variant="danger"><span className="visually-hidden">Loading...</span></Spinner>
+                    }
                     </Tab.Pane>
                     <Tab.Pane eventKey={props.title2}>
-                        <div ref={chart2} style={{float: 'left', width: '360px', height: '320px'}}></div>
-                        <div ref={legend2} className="filter_scroll_area" style={{overflowX: 'hidden', overflowY: 'scroll', float: 'left', width: '200px', height: '320px'}}></div>
+                    { props.queryResult2
+                    ? <div className="d-flex flex-wrap flex-row justify-content-center">
+                      <div ref={chart2} style={{float: 'left', width: '300px', height: '320px'}}></div>
+                        <div ref={legend2} className="filter_scroll_area" style={{width: '250px', minHeight: '320px', maxHeight: '320px', height: ((18*props.queryResult2.length)+20), overflow: 'auto'}}></div>
                         { props.queryResult1NullValues > 0 && (
-                          <p className="pt-2 mb-0" style={{float: 'left', width: '400px'}}>
-                            * There are { props.queryResult2NullValues } null values
+                          <p className="pt-3 mb-0" style={{ fontSize: '.75em', float: 'left', minWidth: '200px'}}>
+                            * This chart excludes { props.queryResult2NullValues } nodes with 'null' or 'unknown' values.
                           </p>
                         )}
+                      </div>
+                    : <Spinner animation="border" role="status" variant="danger"><span className="visually-hidden">Loading...</span></Spinner>
+                    }
                     </Tab.Pane>
                 </Tab.Content>
             </Tab.Container>

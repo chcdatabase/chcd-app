@@ -4,12 +4,9 @@
 
 import React, { useState } from 'react'
 import { FaBars, FaTimes, FaQuoteRight } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { DropdownButton, Dropdown, Button } from 'react-bootstrap';
 import translate from "../../Assets/indexes/translate.json";
-import nationality from "../../Assets/indexes/nationality.json";
-import family_trans from "../../Assets/indexes/religious_family.json";
-import cat_trans from "../../Assets/indexes/categories.json";
 import logo_en from "../../Assets/logos/logo_en.png";
 import logo_en_white from "../../Assets/logos/logo_en_white.png";
 import logo_zh from "../../Assets/logos/logo_zh.png";
@@ -72,7 +69,7 @@ function Navbar(props) {
         <a className="aria-only" href="#main">Skip to main content</a>
         <div className={navSet} >
             <div className='nav_container_logo container col'>
-                <Link onClick={closeMobileMenu} to={{pathname:"/", langGive: props.language }} title={translate[0].home[props.language]} style={logoStyle}  />
+                <NavLink onClick={closeMobileMenu} to="/" langgive={props.language} title={translate[0].home[props.language]} style={logoStyle}  />
             </div>
             <div className='container col-lg-auto'>
                 <div onClick={handleClick} className='menu-icon'>
@@ -80,43 +77,32 @@ function Navbar(props) {
                 </div>
                 <ul className={click ? 'nav-menu active' : 'nav-menu'}>
                     <li className='nav-item'>
-                        <Link onClick={closeMobileMenu} className='nav_bar_link' to={{pathname:"/", langGive: props.language }} >{translate[0].home[props.language]}</Link>
+                        <NavLink onClick={closeMobileMenu} className='nav_bar_link' to="/" search="" state={{ langgive: props.language }}>{translate[0].home[props.language]}</NavLink>
                     </li>
                     <li className='nav-item'>
-                        <Link onClick={closeMobileMenu} className='nav_bar_link' to={{pathname:"/search", langGive: props.language }} >{translate[0].explore[props.language]}</Link>
+                        <NavLink onClick={closeMobileMenu} className='nav_bar_link' to="/search" search="" state={{ langgive: props.language }}>{translate[0].explore[props.language]}</NavLink>
                     </li>
                     <li className='nav-item'>
-                        <Link onClick={closeMobileMenu} className='nav_bar_link' to={{pathname:"/map", langGive: props.language }} >{translate[0].map[props.language]}</Link>
+                        <NavLink onClick={closeMobileMenu} className='nav_bar_link' to="/map" search="" state={{ langgive: props.language }}>{translate[0].map[props.language]}</NavLink>
                     </li>
                     <li className='nav-item'>
-                        <Link onClick={closeMobileMenu} className='nav_bar_link' to={{pathname:"/network", langGive: props.language }} >{translate[0].network[props.language]}</Link>
+                        <NavLink onClick={closeMobileMenu} className='nav_bar_link' to="/network" search="" state={{ langgive: props.language }}>{translate[0].network[props.language]}</NavLink>
                     </li>
-                    {/* <li className='nav-item'>
-                        <Link onClick={closeMobileMenu} className='nav_bar_link' to={{pathname:"/data", langGive: props.language }} >{translate[0].data[props.language]}</Link>
-                    </li> */}
+                    <li className='nav-item'>
+                        <NavLink onClick={closeMobileMenu} className='nav_bar_link' to="/data" search="" state={{ langgive: props.language }}>{translate[0].data[props.language]}</NavLink>
+                    </li>
                     <li>
                       <DropdownButton
                         align="end"
                         variant="secondary"
                         className="lang-switch-button"
                         title={translate[0].language[props.language]}
+                        style={{zIndex: '99999999'}}
                       >
                         <Dropdown.Item href="#" value="en" onClick={e => props.langSwitch(e)}>EN</Dropdown.Item>
                         <Dropdown.Item href="#" value="zh" onClick={e => props.langSwitch(e)}>简体</Dropdown.Item>
                         <Dropdown.Item href="#" value="tw" onClick={e => props.langSwitch(e)}>繁體</Dropdown.Item>
                       </DropdownButton>
-                    </li>
-                    <li className='nav-item'>
-                      <Link className='lang-switch-button' data-prop="cite" onClick={(i) =>  props.toggleCite(i)} >
-                        <Button
-                          align="end"
-                          variant="secondary"
-                          className="mt-2 mx-2"
-                          style={{background: 'none'}}
-                        >
-                            <FaQuoteRight className="lang-switch-button pb-1"/>
-                        </Button>
-                      </Link>
                     </li>
                 </ul>
             </div>

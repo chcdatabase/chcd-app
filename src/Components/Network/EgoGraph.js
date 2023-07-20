@@ -10,12 +10,19 @@ import translate from "../../Assets/indexes/translate.json"
 import nationality from "../../Assets/indexes/nationality.json"
 import family_trans from "../../Assets/indexes/religious_family.json"
 import cat_trans from "../../Assets/indexes/categories.json"
+import CsvDownloadButton from 'react-json-to-csv'
+import ReactTooltip from "react-tooltip"
+import { FaRegDotCircle, FaCodeBranch, FaQuoteRight } from 'react-icons/fa'
+import { AiOutlineDownload } from "react-icons/ai";
+import { useAlert } from 'react-alert'
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // COMPONENT ////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial, language, filterDisplay, networkKey}) {
+export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial, language, filterDisplay, networkKey, getCitation, props}) {
+
+  const alert = useAlert()
 
 // CONSTRUCT CONTAINER ///////////////////////////////////////////////////////////////////////////////
   const d3Container = useRef(null);
@@ -23,6 +30,7 @@ export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial, lan
 // HOOK TO CREATE GRAPH & UPDATE  ON STATE CHANGE ////////////////////////////////////////////////////
   useEffect(() => {
     if (nodeArray.length !== 0 && d3Container.current) {
+
       //USE NODEARRAY TO CREATE NEW ARRAY WITH CONNECTION COUNT INCLUDED IN NODE SUBARRAYS
       const nodes2 = nodeArray[0].nodes;
       const rels2 = nodeArray[0].links;
@@ -137,8 +145,8 @@ export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial, lan
         })
         .attr("stroke", "#000")
         .attr("stroke-width", function(d){
-          if (d.key === node_id) {return "3"}
-          else { return "0"}
+          if (d.key === Number(node_id)) {return "3"}
+          else {return "0"}
         })
         .call(drag(simulation))
         .on('mouseover', function (d) {
@@ -200,7 +208,7 @@ export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial, lan
       //REMOVE OLD ELEMENTS
       node.exit().remove();
     }
-  },[nodeArray, selectSwitchInitial, node_id])
+  },[nodeArray, selectSwitchInitial, node_id, props])
 
 // PRE-RENDER CONSTRUCTORS //////////////////////////////////////////////////////////////////////////
 
@@ -234,12 +242,57 @@ export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial, lan
   )}
 
   // NETWORK GRAPH RETURN
-  else { return (
+  else { 
+      //CONST CSV PRINTABLE ARRAYS
+      const flatten = (obj, prefix = [], current = {}) => {
+        if (typeof(obj) === 'object' && obj !== null) { for (const key of Object.keys(obj)) {flatten(obj[key], prefix.concat(key), current)}} 
+        else {current[prefix.join('.')] = obj}return current
+      }
+
+      const testnodes = nodeArray[0].nodes;
+      let printnodes = [];
+      for (var i = 0; i < testnodes.length ; i++) {
+        printnodes.push(flatten(testnodes[i]))
+      }
+
+      const testnodes2 = nodeArray[0].links;
+      let printlinks = [];
+      for (var i = 0; i < testnodes2.length ; i++) {
+        printlinks.push(flatten(testnodes2[i]))
+      }
+
+    return (
     <div>
       <h1 className="aria-only">{translate[0]["network"][language]}</h1>
       <div className="graph_container" id="main">
-        <div id="graph-float" className={containerCheck}>
 
+        <div className="card border-1 border-light d-flex m-3 pb-3 justify-content-center position-absolute" style={{background: 'transparent', zIndex: '1000', top:'0', right:'0', height: '100px'}}>
+          <AiOutlineDownload className="w-100 h-50 text-light"/> 
+          <CsvDownloadButton delimiter="*" data={printnodes} filename="nodes" style={{borderWidth:'0px', background:'none', height: '2em'}}> 
+            <FaRegDotCircle className="link-icons2" data-tip data-for="nodes"/> 
+            <ReactTooltip id="nodes" place="left" effect="solid">{translate[0]["download_node_data"][language]}</ReactTooltip>
+          </CsvDownloadButton>
+          <CsvDownloadButton delimiter="*" data={printlinks} filename="relationships" style={{borderWidth:'0px', background:'none', height: '2em'}}> 
+            <FaCodeBranch className="link-icons2" data-tip data-for="rels"/> 
+            <ReactTooltip id="rels" place="left" effect="solid">{translate[0]["download_rel_data"][language]}</ReactTooltip>
+          </CsvDownloadButton>
+          
+        </div>
+        <div className="card border-0 d-flex m-3 pb-3 justify-content-center position-absolute" style={{background: 'transparent', zIndex: '1000', top:'105px', right:'5px', height: '50px'}}>
+          <FaQuoteRight 
+            className="link-icons2" 
+            data-tip data-for="cite"
+            onClick={() => { 
+              const link = window.location.href;
+              const title = translate[0]['custom_network_map'][language];
+              const message = getCitation(title, link);
+              const header = translate[0]["citation"][language]
+              alert.show(message, { closeCopy: 'X', title: header });
+            }}
+            />
+          <ReactTooltip id="cite" place="bottom" effect="solid">{translate[0]['citation'][language]}</ReactTooltip>
+        </div>
+        <div id="graph-float" className={containerCheck}>
           <svg className="d3-component" ref={d3Container} />
         </div>
       </div>
