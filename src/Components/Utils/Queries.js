@@ -10,7 +10,6 @@ import translate from "../../Assets/indexes/translate.json"
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
 // QUERY TO FETCH RESULTS FOR SEARCH ////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 export function fetchSearch() {
@@ -61,7 +60,7 @@ export function fetchSearch() {
   } else {}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // QUERY TO FETCH RESULTS FOR MAP ///////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 export function fetchResults() {
@@ -381,7 +380,7 @@ export function fetchResults() {
   }
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //QUERIES FOR NETWORK GRAPH  ////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -533,7 +532,6 @@ export function fetchNetworkResults() {
 };
 
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // QUERIES FOR POPUP INFORMATION ////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -546,12 +544,8 @@ export function selectSwitchAppend(event) {
     MATCH (n)-[t]-(p:Person) WHERE ID(n) =` + event +` RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat:"none"} AS SelectNodes ORDER BY SelectNodes.rel.start_year
     UNION MATCH (n)-[t]-(p:CorporateEntity) WHERE ID(n) =` + event +` RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat:"none"} AS SelectNodes ORDER BY SelectNodes.rel.start_year
     UNION MATCH (n)-[t]-(p:Event) WHERE ID(n) =` + event +` RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat:"none"} AS SelectNodes ORDER BY SelectNodes.rel.start_year
-    UNION MATCH (n)-[t]-(p:Institution)-[q]-(l) WHERE ID(n) =` + event +`
-      CALL {
-        WITH q
-        RETURN q.notes
-      }
-    RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat: apoc.convert.toString(collect(DISTINCT q.notes))} AS SelectNodes
+    UNION MATCH (n)-[t]-(p:Institution) WHERE ID(n) =` + event +`
+    RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat: t.notes} AS SelectNodes
     ORDER BY SelectNodes.rel.start_year IS NULL
     `
     session.run(selectquery).then((results) => {const selectArray = results.records.map((record) => record.get('SelectNodes')); this.setState ({ selectArray });
@@ -594,12 +588,8 @@ export function selectSwitchReduce(event, order) {
     MATCH (n)-[t]-(p:Person) WHERE ID(n) =` + event +` RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat:"none"} AS SelectNodes ORDER BY SelectNodes.rel.start_year
     UNION MATCH (n)-[t]-(p:CorporateEntity) WHERE ID(n) =` + event +` RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat:"none"} AS SelectNodes ORDER BY SelectNodes.rel.start_year
     UNION MATCH (n)-[t]-(p:Event) WHERE ID(n) =` + event +` RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat:"none"} AS SelectNodes ORDER BY SelectNodes.rel.start_year
-    UNION MATCH (n)-[t]-(p:Institution)-[q]-(l) WHERE ID(n) =` + event +`
-      CALL {
-        WITH q
-        RETURN q.notes
-      }
-    RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat: apoc.convert.toString(collect(DISTINCT q.notes))} AS SelectNodes
+    UNION MATCH (n)-[t]-(p:Institution) WHERE ID(n) =` + event +`
+    RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat: t.notes} AS SelectNodes
     ORDER BY SelectNodes.rel.start_year IS NULL
     `
     session.run(selectquery).then((results) => {const selectArray = results.records.map((record) => record.get('SelectNodes')); this.setState ({ selectArray });
@@ -813,7 +803,6 @@ export function fetchMapIndexes() {
 // QUERIES FOR DATAVIEW /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 export function fetchDBWide() {
-  console.log("all")
   this.setState ({ content: "loading" })
   this.setState ({ nodeArray: [] })
   this.setState ({ node_id: "" })
@@ -1078,7 +1067,6 @@ export function fetchInstitutionsData() {
       this.setState ({nosend: "nosend"})
   }
   else {
-    console.log("inst")
     this.setState ({ content: "loading" })
     let selectedOption = "Institution"
     this.setState ({ selectedOption });
@@ -1330,7 +1318,6 @@ export function fetchCorporateEntitiesData() {
       this.setState ({nosend: "nosend"})
   }
   else {
-    console.log("corp")
     this.setState ({ content: "loading" })
     let selectedOption = "CorporateEntity"
     this.setState ({ selectedOption });
@@ -1625,7 +1612,6 @@ export function fetchGeographyData() {
       this.setState ({nosend: "nosend"})
   }
   else {
-    console.log("geo")
     let selectedOption = "Geography"
     this.setState ({ content: "loading" })
     this.setState ({ selectedOption });

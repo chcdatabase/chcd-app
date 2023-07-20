@@ -131,7 +131,7 @@ function DataResults(props) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
   // INITIAL ALL DATABASE RETURN ///////////////////////////////////////////////////////////////////////////
-  if (props.nodeArray.length === 0 || props.selectedOption === "All") { {console.log("all-disp"); console.log(props.nodeArray)} return (
+  if (props.nodeArray.length === 0 || props.selectedOption === "All") { return (
     <div className={containerCheck + " bg-light px-5 py-3 data_container" } >
       <div style={{margin: 'auto auto'}}>
         <Row className="w-100">
@@ -237,7 +237,7 @@ function DataResults(props) {
   )}
 
   // CORP DATA RETURN //////////////////////////////////////////////////////////////////////////////////////
-  else if (props.nodeArray.labels[0] === "CorporateEntity") { {console.log(props.nodeArray); console.log("corp-disp")} return ( 
+  else if (props.nodeArray.labels[0] === "CorporateEntity") {  return ( 
     <div className={containerCheck + " bg-light px-5 py-3 data_container" }>
       <div style={{margin: 'auto auto'}}>
       <h1 className="aria-only">{translate[0]["search"][props.language]}</h1>
@@ -367,7 +367,7 @@ function DataResults(props) {
   )}
 
   // INST DATA RETURN //////////////////////////////////////////////////////////////////////////////////////
-  else if (props.nodeArray.labels[0] === "Institution") { {console.log(props.nodeArray.labels[0]); console.log("inst-disp")} return ( 
+  else if (props.nodeArray.labels[0] === "Institution") { return ( 
     <div className={containerCheck + " bg-light px-5 py-3 data_container" }>
       <div style={{margin: 'auto auto'}}>
       <h1 className="aria-only">{translate[0]["search"][props.language]}</h1>
@@ -466,7 +466,7 @@ function DataResults(props) {
   // GEO DATA RETURN
   else if (props.nodeArray.labels[0] === "County" || 
           props.nodeArray.labels[0] === "Prefecture" || 
-          props.nodeArray.labels[0] === "Province") { {console.log(props.nodeArray); console.log("geo-disp")} return (
+          props.nodeArray.labels[0] === "Province") { return (
     <div className={containerCheck + " bg-light px-5 py-3 data_container" }>
       <div style={{margin: 'auto auto'}}>
       <h1 className="aria-only">{translate[0]["search"][props.language]}</h1>
@@ -595,7 +595,7 @@ function DataResults(props) {
   )}
 
   // LOADING STATE RETURN ///////////////////////////////////////////////////////////////////////////
-  else { {console.log("loading")} return (
+  else { return (
     <div className="bg-light d-flex" style={{height: '60vh'}}>
       <div style={{margin: 'auto auto'}}>
         <Row><Col>

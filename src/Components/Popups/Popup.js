@@ -33,7 +33,6 @@ const printCorp = print.filter(i => i.end_type === "CorporateEntity");
 const printEvent = print.filter(i => i.end_type === "Event");
 
 
-
 // PEOPLE RELATIONSHIPS CONSTRUCTOR ///////////////////////////////////////////////////////////////////////////////
   const getPersRels = () => {
     const persRels = props.selectArray.filter(type => type.rel_kind === "Person")
@@ -45,8 +44,8 @@ const printEvent = print.filter(i => i.end_type === "Event");
         }}
         let source = sourceCheck(node)
 
-        function noteCheck(node) { if (node.rel_locat.length >= 1 && node.rel_locat != "none") {
-          return (<li className="card_sources list-group-item px-3 pt-0 pb-1 border-0 border-bottom-1"><span className="popup_card_header sources">{translate[0]["note"][props.language]}:</span> {node.rel_locat}</li>)
+        function noteCheck(node) { if (node.rel.notes) {
+          return (<li className="card_sources list-group-item px-3 pt-0 pb-1 border-0 border-bottom-1"><span className="popup_card_header sources">{translate[0]["note"][props.language]}:</span> {node.rel.notes}</li>)
         }}
         let note = noteCheck(node)
 
@@ -131,8 +130,8 @@ const printEvent = print.filter(i => i.end_type === "Event");
       }}
       let source = sourceCheck(node)
 
-      function noteCheck(node) { if (node.rel_locat.length >= 1 && node.rel_locat != "none") {
-        return (<li className="card_sources list-group-item px-3 pt-0 pb-1 border-0 border-bottom-1"><span className="popup_card_header sources">{translate[0]["note"][props.language]}:</span> {node.rel_locat}</li>)
+      function noteCheck(node) { if (node.rel.notes) {
+        return (<li className="card_sources list-group-item px-3 pt-0 pb-1 border-0 border-bottom-1"><span className="popup_card_header sources">{translate[0]["note"][props.language]}:</span> {node.rel.notes}</li>)
       }}
       let note = noteCheck(node)
 
@@ -206,8 +205,8 @@ const printEvent = print.filter(i => i.end_type === "Event");
       }}
       let source = sourceCheck(node)
 
-      function noteCheck(node) { if (node.rel_locat.length >= 1 && node.rel_locat != "none") {
-        return (<li className="card_sources list-group-item px-3 pt-0 pb-1 border-0 border-bottom-1"><span className="popup_card_header sources">{translate[0]["note"][props.language]}:</span> {node.rel_locat}</li>)
+      function noteCheck(node) { if (node.rel.notes) {
+        return (<li className="card_sources list-group-item px-3 pt-0 pb-1 border-0 border-bottom-1"><span className="popup_card_header sources">{translate[0]["note"][props.language]}:</span> {node.rel.notes}</li>)
       }}
       let note = noteCheck(node)
 
@@ -281,8 +280,8 @@ const printEvent = print.filter(i => i.end_type === "Event");
       }}
       let source = sourceCheck(node)
 
-      function noteCheck(node) { if (node.rel_locat.length >= 1 && node.rel_locat != "none") {
-        return (<li className="card_sources list-group-item px-3 pt-0 pb-1 border-0 border-bottom-1"><span className="popup_card_header sources">{translate[0]["note"][props.language]}:</span> {node.rel_locat}</li>)
+      function noteCheck(node) { if (node.rel.notes) {
+        return (<li className="card_sources list-group-item px-3 pt-0 pb-1 border-0 border-bottom-1"><span className="popup_card_header sources">{translate[0]["note"][props.language]}:</span> {node.rel.notes}</li>)
       }}
       let note = noteCheck(node)
 
