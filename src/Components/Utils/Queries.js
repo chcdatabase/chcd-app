@@ -806,8 +806,6 @@ export function fetchDBWide() {
   this.setState ({ content: "loading" })
   this.setState ({ nodeArray: [] })
   this.setState ({ node_id: "" })
-  this.setState ({ sent_id: "init" })
-  this.setState ({ nodeSelect: "" })
   this.setState ({ selectedOption: "All"});
   this.setState ({ nationality: "" });
   this.setState ({ nationalityNull: "" });

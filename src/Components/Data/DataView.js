@@ -170,6 +170,10 @@ class DataView extends React.Component {
             const info = this.props.searchParams.get('kind');
             this.setState({ selectedOption: info });
           };
+          if (this.props.searchParams.get('kind') === "All" ) {
+            const info = this.props.searchParams.get('kind');
+            this.setState({ selectedOption: "" });
+          };
         };
 
       //FROM INTERNAL LINK (I.E., PULLS DATA FROM PASSED STATE)
