@@ -1743,6 +1743,7 @@ export function fetchGeographyData() {
       const genderListFilter3 = genderListFilter2.filter((o, i) => !i ||  o.male >= (genderListFilter2[i-1].male * .25 ));
       const genderList = genderListFilter3.filter((o, i) => !i ||  o.male >= (genderListFilter3[i-1].male * .25 ));
       this.setState ({ genderList })
+      console.log({ genderList })
       session2b.close()})
 
     //FETCH NATIONALITY

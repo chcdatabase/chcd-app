@@ -40,15 +40,15 @@ export function toggleDisplay(event) {
   let h3 = event.target.dataset.prop + "-full2";
   let f ="popupcontainer-full";
   let t;
-
+  
   if (this.state.nodeSelect !== "") {this.setState({ nodeSelect: "" })}
   else {}
-
+  
   if (event.target.dataset.prop === "addinfo") { t = "addinfortext"}
   else if (event.target.dataset.prop === "addpers") { t = "addperstext"}
   else if (event.target.dataset.prop === "addinst") { t = "addinsttext"}
   else if (event.target.dataset.prop === "addevent") { t = "addeventtext"}
-  else if (event.target.dataset.prop === "addcorp") { t = "addcorptext"}
+  else if (event.target.dataset.prop === "addcorp") { t = "addcorptext"} 
 
   if ((this.state[v] === v && v === p) || (this.state[v] === v2 && v2 === f)) {
     let hidden = this.state[v] + " hide";
@@ -77,7 +77,7 @@ export function toggleDisplay(event) {
     this.setState ({[t]: "additional_info"});
     this.setState ({ breadCrumb: [] });
     return this.state[v]; }
-  
+
 };
 
 //TOGGLE FILTER STATE

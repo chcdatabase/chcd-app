@@ -75,6 +75,8 @@ function LineGraphGender(props) {
         .y(function(d) { return y(d.male) })
         .curve(d3.curveBasis)
         )
+      if (data.length === 1) {
+        
       svg.selectAll("myCircles")
       .data(data)
       .enter()
@@ -82,9 +84,10 @@ function LineGraphGender(props) {
         .attr("fill", "pink")
         .attr("stroke", "pink")
         .attr("stroke-width", 2)
-        .attr("cx", function(d) { return x(d.info) })
+        .attr("cx", function(d) { return x(parseTime(d.info))})
         .attr("cy", function(d) { return y(d.female) })
-        .attr("r", 3)
+        .attr("r", 4)
+        
       svg.selectAll("myCircles")
       .data(data)
       .enter()
@@ -92,9 +95,10 @@ function LineGraphGender(props) {
         .attr("fill", "steelblue")
         .attr("stroke", "none")
         .attr("stroke-width", 0)
-        .attr("cx", function(d) { return x(d.info) })
+        .attr("cx", function(d) { return x(parseTime(d.info))})
         .attr("cy", function(d) { return y(d.male) })
-        .attr("r", 3)
+        .attr("r", 4)
+      } else {}
 
     }, [data]);
 
