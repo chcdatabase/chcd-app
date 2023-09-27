@@ -218,13 +218,13 @@ function LeafletMap(props) {
    function getDownloadLink(props) {
     if (props.printArray.length !== 0 ) { return ( 
     <div>
-      <div className="d-flex justify-content-end position-relative" style={{zIndex: '1000', top:'4em', right:'.5em'}}>
+      <div className="d-flex justify-content-end position-absolute" style={{zIndex: '1000', bottom:'8em', right:'.25em'}}>
         <CsvDownloadButton delimiter="*" data={props.printArray} style={{borderWidth:'0px', background:'none'}}> 
           <FaFileCsv className="link-icons" data-tip data-for="all"/> 
           <ReactTooltip id="all" place="left" effect="solid">{translate[0]["download_all_data"][props.language]}</ReactTooltip>
         </CsvDownloadButton>
       </div>
-      <div className="d-flex justify-content-end position-relative" style={{zIndex: '1000', top:'4.5em', right:'.7em'}}>
+      <div className="d-flex justify-content-end position-absolute" style={{zIndex: '1000', bottom:'6em', right:'.5em'}}>
         <FaQuoteRight 
           className="link-icons pt-1" 
           data-tip data-for="cite"

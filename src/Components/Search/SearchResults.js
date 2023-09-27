@@ -104,7 +104,7 @@ function SearchResults(props) {
         if (node.properties.alternative_chinese_name_romanized) {a5 = node.properties.alternative_chinese_name_romanized}
         altVal = [a1, a2, a3, a4, a5, a6, a7].filter(Boolean).join("; ");
       }
-        if (altVal.length > 0) {altDisp = <Row><Col className="card_sources pt-1">{altVal}</Col></Row>}
+        if (altVal.length > 0) {altDisp = altVal+" | "}
       //SET NAME
       let nameVal;
       if (node.label === "Person") {
@@ -121,22 +121,30 @@ function SearchResults(props) {
       if (node.label === "CorporateEntity") {typeVal = translate[0]["corporate_entity"][props.language]; typeStyle = "d-inline-block font-weight-bold mt-1 p-2 badge bg-info"}
       else if (node.label === "Person") {typeVal = translate[0][node.label.toLowerCase()][props.language]; typeStyle = "d-inline-block font-weight-bold mt-1 p-2 badge bg-danger"}
       else if (node.label === "Institution") {typeVal = translate[0][node.label.toLowerCase()][props.language]; typeStyle = "d-inline-block font-weight-bold mt-1 p-2 badge bg-secondary"}
-      else if (node.label === "Event") {typeVal = translate[0][node.label.toLowerCase()][props.language]; typeStyle = "d-inline-block font-weight-bold mt-1 p-2 badge bg-warning"};
+      else if (node.label === "Event") {typeVal = translate[0][node.label.toLowerCase()][props.language]; typeStyle = "d-inline-block font-weight-bold mt-1 p-2 badge bg-warning"}
+      else if (node.label === "Publication") {typeVal = translate[0][node.label.toLowerCase()][props.language]; typeStyle = "d-inline-block font-weight-bold mt-1 p-2 badge bg-black"};
 
       let rel;
         if (node.rel) { rel = node.rel }
         else {rel = "N/A"}
 
+      function capitilizeFirst(str) {
+        let capitalizedString = str.toString().substr(0, 1).toUpperCase();
+        capitalizedString += str.replace(str.substr(0, 1), "");
+        return capitalizedString;
+        }
+
       let relcheck;
-        if (relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined ) {relcheck = rel}
+        if (relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined && rel !== null) {relcheck = capitilizeFirst(rel)}
         else {relcheck = relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
 
       return (
       <li className="list-group-item pt-1 pb-1"><div className="card-body px-1 p-1"><Row>
         <Col className="col-7">
-          <Row><Col className="text-start"><span className="popup_link" data-prop="popupcontainer" onClick={() => props.selectSwitchInitial((node.key))}>{nameVal}</span></Col></Row>
-          {altDisp}
-          <Row><Col className="card_sources pt-1">{relcheck} - {otherVal}</Col></Row>
+          <Row><Col className="text-start">
+            <span className="popup_link" data-prop="popupcontainer" onClick={() => props.selectSwitchInitial((node.key))}>{nameVal}</span>
+            </Col></Row>
+          <Row><Col className="card_sources lh-1 pt-1">{altDisp} {relcheck} - {otherVal}</Col></Row>
         </Col>
         <Col className="col-5 text-end">
           {props.linkCheck(props, node)}

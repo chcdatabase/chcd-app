@@ -4,6 +4,7 @@ import * as d3 from "d3";
 import { Card, Spinner} from "react-bootstrap";
 
 
+
 function LineGraphGender(props) {
     const data = props.queryResult;
     const svgRef = useRef();

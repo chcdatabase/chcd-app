@@ -110,7 +110,7 @@ function SwitchablePieChart(props) {
       }
   );
 
-    const w = longest.length*12;
+    const w = 100 + longest.length*4;
     let h
     if (data.length > 5) {h = 18*data.length}
     else { h = 300 }

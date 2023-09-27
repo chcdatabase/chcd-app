@@ -202,7 +202,7 @@
 }
 
 @include media-breakpoint-down(lg) {
-  .filter_container2 {
+  .filter_container {
     display: block;
     font-family: $sans-serif;
     position: absolute;
@@ -225,7 +225,7 @@
     width: 100%;
   }
 
-  .filter_container {
+  .filter_container2 {
     display: block;
     font-family: "Lato", sans-serif;
     position: absolute;

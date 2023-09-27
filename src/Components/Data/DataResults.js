@@ -148,6 +148,7 @@ function DataResults(props) {
               <TotalCount type={translate[0]["people"][props.language]} queryResult={props.totalPeople} language={props.language}/>
               <TotalCount type={translate[0]["institutions"][props.language]} queryResult={props.totalInstitutions} language={props.language}/>
               <TotalCount type={translate[0]["events"][props.language]} queryResult={props.totalEvents} language={props.language}/>
+              <TotalCount type={translate[0]["publications"][props.language]} queryResult={props.totalPublications} language={props.language}/>
               <TotalCount type={translate[0]["corporate_entities"][props.language]} queryResult={props.totalCorporateEntities} language={props.language}/>
           </div>
           </Col>
@@ -174,8 +175,8 @@ function DataResults(props) {
             ? <div className="h-100">
                 {(props.christianTradition && props.religiousFamily) && (
                     <SwitchablePieChart
-                        title1={titletrans.total_nodes_christ_trad[props.language]}
-                        title2={titletrans.total_nodes_rel_fam[props.language]}
+                        title1={titletrans.total_nodes_rel_fam[props.language]}
+                        title2={titletrans.total_nodes_christ_trad[props.language]}
                         queryResult1={props.religiousFamily}
                         queryResult1NullValues={props.religiousFamilyNullValues}
                         queryResult2={props.christianTradition}
@@ -216,6 +217,7 @@ function DataResults(props) {
                 {props.provinces && (
                   <ExpandList title={titletrans.area_activity[props.language]}
                   queryResult={[props.provinces, props.prefectures, props.counties]}
+                  language={props.language}
                   />
                 )}
               </div>
@@ -310,6 +312,7 @@ function DataResults(props) {
               { props.provinces && (
                 <ExpandList title={titletrans.area_activity[props.language]}
                 queryResult={[props.provinces, props.prefectures, props.counties]}
+                language={props.language}
                 />
               )}
               </div>
@@ -364,7 +367,7 @@ function DataResults(props) {
         </Row>
       </div>
     </div>
-  )}
+  )} 
 
   // INST DATA RETURN //////////////////////////////////////////////////////////////////////////////////////
   else if (props.nodeArray.labels[0] === "Institution") { return ( 
@@ -441,9 +444,9 @@ function DataResults(props) {
                     title1={titletrans.aff_people_rel_fam[props.language]}
                     title2={titletrans.aff_people_christ_trad[props.language]}
                     queryResult1={props.religiousFamily}
-                    queryResult1NullValues={props.religiousFamilyNullValues}
+                    queryResult1NullValues={0}
                     queryResult2={props.christianTradition}
-                    queryResult2NullValues={props.christianTraditionNullValues} />
+                    queryResult2NullValues={0} />
               )}
               </div>
             : <Card className="d-flex h-100 justify-content-center" style={{minHeight: '400px'}}>

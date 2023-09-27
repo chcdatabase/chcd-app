@@ -429,6 +429,86 @@ function FilterSearch(props) {
     </div>
   )}};
 
+  // SETUP EVENT FILTERS ///////////////////////////////////////////////////////////////////////////////
+
+  //PUBLICATION CATEGORY FILTER
+  function pubCatFilter(props) {
+    if (props.pubCatList.length > 0 && props.label.includes("Publication")) { return (<Form.Group className="mb-1"><Row><Col>
+      <Form.Label className="filter_label mb-0" data-tip data-for="publication_category">{translate[0]["publication_category"][props.language]}</Form.Label>
+        <ReactTooltip id="publication_category" place="right" effect="solid">{translate[0]["select_start"][props.language]} {translate[0]["publication_category"][props.language]}</ReactTooltip>
+        <div key="default-checkbox1" className="mb-1 filter-checkbox-list">
+        {props.pubCatList.filter(i => i !== undefined).map(i => {
+          let labeltrans;
+
+          function titleize(str) {
+            str = str.toLowerCase().split(' ');
+            for (var i = 0; i < str.length; i++) {
+              str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+            }
+            return str.join(' ');
+          }
+
+          let check = cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()]
+            if (check === undefined) { labeltrans = titleize(i) }
+            else {labeltrans = cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+          return (
+          <Form.Check
+            type="checkbox"
+            name="publication_category"
+            label={labeltrans}
+            aria-label={labeltrans}
+            value={i}
+            onChange={(e) =>  props.handleFilterCheck(e)}
+          />)})}
+        </div>
+      </Col></Row></Form.Group>
+    )} else { return null }
+  };
+
+  //PUBLICATION SUBCATEGORY FILTER
+  function pubSubCatFilter(props) {
+    if (props.pubSubCatList.length > 0 && props.label.includes("Publication")) { return (<Form.Group className="mb-1"><Row><Col>
+      <Form.Label className="filter_label mb-0" data-tip data-for="publication_subcategory">{translate[0]["publication_subcategory"][props.language]}</Form.Label>
+        <ReactTooltip id="publication_subcategory" place="right" effect="solid">{translate[0]["select_start"][props.language]} {translate[0]["publication_subcategory"][props.language]}</ReactTooltip>
+        <div key="default-checkbox1" className="mb-1 filter-checkbox-list">
+        {props.pubSubCatList.filter(i => i !== undefined).map(i => {
+          let labeltrans;
+
+          function titleize(str) {
+            str = str.toLowerCase().split(' ');
+            for (var i = 0; i < str.length; i++) {
+              str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+            }
+            return str.join(' ');
+          }
+
+          let check = cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()]
+            if (check === undefined) { labeltrans = titleize(i) }
+            else {labeltrans = cat_trans[0][i.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+          return (
+          <Form.Check
+            type="checkbox"
+            name="publication_subcategory"
+            label={labeltrans}
+            aria-label={labeltrans}
+            value={i}
+            onChange={(e) =>  props.handleFilterCheck(e)}
+          />)})}
+        </div>
+      </Col></Row></Form.Group>
+    )} else { return null }
+  };
+
+  // PUBLICATION FILTERS CONSTRUCTOR
+  function pubFiltersDisplay(props) { if (props.label.includes("Publication")) { return (
+    <div>
+      <div className="filter_label text-danger h6 mb-0 mt-2">{translate[0]["publication-filter"][props.language]}</div>
+      <div className="border border-danger p-2 mb-1">
+        {pubCatFilter(props)}{pubSubCatFilter(props)}
+      </div>
+    </div>
+  )}};
+
 
 // RETURNS ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -469,6 +549,7 @@ function FilterSearch(props) {
             {instFiltersDisplay(props)}
             {corpFiltersDisplay(props)}
             {eventFiltersDisplay(props)}
+            {pubFiltersDisplay(props)}
           </div>
 
 {/* SUBMIT & RESET BUTTON /////////////////////////////////////////////////////////////////////////////////// */}

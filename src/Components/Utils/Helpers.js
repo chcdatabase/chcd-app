@@ -49,6 +49,7 @@ export function toggleDisplay(event) {
   else if (event.target.dataset.prop === "addinst") { t = "addinsttext"}
   else if (event.target.dataset.prop === "addevent") { t = "addeventtext"}
   else if (event.target.dataset.prop === "addcorp") { t = "addcorptext"} 
+  else if (event.target.dataset.prop === "addpub") { t = "addpubtext"}
 
   if ((this.state[v] === v && v === p) || (this.state[v] === v2 && v2 === f)) {
     let hidden = this.state[v] + " hide";
@@ -104,6 +105,8 @@ export function filterHide() {
   }
 };
 
+
+
 //LANGUAGE SWITCHER
 export function langSwitch(event) {
   let l = event.target.attributes.value.value;
@@ -139,10 +142,13 @@ export function filterResults() {
   // EVENT FILTERS
   let event_category; if (this.state.event_category.length > 0) {event_category = this.state.event_category} else { event_category = this.state.eventCatList };
   let event_subcategory; if (this.state.event_subcategory.length > 0) {event_subcategory = this.state.event_subcategory} else { event_subcategory = this.state.eventSubCatList };
+  // publication FILTERS
+  let publication_category; if (this.state.publication_category.length > 0) {publication_category = this.state.publication_category} else { publication_category = this.state.pubCatList };
+  let publication_subcategory; if (this.state.publication_subcategory.length > 0) {publication_subcategory = this.state.publication_subcategory} else { publication_subcategory = this.state.pubSubCatList };
 
   //CONSTRUCT FILTEREED RESULTS
   if (label !== this.state.labelList || religious_family !== this.state.relFamList || christian_tradition !== this.state.christTradList || this.state.start_year !== "" || this.state.end_year !== "") {
-    let personFilter; let instFilter; let corpFilter; let eventFilter;
+    let personFilter; let instFilter; let corpFilter; let eventFilter; let pubFilter;
     if (label.includes("Person")) { personFilter = this.state.nodeArray.filter(e =>
         label.includes(e.label) &&
         religious_family.includes(e.other.religious_family) &&
@@ -172,7 +178,14 @@ export function filterResults() {
         event_category.includes(e.properties.event_category || e.other.event_category) &&
         event_subcategory.includes(e.properties.event_subcategory || e.other.event_subcategory)
     )}
-    const filterArraySub = [].concat(personFilter, instFilter, corpFilter, eventFilter).filter(i => i !== undefined)
+    if (label.includes("Publication")) { pubFilter = this.state.nodeArray.filter(e =>
+      label.includes(e.label) &&
+      religious_family.includes(e.properties.religious_family) &&
+      christian_tradition.includes(e.properties.christian_tradition) &&
+      publication_category.includes(e.properties.publication_category || e.other.publication_category) &&
+      publication_subcategory.includes(e.properties.publication_subcategory || e.other.publication_subcategory)
+  )}
+    const filterArraySub = [].concat(personFilter, instFilter, corpFilter, eventFilter, pubFilter).filter(i => i !== undefined)
 
     let filterArray = [];
     for (let i = 0; i < filterArraySub.length; i++ ) {
@@ -530,6 +543,20 @@ export function linkCheck(props, node) {
               <ReactTooltip id="network" place="bottom" effect="solid">{translate[0]["view_network"][props.language]}</ReactTooltip>
         </Link>
       </div>
+  )}
+  else if (node.label === "Publication" || node.select_kind === "Publication") { return (
+    <div className="d-inline-block">
+      <Link title="network map" to="/network" 
+        state={{ 
+          langgive: props.language,
+          sent_id: node.key,
+          selected_option: "Publication",
+          input_value: tester.name_western
+        }}>
+         <BiNetworkChart className="link-icons" data-tip data-for="network"/>
+            <ReactTooltip id="network" place="bottom" effect="solid">{translate[0]["view_network"][props.language]}</ReactTooltip>
+      </Link>
+    </div>
   )}
   else { return null }
 };

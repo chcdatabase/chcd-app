@@ -87,6 +87,7 @@ class DataView extends React.Component {
             totalRelationships: "",
             totalInstitutions: "",
             totalEvents: "",
+            totalPublications: "",
             totalNodes: "",
             totalCorporateEntities: "",
             genders: "",

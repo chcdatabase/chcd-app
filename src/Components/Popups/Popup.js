@@ -31,10 +31,20 @@ const printPers = print.filter(i => i.end_type === "Person");
 const printInst = print.filter(i => i.end_type === "Institution");
 const printCorp = print.filter(i => i.end_type === "CorporateEntity");
 const printEvent = print.filter(i => i.end_type === "Event");
+const printPub = print.filter(i => i.end_type === "Publication");
 
 
 // PEOPLE RELATIONSHIPS CONSTRUCTOR ///////////////////////////////////////////////////////////////////////////////
   const getPersRels = () => {
+
+    function titleize(str) {
+      str = str.toString().toLowerCase().replace('\(','\( ').replace('\[','\[ ').split(' ');
+      for (var i = 0; i < str.length; i++) {
+        str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+      }
+      return str.join(' ').replace('\( ','\(').replace('\[ ','\[');
+     }
+
     const persRels = props.selectArray.filter(type => type.rel_kind === "Person")
     if (persRels.length > 0) {
       const persList = persRels.map(function(node) {
@@ -59,7 +69,7 @@ const printEvent = print.filter(i => i.end_type === "Event");
           else {rel = "N/A"}
 
           let relcheck;
-            if (relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined ) {relcheck = rel}
+            if (relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined ) {relcheck = titleize(rel)}
             else {relcheck = relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
 
           let datecheck;
@@ -111,6 +121,15 @@ const printEvent = print.filter(i => i.end_type === "Event");
 
 // INSTITUTION RELATIONSHIPS CONSTRUCTOR ///////////////////////////////////////////////////////////////////////////////
   const getInstRels = () => {
+
+    function titleize(str) {
+      str = str.toString().toLowerCase().replace('\(','\( ').replace('\[','\[ ').split(' ');
+      for (var i = 0; i < str.length; i++) {
+        str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+      }
+      return str.join(' ').replace('\( ','\(').replace('\[ ','\[');
+     }
+
     const instRels = props.selectArray.filter(type => type.rel_kind === "Institution").sort((a, b) => {
       if (a.rel.start_year && b.rel.start_year) {
         return a.rel.start_year - b.rel.start_year;
@@ -144,7 +163,7 @@ const printEvent = print.filter(i => i.end_type === "Event");
        else {rel = "N/A"}
 
      let relcheck;
-       if (relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined ) {relcheck = rel}
+       if (relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined ) {relcheck = titleize(rel)}
        else {relcheck = relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
 
      let datecheck;
@@ -196,7 +215,17 @@ const printEvent = print.filter(i => i.end_type === "Event");
 
 // CORPORATE ENTITY RELATIONSHIPS CONSTRUCTOR ///////////////////////////////////////////////////////////////////////////////
   const getCorpRels = () => {
-    const corpRels = props.selectArray.filter(type => type.rel_kind === "CorporateEntity")
+
+    function titleize(str) {
+      str = str.toString().toLowerCase().replace('\(','\( ').replace('\[','\[ ').split(' ');
+      for (var i = 0; i < str.length; i++) {
+        str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+      }
+      return str.join(' ').replace('\( ','\(').replace('\[ ','\[');
+     }
+
+    const corpRels = props.selectArray
+    .filter(type => type.rel_kind === "CorporateEntity")
     if (corpRels.length > 0) {
   const corpList = corpRels.map(function(node) {
 
@@ -219,7 +248,7 @@ const printEvent = print.filter(i => i.end_type === "Event");
         else {rel = "N/A"}
 
       let relcheck;
-        if (relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined ) {relcheck = rel}
+        if (relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined ) {relcheck = titleize(rel)}
         else {relcheck = relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
 
       let datecheck;
@@ -271,7 +300,15 @@ const printEvent = print.filter(i => i.end_type === "Event");
 
 // EVENT RELATIONSHIPS CONSTRUCTOR ///////////////////////////////////////////////////////////////////////////////
   const getEventRels = () => {
-    const eventRels = props.selectArray.filter(type => type.rel_kind === "Event")
+    
+    function titleize(str) {
+      str = str.toString().toLowerCase().replace('\(','\( ').replace('\[','\[ ').split(' ');
+      for (var i = 0; i < str.length; i++) {
+        str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+      }
+      return str.join(' ').replace('\( ','\(').replace('\[ ','\[');
+     }
+     const eventRels = props.selectArray.filter(type => type.rel_kind === "Event")
     if (eventRels.length > 0) {
     const eventList = eventRels.map(function(node) {
 
@@ -294,7 +331,7 @@ const printEvent = print.filter(i => i.end_type === "Event");
        else {rel = "N/A"}
 
      let relcheck;
-       if (relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined ) {relcheck = rel}
+       if (relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined ) {relcheck = titleize(rel)}
        else {relcheck = relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
 
      let datecheck;
@@ -343,6 +380,90 @@ const printEvent = print.filter(i => i.end_type === "Event");
     )
   } else {}
   };
+
+// PUBLICATION RELATIONSHIPS CONSTRUCTOR ///////////////////////////////////////////////////////////////////////////////
+const getPubRels = () => {
+
+  function titleize(str) {
+    str = str.toString().toLowerCase().replace('\(','\( ').replace('\[','\[ ').split(' ');
+    for (var i = 0; i < str.length; i++) {
+      str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+    }
+    return str.join(' ').replace('\( ','\(').replace('\[ ','\[');
+   }
+
+  const pubRels = props.selectArray.filter(type => type.rel_kind === "Publication")
+  if (pubRels.length > 0) {
+  const pubList = pubRels.map(function(node) {
+
+    function sourceCheck(node) { if (node.rel.source) {
+      return (<li className="card_sources list-group-item px-3 pt-0 pb-1 border-0 border-bottom-1"><span className="popup_card_header sources">{translate[0]["sources"][props.language]}:</span> {node.rel.source}</li>)
+    }}
+    let source = sourceCheck(node)
+
+    function noteCheck(node) { if (node.rel.notes) {
+      return (<li className="card_sources list-group-item px-3 pt-0 pb-1 border-0 border-bottom-1"><span className="popup_card_header sources">{translate[0]["note"][props.language]}:</span> {node.rel.notes}</li>)
+    }}
+    let note = noteCheck(node)
+
+    let rel_name;
+       if ((props.language == "zh" || props.language == "tw") && node.node2.chinese_name_hanzi) { rel_name = node.node2.chinese_name_hanzi }
+       else { rel_name = node.node2.name_western }
+
+   let rel;
+     if (node.rel.rel_type) { rel = node.rel.rel_type }
+     else {rel = "N/A"}
+
+   let relcheck;
+     if (relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined ) {relcheck = titleize(rel)}
+     else {relcheck = relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+
+   let datecheck;
+     if (node.rel.start_year && node.rel.end_year)  {datecheck = node.rel.start_year+"-"+node.rel.end_year}
+     else if (node.rel.start_year) {datecheck = node.rel.start_year}
+     else if (node.rel.end_year) {datecheck = node.rel.start_year}
+     else {datecheck = "Unknown"}
+
+    return (
+      <ul className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1">
+        <li className="list-group-item pt-0 pb-0 border-0">
+          <div className="card-body px-0 p-1 border-0">
+            <Row>
+              <Col className="text-left">{relcheck}</Col>
+              <Col className="text-center"><span className="popup_link" onClick={() =>  props.selectSwitchAppend((node.key2))}>{rel_name}</span></Col>
+              <Col className="text-end">{datecheck}</Col>
+            </Row>
+          </div>
+        </li>
+        {source}{note}
+      </ul>
+)
+})
+  return (
+      <div>
+      <div className="pb-3">
+      <h2 className="popup_section_head mt-2">{translate[0]["publication_relationships"][props.language]}
+      <Button className="btn btn-sm btn-danger mx-2" data-prop="addpub" onClick={(i) =>  props.toggleDisplay(i)} role="button" >{translate[0][props.addeventtext][props.language]}</Button>
+      <CsvDownloadButton delimiter="*" data={printPub} style={{borderWidth:'0px', width:'0px', padding:'0px'}}> 
+        <BiDownload className="download-icons" data-tip data-for="pub_rels"/> 
+        <ReactTooltip id="pub_rels" place="bottom" effect="solid">{translate[0]["download_pub_rels"][props.language]}</ReactTooltip>
+        </CsvDownloadButton>
+      </h2>
+       <div className={props.addevent + ' card'}>
+        <div className="popup_card_header card-header">
+          <Row>
+            <Col className="text-left">{translate[0]["relationship"][props.language]}</Col>
+            <Col className="text-center">{translate[0]["event"][props.language]}</Col>
+            <Col className="text-end">{translate[0]["years"][props.language]}</Col>
+          </Row>
+        </div>
+        {pubList}
+      </div>
+      </div>
+    </div>
+  )
+} else {}
+};
 
 // BASIC INFORMATION CONSTRUCTOR ///////////////////////////////////////////////////////////////////////////////
   const getInfo = () => {
@@ -473,6 +594,11 @@ const printEvent = print.filter(i => i.end_type === "Event");
            if (cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {cat = check}
            else {cat = cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
            }
+         else if (info.select_node.publication_category) {
+          let check = info.select_node.publication_category;
+          if (cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {cat = titleize(check)}
+          else {cat = cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+          }
          else if (info.select_node.name_wes) {
             cat = translate[0]["geography"][props.language] 
           }
@@ -495,6 +621,11 @@ const printEvent = print.filter(i => i.end_type === "Event");
            if (cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {subcat = check}
            else {subcat = cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
            }
+         else if (info.select_node.publication_subcategory) {
+          let check = info.select_node.publication_subcategory;
+          if (cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) {subcat = titleize(check)}
+          else {subcat = cat_trans[0][check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+          }
          else if (info.select_node.name_wes) {
           let check = info.select_kind;
           let string = check.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()
@@ -517,11 +648,23 @@ const printEvent = print.filter(i => i.end_type === "Event");
 
          const selectNode = Object.entries(info.select_node)
 
-         const filter = ['id', 'name_wes','name_rom','name_zh','given_name_western', 'family_name_western', 'name_western', 'chinese_family_name_hanzi', 'chinese_given_name_hanzi', 'chinese_name_hanzi', 'chinese_family_name_romanized', 'chinese_given_name_romanized', 'chinese_name_romanized', 'alternative_name_western', 'alternative_chinese_name_hanzi', 'alternative_chinese_name_romanized', 'notes', 'source', 'gender', 'nationality', 'birth_day', 'birth_month', 'birth_year', 'birth_place', 'death_day', 'death_month', 'death_year', 'death_place', 'christian_tradition', 'religious_family', 'corporate_entity_category', 'institution_category', 'event_category', 'corporate_entity_subcategory', 'institution_subcategory', 'event_subcategory'];
+         const filter = ['id', 'name_wes','name_rom','name_zh','given_name_western', 'family_name_western', 'name_western', 'chinese_family_name_hanzi', 'chinese_given_name_hanzi', 'chinese_name_hanzi', 'chinese_family_name_romanized', 'chinese_given_name_romanized', 'chinese_name_romanized', 'alternative_name_western', 'alternative_chinese_name_hanzi', 'alternative_chinese_name_romanized', 'notes', 'source', 'gender', 'nationality', 'birth_day', 'birth_month', 'birth_year', 'birth_place', 'death_day', 'death_month', 'death_year', 'death_place', 'christian_tradition', 'religious_family', 'corporate_entity_category', 'institution_category', 'event_category', 'publication_category', 'corporate_entity_subcategory', 'institution_subcategory', 'event_subcategory', 'publication_subcategory'];
 
-         const staticInfo = Array.from(selectNode).filter(x => !filter.includes(x[0])).map(function(node) {
+         function titleize(str) {
+          str = str.toString().toLowerCase().replace('\(','\( ').replace('\[','\[ ').split(' ');
+          for (var i = 0; i < str.length; i++) {
+            str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+          }
+          return str.join(' ').replace('\( ','\(').replace('\[ ','\[');
+         }
+        
+        const staticInfo = Array.from(selectNode).filter(x => !filter.includes(x[0])).map(function(node) {
            let key;
-           let value = node[1];
+           let valueprep = node[1];
+           let value;
+
+           if (valueprep !== null){ value = titleize(valueprep)} 
+           else {value = valueprep}
 
            let keycheck = node[0]
 
@@ -536,6 +679,7 @@ const printEvent = print.filter(i => i.end_type === "Event");
              key = titleCase(keycheck)
            }
            else {key = translate[0][keycheck.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+           
 
            return (
              <ul className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1">
@@ -653,6 +797,16 @@ const printEvent = print.filter(i => i.end_type === "Event");
            }
         };
 
+        function pubCheck(i,p) {
+          let name;
+          if (info.select_node.publication_category) {
+            name = translate[0][i][props.language]
+          } else {
+            name = translate[0][p][props.language]
+          }
+          return ( name )
+        }
+
          return (
           <div className="pb-3">
              <Row><Col>
@@ -711,28 +865,28 @@ const printEvent = print.filter(i => i.end_type === "Event");
 
                   <ul className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1"><li className="list-group-item pt-0 pb-0 border-0"><div className="card-body px-0 p-1 border-0">
                    <Row>
-                     <Col className="text-left">{translate[0]["western_name"][props.language]}</Col>
+                     <Col className="text-left">{pubCheck("pub_title_wes", "western_name")}</Col>
                      <Col className="text-left col-9">{wes_name}</Col>
                     </Row>
                   </div></li></ul>
 
                   <ul className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1"><li className="list-group-item pt-0 pb-0 border-0"><div className="card-body px-0 p-1 border-0">
                    <Row>
-                     <Col className="text-left">{translate[0]["alternate_western_names"][props.language]}</Col>
+                     <Col className="text-left">{pubCheck("alt_pub_title_wes", "alternate_western_names")}</Col>
                      <Col className="text-left col-9">{alt_wes_name}</Col>
                     </Row>
                   </div></li></ul>
 
                   <ul className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1"><li className="list-group-item pt-0 pb-0 border-0"><div className="card-body px-0 p-1 border-0">
                    <Row>
-                     <Col className="text-left">{translate[0]["chinese_name"][props.language]}</Col>
+                     <Col className="text-left">{pubCheck("pub_title_zh", "chinese_name")}</Col>
                      <Col className="text-left col-9">{hanzi_name}</Col>
                     </Row>
                   </div></li></ul>
 
                   <ul className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1"><li className="list-group-item pt-0 pb-0 border-0"><div className="card-body px-0 p-1 border-0">
                     <Row>
-                      <Col className="text-left">{translate[0]["chinese_name_romanization"][props.language]}</Col>
+                      <Col className="text-left">{pubCheck("pub_title_rom", "chinese_name_romanization")}</Col>
                       <Col className="text-left col-9">{rom_name}</Col>
                      </Row>
                    </div></li></ul>
@@ -825,6 +979,7 @@ const printEvent = print.filter(i => i.end_type === "Event");
             {getInstRels()}
             {getCorpRels()}
             {getEventRels()}
+            {getPubRels()}
           </div>
         </div>
     </div>

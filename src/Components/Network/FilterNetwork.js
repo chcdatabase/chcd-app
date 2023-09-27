@@ -43,6 +43,9 @@ function typeFilter(props) {
           <div className="form-check">
             <label> <input type="radio" className="form-check-input" onChange={props.handleOptionChange} value="Event" checked={props.selectedOption === "Event"} />{translate[0]["event"][props.language]}</label>
           </div>
+          <div className="form-check">
+            <label> <input type="radio" className="form-check-input" onChange={props.handleOptionChange} value="Publication" checked={props.selectedOption === "Publication"} />{translate[0]["publication"][props.language]}</label>
+          </div>
           </Col>
         </Row>
     </Col></Row></Form.Group>
@@ -168,6 +171,15 @@ if (props.selectedOption !== "") {return (
             label={translate[0]["events"][props.language]}
             aria-label={translate[0]["events"][props.language]}
             checked={props.event_include}
+            onChange={(checked) =>  props.handleCheck(checked)}
+          />
+        </div>
+        <div key="default-checkbox4" className="mb-1">
+          <Form.Check type="checkbox"
+            name="pub_include"
+            label={translate[0]["publications"][props.language]}
+            aria-label={translate[0]["publications"][props.language]}
+            checked={props.pub_include}
             onChange={(checked) =>  props.handleCheck(checked)}
           />
         </div>

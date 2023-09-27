@@ -49,6 +49,7 @@ class NetworkView extends React.Component {
       corp_include: false,
       inst_include: false,
       event_include: false,
+      pub_include: false,
       node_id: "",
       given: "",
       degree: 1,
@@ -74,11 +75,13 @@ class NetworkView extends React.Component {
       addinst: "addinst",
       addevent: "addevent",
       addcorp: "addcorp",
+      addcorp: "addpub",
       addinfortext: "hide_additional_info",
       addperstext: "hide_additional_info",
       addinsttext: "hide_additional_info",
       addeventtext: "hide_additional_info",
       addcorptext: "hide_additional_info",
+      addpubtext: "hide_additional_info",
       noresults: "noresults hide",
       nosend: "nosend hide",
       networkKey: "addinfo hide",
@@ -136,6 +139,8 @@ class NetworkView extends React.Component {
         this.setState({ degree: 1 });
         this.setState({ people_include: true });
         this.setState({ inst_include: true });
+        this.setState({ corp_include: true });
+        this.setState({ event_include: true });
         this.setState({ selectedOption: this.props.match.params.state.selected_option  });
         this.setState({ inputValue: this.props.match.params.state.input_value  });
       };
@@ -183,6 +188,10 @@ class NetworkView extends React.Component {
         const info = this.props.searchParams.get('event_include');
         if (info === 'false') {} else { this.setState({ event_include: Boolean(info) })}; 
       };
+      if (this.props.searchParams.get('pub_include') !== "" ) {
+        const info = this.props.searchParams.get('pub_include');
+        if (info === 'false') {} else { this.setState({ pub_include: Boolean(info) })}; 
+      };
       if (this.props.searchParams.get('start_year') !== "" ) {
         const info = this.props.searchParams.get('start_year');
         this.setState({ start_year: info}); 
@@ -214,6 +223,7 @@ class NetworkView extends React.Component {
         corp_include: this.state.corp_include,
         inst_include: this.state.inst_include,
         event_include: this.state.event_include,
+        pub_include: this.state.pub_include
     });}
   };
 

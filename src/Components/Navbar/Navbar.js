@@ -5,7 +5,7 @@
 import React, { useState } from 'react'
 import { FaBars, FaTimes, FaQuoteRight } from 'react-icons/fa'
 import { NavLink } from 'react-router-dom'
-import { DropdownButton, Dropdown, Button } from 'react-bootstrap';
+import { DropdownButton, Dropdown, Button, Card } from 'react-bootstrap';
 import translate from "../../Assets/indexes/translate.json";
 import logo_en from "../../Assets/logos/logo_en.png";
 import logo_en_white from "../../Assets/logos/logo_en_white.png";
@@ -67,6 +67,19 @@ function Navbar(props) {
     return (
       <nav role="navigation">
         <a className="aria-only" href="#main">Skip to main content</a>
+          {/* <div className="bg-white text-black p-2 border border-danger border-1" 
+            style={{
+              marginLeft:'250px',
+              marginRight: '100px', 
+              marginTop: '1.5em', 
+              display:'block',
+              float:'left', 
+              position:'absolute',
+              zIndex: '9999999999999999999999'
+            }}
+          >
+            This application is under construction. Some features may not be available.
+          </div> */}
         <div className={navSet} >
             <div className='nav_container_logo container col'>
                 <NavLink onClick={closeMobileMenu} to="/" langgive={props.language} title={translate[0].home[props.language]} style={logoStyle}  />

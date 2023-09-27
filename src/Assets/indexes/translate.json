@@ -124,6 +124,12 @@
   "tw": "下載節點數據"
   },
 
+  "location_record_count": {
+    "en": "Location Record Count",
+    "zh": "位置记录数量",
+    "tw": "位置記錄數量"
+    },
+
 "province": {
   "en": "Province",
   "zh": "省级",
@@ -364,18 +370,87 @@
   "tw": "組織篩選"
 },
 
-    "corp_category": {
-      "en": "Corporate Entity Category",
-      "zh": "组织类别",
-      "tw": "組織類別"
-    },
+"corp_category": {
+  "en": "Corporate Entity Category",
+  "zh": "组织类别",
+  "tw": "組織類別"
+},
 
-    "corp_subcategory": {
-      "en": "Corporate Entity Subcategory",
-      "zh": "组织子类别",
-      "tw": "組織子類別"
-    },
+"corp_subcategory": {
+  "en": "Corporate Entity Subcategory",
+  "zh": "组织子类别",
+  "tw": "組織子類別"
+},
 
+"publication": {
+  "en": "Publication",
+  "zh": "出版物",
+  "tw": "出版品"
+},
+"publications": {
+  "en": "Publications",
+  "zh": "出版物",
+  "tw": "出版品"
+},
+"publication-filter": {
+  "en": "Publication Filters",
+  "zh": "出版物筛选",
+  "tw": "出版品篩選"
+},
+
+"publication_relationships": {
+  "en": "Publication Relationships",
+  "zh": "与出版物的关系",
+  "tw": "與出版品的關係"
+},
+
+"pub_title_wes": {
+  "en": "Western Title",
+  "zh": "西文标题",
+  "tw": "西文標題"
+},
+
+"alt_pub_title_wes": {
+  "en": "Alternative Western Title(s)",
+  "zh": "另类西方标题",
+  "tw": "另類西方標題"
+},
+
+"pub_title_zh": {
+  "en": "Chinese Title",
+  "zh": "中文标题",
+  "tw": "中文標題"
+},
+
+"pub_title_rom": {
+  "en": "Romanized Chinese Title",
+  "zh": "罗马拼音中文标题",
+  "tw": "羅馬拼音中文標題"
+},
+
+"alt_pub_title_zh": {
+  "en": "Alternative Chinese Title(s)",
+  "zh": "另类中文标题",
+  "tw": "另類中文標題"
+},
+
+"download_pub_rels": {
+  "en": "Download Publication Relationships",
+  "zh": "下载与出版物相关的数据",
+  "tw": "下載與出版物相關的數據"
+},
+
+"publication_category": {
+  "en": "Publication Category",
+  "zh": "出版物类别",
+  "tw": "出版品類別"
+},
+
+"publication_subcategory": {
+  "en": "Publication Subcategory",
+  "zh": "出版物子类别",
+  "tw": "出版品子類別"
+},
 "event-filter": {
   "en": "Event Filters",
   "zh": "历史事件筛选",

@@ -20,16 +20,19 @@ export function fetchSearch() {
 
   const query = `
   CALL db.index.fulltext.queryNodes("allPropIndex", "`+ searchProp +`~") YIELD node
-  WITH node MATCH (node)-[t]-(m)
-  RETURN {key:id(node), properties:properties(node), label:labels(node)[0], rel:t.rel_type, other:properties(m), start_year:t.start_year, end_year:t.end_year} as Nodes LIMIT 300
+  WITH node MATCH (node)-[t]-(m) 
+  WHERE node:Person OR node:Institution OR node:CorporateEntity OR node:Event OR m:Person OR m:Institution OR m:CorporateEntity OR m:Event 
+  RETURN {key:id(node), properties:properties(node), label:labels(node)[0], rel:t.rel_type, other:properties(m), start_year:t.start_year, end_year:t.end_year} as Nodes LIMIT 150
   UNION
-  MATCH (node)-[t]-(m) WHERE (any(prop in keys(m) WHERE m[prop] =~ '(?i).*`+ searchProp +`.*'))
-  RETURN {key:id(node), properties:properties(node), label:labels(node)[0], rel:t.rel_type, other_label:labels(m)[0], other:properties(m), start_year:t.start_year, end_year:t.end_year} as Nodes LIMIT 300
+  MATCH (node)-[t]-(m) 
+  WHERE node:Person OR node:Institution OR node:CorporateEntity OR node:Event OR m:Person OR m:Institution OR m:CorporateEntity OR m:Event 
+  AND (any(prop in keys(m) WHERE m[prop] =~ '(?i).*`+ searchProp +`.*'))
+  RETURN {key:id(node), properties:properties(node), label:labels(node)[0], rel:t.rel_type, other_label:labels(m)[0], other:properties(m), start_year:t.start_year, end_year:t.end_year} as Nodes LIMIT 150
     `
   session
   .run(query)
   .then((results) => {
-    this.setState ({ nodeArray: [], filterArray: [], genderList: [], nationalityList: [], labelList: [], relFamList: [], christTradList: [], instCatList: [], instSubCatList: [], corpCatList: [], corpSubCatList: [], eventCatList: [], eventSubCatList: [], affList: [] });
+    this.setState ({ nodeArray: [], filterArray: [], genderList: [], nationalityList: [], labelList: [], relFamList: [], christTradList: [], instCatList: [], instSubCatList: [], corpCatList: [], corpSubCatList: [], eventCatList: [], eventSubCatList: [], pubCatList: [], pubSubCatList: [], affList: [] });
     this.setState ({ label: "", nationality: "", gender: "", religious_family: "", christian_tradition: "", institution_category: "", institution_subcategory: "", corporate_entity_category: "", corporate_entity_subcategory: "", event_category: "", event_subcategory: "", name_western: "", inst_name_western: "" });
 
     const nodeArray = results.records.map((record) => record.get('Nodes'));
@@ -48,12 +51,14 @@ export function fetchSearch() {
       let corpSubCatList = [...new Set(nodeArray.map(item => item.properties.corporate_entity_subcategory))];
       let eventCatList = [...new Set(nodeArray.map(item => item.properties.event_category))];
       let eventSubCatList = [...new Set(nodeArray.map(item => item.properties.event_subcategory))];
+      let pubCatList = [...new Set(nodeArray.map(item => item.properties.publication_category))];
+      let pubSubCatList = [...new Set(nodeArray.map(item => item.properties.publication_subcategory))];
       let affList = [...new Set(nodeArray.map(item => {if (item.label === "Person") { return item.other.name_western }}))];
       let instList = [...new Set(nodeArray.map(item => {if (item.label === "Institution" && item.other.corporate_entity_category) { return item.other.name_western }}))];
 
       this.setState ({noResults: "no_results hide", content: "loaded" });
       this.setState ({ nodeArray, filterArray });
-      this.setState ({ instList, affList, genderList, nationalityList, labelList, relFamList, christTradList, instCatList, instSubCatList, corpCatList, corpSubCatList, eventCatList, eventSubCatList });
+      this.setState ({ instList, affList, genderList, nationalityList, labelList, relFamList, christTradList, instCatList, instSubCatList, corpCatList, corpSubCatList, eventCatList, eventSubCatList, pubCatList, pubSubCatList });
       this.setState ({ searchSet: this.state.search })
     }
     session.close()})
@@ -326,56 +331,57 @@ export function fetchResults() {
               session2.close()})
 
 
-     } else if (this.state.kind === "Events") {
-         const query = `
-           MATCH (r:Event {`+ instFilterStaticClean +`})-[t]-(l)`+ timeFilter + keyFilter +`
-           WITH r,t,l MATCH (r)-[t]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)`+ locatFilter + nameFilter2 +`
-           RETURN {key:id(r),properties:properties(r),locat:properties(l),rel:properties(t),locat_name:properties(l).name_wes} AS Nodes
-           `
-           session.run(query).then((results) => {
-             let unfiltArray = results.records.map((record) => record.get('Nodes'));
-             let nodeArray = unfiltArray.filter(node => node.locat.latitude && node.locat.longitude);
-             if (nodeArray.length === 0) {
-               this.setState ({ noresults: "noresults" });
-               this.setState ({ content: "loaded" });
-             }
-             else {
-               const mapBounds = nodeArray.map(node => ([node.locat.latitude,node.locat.longitude]));
-               this.setState ({ nodeArray });
-               this.setState ({ mapBounds });
-               this.setState ({noresults: "noresults hide"});
-               this.setState ({ content: "loaded" });
-               this.setState ({sent_id: "init"});
-             }
-             session.close()})
+    } else if (this.state.kind === "Events") {
+        const query = `
+          MATCH (r:Event {`+ instFilterStaticClean +`})-[t]-(l)`+ timeFilter + keyFilter +`
+          WITH r,t,l MATCH (r)-[t]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)`+ locatFilter + nameFilter2 +`
+          RETURN {key:id(r),properties:properties(r),locat:properties(l),rel:properties(t),locat_name:properties(l).name_wes} AS Nodes
+          `
+          session.run(query).then((results) => {
+            let unfiltArray = results.records.map((record) => record.get('Nodes'));
+            let nodeArray = unfiltArray.filter(node => node.locat.latitude && node.locat.longitude);
+            if (nodeArray.length === 0) {
+              this.setState ({ noresults: "noresults" });
+              this.setState ({ content: "loaded" });
+            }
+            else {
+              const mapBounds = nodeArray.map(node => ([node.locat.latitude,node.locat.longitude]));
+              this.setState ({ nodeArray });
+              this.setState ({ mapBounds });
+              this.setState ({noresults: "noresults hide"});
+              this.setState ({ content: "loaded" });
+              this.setState ({sent_id: "init"});
+            }
+            session.close()})
 
-             const session2 = this.driver.session()
-             const query2 = `
-             MATCH (r:Event {`+ instFilterStaticClean +`})-[t]-(l)`+ timeFilter + keyFilter +`
-             WITH r,t,l MATCH (r)-[t]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)`+ locatFilter + nameFilter2 +`
-              RETURN {
-                event_id:r.id,
-                event_name_western: r.name_western,
-                event_name_chinese: r.chinese_name_hanzi,
-                location_name_western: l.name_wes,
-                location_name_chinese: l.name_zh,
-                longitude: l.longitude,
-                latitude: l.latitude,
-                rel_type: t.rel_type, 
-                start_year: CASE WHEN toInteger(t.start_year) > 0 THEN toInteger(t.start_year) ELSE "" END, 
-                end_year: CASE WHEN toInteger(t.end_year) > 0 THEN toInteger(t.end_year) ELSE "" END, 
-                sources: COALESCE(t.source ,"")+ CASE WHEN r.source IS NOT NULL THEN ' / ' ELSE '' END + COALESCE(r.source ,""), 
-                notes: COALESCE(t.notes ,"") + CASE WHEN r.notes IS NOT NULL THEN ' / ' ELSE '' END + COALESCE(r.notes ,"")
-              } AS Nodes
-             `
-             session2
-             .run(query2)
-             .then((results) => {
-               let unfiltArrayPrint = results.records.map((record) => record.get('Nodes'));
-               let printArray = unfiltArrayPrint.filter(i => i.latitude && i.longitude);
-                 this.setState ({ printArray })
-               session2.close()})
-      }
+            const session2 = this.driver.session()
+            const query2 = `
+            MATCH (r:Event {`+ instFilterStaticClean +`})-[t]-(l)`+ timeFilter + keyFilter +`
+            WITH r,t,l MATCH (r)-[t]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)`+ locatFilter + nameFilter2 +`
+            RETURN {
+              event_id:r.id,
+              event_name_western: r.name_western,
+              event_name_chinese: r.chinese_name_hanzi,
+              location_name_western: l.name_wes,
+              location_name_chinese: l.name_zh,
+              longitude: l.longitude,
+              latitude: l.latitude,
+              rel_type: t.rel_type, 
+              start_year: CASE WHEN toInteger(t.start_year) > 0 THEN toInteger(t.start_year) ELSE "" END, 
+              end_year: CASE WHEN toInteger(t.end_year) > 0 THEN toInteger(t.end_year) ELSE "" END, 
+              sources: COALESCE(t.source ,"")+ CASE WHEN r.source IS NOT NULL THEN ' / ' ELSE '' END + COALESCE(r.source ,""), 
+              notes: COALESCE(t.notes ,"") + CASE WHEN r.notes IS NOT NULL THEN ' / ' ELSE '' END + COALESCE(r.notes ,"")
+            } AS Nodes
+            `
+            session2
+            .run(query2)
+            .then((results) => {
+              let unfiltArrayPrint = results.records.map((record) => record.get('Nodes'));
+              let printArray = unfiltArrayPrint.filter(i => i.latitude && i.longitude);
+                this.setState ({ printArray })
+              session2.close()})
+
+    } 
 
   }
 };
@@ -459,6 +465,8 @@ export function fetchNetworkResults() {
     let instFilter; if (this.state.inst_include === true) {instFilter = "+"} else {instFilter = "-"}
     let corpFilter; if (this.state.corp_include === true) {corpFilter = "+"} else {corpFilter = "-"}
     let eventFilter; if (this.state.event_include === true) {eventFilter = "+"} else {eventFilter = "-"}
+    let pubFilter; if (this.state.publ_include === true) {pubFilter = "+"} else {pubFilter = "-"}
+
 
     //CONCAT FILTERS
     const filterStatic = [nodeIdFilter]
@@ -481,7 +489,7 @@ export function fetchNetworkResults() {
     MATCH (n)-[t]-(o) WHERE id(n)=`+ nodeIdFilter +`
         CALL apoc.path.subgraphAll(n, {
           maxLevel:`+degreeFilter+`,
-          labelFilter:"`+ peopleFilter +`Person|`+ instFilter +`Institution|`+ corpFilter +`CorporateEntity|`+ eventFilter +`Event|-Village|-Township|-County|-Prefecture|-Province"
+          labelFilter:"`+ peopleFilter +`Person|`+ instFilter +`Institution|`+ corpFilter +`CorporateEntity|`+ eventFilter +`Event|`+ pubFilter +`Publication|-Village|-Township|-County|-Prefecture|-Province"
               })
         YIELD nodes, relationships
         UNWIND nodes AS ender
@@ -491,7 +499,7 @@ export function fetchNetworkResults() {
     MATCH (y)-[k]-(j) WHERE id(y)=`+ nodeIdFilter +`
         CALL apoc.path.subgraphAll(y, {
                 maxLevel:`+degreeFilter+`,
-                labelFilter:"`+ peopleFilter +`Person|`+ instFilter +`Institution|`+ corpFilter +`CorporateEntity|`+ eventFilter +`Event|-Village|-Township|-County|-Prefecture|-Province",
+                labelFilter:"`+ peopleFilter +`Person|`+ instFilter +`Institution|`+ corpFilter +`CorporateEntity|`+ eventFilter +`Event|`+ pubFilter +`Publication|-Village|-Township|-County|-Prefecture|-Province",
                 blacklistNodes: endNodes
               })
         YIELD nodes, relationships
@@ -542,6 +550,7 @@ export function selectSwitchAppend(event) {
     const session = this.driver.session()
     const selectquery = `
     MATCH (n)-[t]-(p:Person) WHERE ID(n) =` + event +` RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat:"none"} AS SelectNodes ORDER BY SelectNodes.rel.start_year
+    UNION MATCH (n)-[t]-(p:Publication) WHERE ID(n) =` + event +` RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat:"none"} AS SelectNodes ORDER BY SelectNodes.rel.start_year
     UNION MATCH (n)-[t]-(p:CorporateEntity) WHERE ID(n) =` + event +` RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat:"none"} AS SelectNodes ORDER BY SelectNodes.rel.start_year
     UNION MATCH (n)-[t]-(p:Event) WHERE ID(n) =` + event +` RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat:"none"} AS SelectNodes ORDER BY SelectNodes.rel.start_year
     UNION MATCH (n)-[t]-(p:Institution) WHERE ID(n) =` + event +`
@@ -586,6 +595,7 @@ export function selectSwitchReduce(event, order) {
     const session = this.driver.session()
     const selectquery = `
     MATCH (n)-[t]-(p:Person) WHERE ID(n) =` + event +` RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat:"none"} AS SelectNodes ORDER BY SelectNodes.rel.start_year
+    UNION MATCH (n)-[t]-(p:Publication) WHERE ID(n) =` + event +` RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat:"none"} AS SelectNodes ORDER BY SelectNodes.rel.start_year
     UNION MATCH (n)-[t]-(p:CorporateEntity) WHERE ID(n) =` + event +` RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat:"none"} AS SelectNodes ORDER BY SelectNodes.rel.start_year
     UNION MATCH (n)-[t]-(p:Event) WHERE ID(n) =` + event +` RETURN {key:id(n), select_kind:labels(n)[0], select_node:properties(n), key2:id(p), node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat:"none"} AS SelectNodes ORDER BY SelectNodes.rel.start_year
     UNION MATCH (n)-[t]-(p:Institution) WHERE ID(n) =` + event +`
@@ -810,6 +820,7 @@ export function fetchDBWide() {
   this.setState ({ nationality: "" });
   this.setState ({ nationalityNull: "" });
   this.setState ({ totalPeople: "" });
+  this.setState ({ totalPublications: "" });
   this.setState ({ totalRelationships: "" });
   this.setState ({ totalInstitutions: "" });
   this.setState ({ instTypeList: "" });
@@ -858,6 +869,14 @@ export function fetchDBWide() {
     this.setState ({ totalEvents })
     session4.close()})
 
+  //QUERY TO FETCH TOTAL PUBLICATIONS
+  const session4a = this.driver.session();
+  const query4a = `MATCH (n:Publication) RETURN count(n) AS Count`
+  session4a.run(query4a).then((results) => {
+    const totalPublications = results.records.map((record) => record.get('Count'));
+    this.setState ({ totalPublications })
+    session4a.close()})
+
   //TOTAL NODE COUNT
   const session5 = this.driver.session();
   const query5 = `MATCH (n) RETURN count(n) AS Count`
@@ -895,7 +914,7 @@ export function fetchDBWide() {
   const query8 = `MATCH (p:Province)
       UNWIND p as x
       MATCH (x:Province)<-[:LOCATED_IN|INSIDE_OF*1..5]-(q)<-[:PRESENT_AT]-(n:Person)
-      RETURN DISTINCT {Province : x.name_wes, Activity: count(n)} AS List
+      RETURN DISTINCT {Province: {en: x.name_wes, zh: x.name_zh, tw: x.name_zh}, Activity: count(n)} AS List
       ORDER BY List.Activity DESC LIMIT 10
     `
   session8.run(query8).then((results) => {
@@ -908,20 +927,20 @@ export function fetchDBWide() {
   const query9 = `MATCH (p:Prefecture)
       UNWIND p as x
       MATCH (x:Prefecture)<-[:LOCATED_IN|INSIDE_OF*1..4]-(q)<-[:PRESENT_AT]-(n:Person)
-      RETURN DISTINCT {Prefecture : x.name_wes, Activity: count(n)} AS List
+      RETURN DISTINCT {Prefecture: {en: x.name_wes, zh: x.name_zh, tw: x.name_zh}, Activity: count(n)} AS List
       ORDER BY List.Activity DESC LIMIT 10
     `
   session9.run(query9).then((results) => {
     const prefectures = results.records.map((record) => record.get('List', 'Activity'));
     this.setState ({ prefectures })
-    session.close()})
+    session9.close()})
   
   //QUERY TO GET ACTIVITY FOR COUNTIES.
   const session10 = this.driver.session();
   const query10 = `MATCH (p:County)
       UNWIND p as x
       MATCH (x:County)<-[:LOCATED_IN|INSIDE_OF*1..3]-(q)<-[:PRESENT_AT]-(n:Person)
-      RETURN DISTINCT {County : x.name_wes, Activity: count(n)} AS List
+      RETURN DISTINCT {County: {en: x.name_wes, zh: x.name_zh, tw: x.name_zh}, Activity: count(n)} AS List
       ORDER BY List.Activity DESC LIMIT 10
     `
   session10.run(query10).then((results) => {
@@ -1035,7 +1054,7 @@ export function fetchCorpOptions() {
 // GET INST DATA FOR DATA DASHBOARD SELECT
 export function fetchInstOptions() {
   const session = this.driver.session();
-  const query = `MATCH (c:Institution)--(p:Person) WHERE c.institution_category <> 'General Area' AND c.institution_subcategory <> 'General Work'
+  const query = `MATCH (c:Institution)--(p:Person) WHERE c.institution_subcategory <> 'General Work'
   WITH DISTINCT c
   RETURN {value: id(c), label: c.name_western, label_alt:c.chinese_name_hanzi, type:labels(c)[0]} as List
   `
@@ -1049,9 +1068,10 @@ export function fetchInstOptions() {
 export function fetchGeoOptions() {
   const session = this.driver.session();
   const query = `MATCH (c)--(i)
-  WHERE (c:Village OR c:Township OR c:County OR c:Prefecture OR c:Province) AND (i:Event OR i:Institution) AND i.institution_category <> 'General Area'
-  WITH DISTINCT c
-  RETURN {value: id(c), label: c.name_wes, label_alt:c.name_zh, type:labels(c)[0]} as List
+    WHERE (c:Village OR c:Township OR c:County OR c:Prefecture OR c:Province) AND (i:Event OR i:Institution)
+    WITH DISTINCT c
+    MATCH (c)-[:INSIDE_OF]->(d) WHERE (d:Township OR d:County OR d:Prefecture OR d:Province OR d:Nation)
+    RETURN {value: id(c), label: c.name_wes+", "+d.name_wes, label_alt:c.name_zh+", "+d.name_zh, type:labels(c)[0]} as List
   `
   session.run(query).then((results) => {
     const geoOptions = results.records.map((record) => record.get('List', 'Activity'));
@@ -1259,8 +1279,10 @@ export function fetchInstitutionsData() {
     MATCH (p) WHERE id(p)=`+ nodeIdFilter +`
     CALL {
       WITH p
-      MATCH (p)--(n:Person)--(t:CorporateEntity) WHERE EXISTS(t.religious_family)
-      WITH DISTINCT t.religious_family as name, count(DISTINCT n) AS count
+      MATCH (p)--(n:Person)--(t:CorporateEntity)
+      WITH DISTINCT CASE t.religious_family 
+      WHEN NULL THEN "Unknown"
+      ELSE t.religious_family END AS  name, count(DISTINCT n) AS count
       RETURN name, count AS Count
     }
     RETURN DISTINCT {religious_family: name, count: Count} AS List
@@ -1329,6 +1351,7 @@ export function fetchCorporateEntitiesData() {
     this.setState ({ provinces: "" });
     this.setState ({ counties: "" });
     this.setState ({ instDateList: "" });
+    this.setState ({ instTypeList: "" });
     this.setState ({ genderList: "" });
     this.setState ({ genders: "" });
     this.setState ({ religiousFamily: "" });
@@ -1417,8 +1440,8 @@ export function fetchCorporateEntitiesData() {
     MATCH (n) WHERE id(n)=`+ nodeIdFilter +`
     CALL {
       WITH n
-      MATCH (n)-[t]-(p:Person)--(q) WHERE id(n)=`+ nodeIdFilter +` AND p.gender IS NOT NULL AND t.start_year IS NOT NULL AND q.institution_category <> "General Area"
-      OPTIONAL MATCH (n)--(q:Institution)-[t]-(p:Person) WHERE id(n)=`+ nodeIdFilter +` AND p.gender IS NOT NULL AND t.start_year IS NOT NULL AND q.institution_category <> "General Area"
+      MATCH (n)-[t]-(p:Person)--(q) WHERE id(n)=`+ nodeIdFilter +` AND p.gender IS NOT NULL AND t.start_year IS NOT NULL 
+      OPTIONAL MATCH (n)--(q:Institution)-[t]-(p:Person) WHERE id(n)=`+ nodeIdFilter +` AND p.gender IS NOT NULL AND t.start_year IS NOT NULL
       WITH p, t.start_year as min, CASE WHEN t.end_year IS NOT NULL THEN t.end_year ELSE t.start_year END as max
       RETURN DISTINCT p, p.gender as gender, range(toInteger(min), toInteger(max)) as range
     }
@@ -1493,19 +1516,22 @@ export function fetchCorporateEntitiesData() {
         maxLevel: 4
     })
     YIELD nodes, relationships
-    WITH count, CASE labels(o)[0]
-    WHEN "Province" THEN NULL
-    WHEN "Prefecture" THEN NULL
+    WITH count, 
+    CASE labels(o)[0] WHEN "Province" THEN NULL WHEN "Prefecture" THEN NULL
     ELSE 
       CASE labels(nodes[0])[0]  WHEN NULL THEN o.name_wes ELSE nodes[0].name_wes END
-    END AS prov
-    WITH {County: prov, Activity: sum(count)} AS Lister ORDER BY Lister.Activity DESC
+    END AS prov,
+    CASE labels(o)[0] WHEN "Province" THEN NULL WHEN "Prefecture" THEN NULL
+    ELSE 
+      CASE labels(nodes[0])[0]  WHEN NULL THEN o.name_zh ELSE nodes[0].name_zh END
+    END AS provzh
+    WITH {County: {en: prov, zh: provzh, tw: provzh}, Activity: sum(count)} AS Lister ORDER BY Lister.Activity DESC
     WITH [prov in COLLECT(Lister) WHERE prov.County IS NOT NULL] as filter1 UNWIND filter1 as List
     RETURN List LIMIT 10`
     
     session5.run(query5).then((results) => {
       const counties1 = results.records.map((record) => record.get('List', 'Activity'));
-      const counties = counties1.filter(d => (d.County !== null))
+      const counties = counties1.filter(d => (d.County.en !== null))
       this.setState ({ counties })
       session5.close()})
 
@@ -1520,18 +1546,20 @@ export function fetchCorporateEntitiesData() {
         maxLevel: 4
     })
     YIELD nodes, relationships
-    WITH count, CASE labels(o)[0]
-    WHEN "Province" THEN NULL
-    ELSE 
+    WITH count, 
+    CASE labels(o)[0] WHEN "Province" THEN NULL ELSE 
       CASE labels(nodes[0])[0]  WHEN NULL THEN o.name_wes ELSE nodes[0].name_wes END
-    END AS prov
-    WITH {Prefecture: prov, Activity: sum(count)} AS Lister ORDER BY Lister.Activity DESC
+    END AS prov,
+    CASE labels(o)[0] WHEN "Province" THEN NULL ELSE 
+      CASE labels(nodes[0])[0]  WHEN NULL THEN o.name_zh ELSE nodes[0].name_zh END
+    END AS provzh
+    WITH {Prefecture: {en: prov, zh: provzh, tw: provzh}, Activity: sum(count)} AS Lister ORDER BY Lister.Activity DESC
     WITH [prov in COLLECT(Lister) WHERE prov.Prefecture IS NOT NULL] as filter1 UNWIND filter1 as List
     RETURN List LIMIT 10`
 
     session6.run(query6).then((results) => {
       const prefectures1 = results.records.map((record) => record.get('List', 'Activity'));
-      const prefectures = prefectures1.filter(d => (d.Prefecture !== null))
+      const prefectures = prefectures1.filter(d => (d.Prefecture.en !== null))
       this.setState ({ prefectures })
       session6.close()})
 
@@ -1546,12 +1574,14 @@ export function fetchCorporateEntitiesData() {
         maxLevel: 4
     })
     YIELD nodes, relationships
-    WITH count, CASE labels(nodes[0])[0]  WHEN NULL THEN o.name_wes ELSE nodes[0].name_wes END as prov
-    RETURN DISTINCT {Province: prov, Activity: sum(count)} AS List ORDER BY List.Activity DESC LIMIT 10`
+    WITH count, 
+    CASE labels(nodes[0])[0]  WHEN NULL THEN o.name_wes ELSE nodes[0].name_wes END as prov,
+    CASE labels(nodes[0])[0]  WHEN NULL THEN o.name_zh ELSE nodes[0].name_zh END as provzh
+    RETURN DISTINCT {Province: {en: prov, zh: provzh, tw: provzh}, Activity: sum(count)} AS List ORDER BY List.Activity DESC LIMIT 10`
 
     session7.run(query7).then((results) => {
       const provinces1 = results.records.map((record) => record.get('List', 'Activity'));
-      const provinces = provinces1.filter(d => (d.Province !== null))
+      const provinces = provinces1.filter(d => (d.Province.en !== null))
       this.setState ({ provinces })
       session7.close()})
 
@@ -1561,9 +1591,9 @@ export function fetchCorporateEntitiesData() {
     MATCH (p) WHERE id(p)=`+ nodeIdFilter +`
     CALL {
       WITH p
-      MATCH (p)--(q:Person)-[t]-(i:Institution) WHERE i.institution_category <> "General Area" AND t.start_year IS NOT NULL
-      OPTIONAL MATCH (p)--(i:Institution)-[t]-(q:Person) WHERE i.institution_category <> "General Area" AND t.start_year IS NOT NULL
-      OPTIONAL MATCH (p)-[t]-(i:Institution) WHERE i.institution_category <> "General Area" AND t.start_year IS NOT NULL
+      MATCH (p)--(q:Person)-[t]-(i:Institution) WHERE t.start_year IS NOT NULL
+      OPTIONAL MATCH (p)--(i:Institution)-[t]-(q:Person) WHERE t.start_year IS NOT NULL
+      OPTIONAL MATCH (p)-[t]-(i:Institution) WHERE t.start_year IS NOT NULL
       WITH DISTINCT i, t.start_year as min, CASE WHEN t.end_year IS NOT NULL THEN t.end_year ELSE t.start_year END as max
       RETURN i.name_western as name, range(toInteger(min), toInteger(max)) as years
       }
@@ -1585,12 +1615,14 @@ export function fetchCorporateEntitiesData() {
     const query9 = `MATCH (n) WHERE id(n)=`+ nodeIdFilter +`
       CALL {
           WITH n
-          MATCH (n)--(:Person)--(i:Institution) WHERE i.institution_category IS NOT NULL AND i.institution_category <> "General Area"
-          OPTIONAL MATCH (n)--(i:Institution) WHERE i.institution_category IS NOT NULL AND i.institution_category <> "General Area"
+          MATCH (n)--(:Person)--(i:Institution) 
+          OPTIONAL MATCH (n)--(i:Institution)
           RETURN DISTINCT i
       }
-      WITH i.institution_category AS type, count(*) AS count
-      RETURN DISTINCT {type: type, count: count} AS List`
+    WITH CASE i.institution_category
+      WHEN NULL THEN "N/A" 
+      ELSE i.institution_category END AS type, count(*) AS count
+    RETURN DISTINCT {type: type, count: count} AS List`
       session9.run(query9).then((results) => {
       const instArray = results.records.map((record) => record.get('List', 'type'));
       let instTypeList = [];
@@ -1713,7 +1745,7 @@ export function fetchGeographyData() {
     MATCH (n) WHERE id(n)=`+ nodeIdFilter +`
     CALL {
       WITH n
-      MATCH (n)--(q)-[t]-(p:Person) WHERE q:Event or q:Institution AND id(n)=`+ nodeIdFilter +` AND p.gender IS NOT NULL AND t.start_year IS NOT NULL AND q.institution_category <> "General Area"
+      MATCH (n)--(q)-[t]-(p:Person) WHERE q:Event or q:Institution AND id(n)=`+ nodeIdFilter +` AND p.gender IS NOT NULL AND t.start_year IS NOT NULL
       WITH p, t.start_year as min, CASE WHEN t.end_year IS NOT NULL THEN t.end_year ELSE t.start_year END as max
       RETURN DISTINCT p, p.gender as gender, range(toInteger(min), toInteger(max)) as range
     }
@@ -1743,7 +1775,6 @@ export function fetchGeographyData() {
       const genderListFilter3 = genderListFilter2.filter((o, i) => !i ||  o.male >= (genderListFilter2[i-1].male * .25 ));
       const genderList = genderListFilter3.filter((o, i) => !i ||  o.male >= (genderListFilter3[i-1].male * .25 ));
       this.setState ({ genderList })
-      console.log({ genderList })
       session2b.close()})
 
     //FETCH NATIONALITY
@@ -1824,7 +1855,7 @@ export function fetchGeographyData() {
     MATCH (p) WHERE id(p)=`+ nodeIdFilter +`
     CALL {
       WITH p
-      MATCH (p)--(i:Institution)-[t]-(q:Person) WHERE i.institution_category <> "General Area" AND t.start_year IS NOT NULL
+      MATCH (p)--(i:Institution)-[t]-(q:Person) WHERE t.start_year IS NOT NULL
       WITH DISTINCT i, t.start_year as min, CASE WHEN t.end_year IS NOT NULL THEN t.end_year ELSE t.start_year END as max
       RETURN i.name_western as name, range(toInteger(min), toInteger(max)) as years
       }
@@ -1844,12 +1875,14 @@ export function fetchGeographyData() {
     //FETCH INSTITUTIONS TYPES
     const session9 = this.driver.session();
     const query9 = `MATCH (n) WHERE id(n)=`+ nodeIdFilter +`
-      CALL {
+        CALL {
           WITH n
-          MATCH (n)--(i:Institution) WHERE i.institution_category IS NOT NULL AND i.institution_category <> "General Area"
+          MATCH (n)--(i:Institution)
           RETURN DISTINCT i
       }
-      WITH i.institution_category AS type, count(*) AS count
+      WITH CASE i.institution_category
+        WHEN NULL THEN "N/A" 
+        ELSE i.institution_category END AS type, count(*) AS count
       RETURN DISTINCT {type: type, count: count} AS List`
       session9.run(query9).then((results) => {
       const instArray = results.records.map((record) => record.get('List', 'type'));
@@ -1860,6 +1893,8 @@ export function fetchGeographyData() {
           {instTypeList.push(instArray[i])}
       }
       this.setState({ instTypeList });
+      console.log(instTypeList)
+      console.log(instArray)
       session9.close()})
     }
 };
