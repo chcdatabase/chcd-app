@@ -6,7 +6,7 @@ import React from 'react'
 import { Row, Col } from 'react-bootstrap';
 import { GiPlainCircle, GiPlainSquare } from 'react-icons/gi'
 import { IoTriangle } from 'react-icons/io5'
-import { ImDiamonds } from 'react-icons/im'
+import { ImDiamonds, ImStarFull } from 'react-icons/im'
 import { BsCircle, BsChevronDown, BsChevronUp } from 'react-icons/bs'
 import translate from "../../Assets/indexes/translate.json"
 
@@ -73,6 +73,7 @@ function NetworkKey(props) {
             <div><GiPlainSquare color="#f2905c" /> {translate[0]["institution"][props.language]}</div>
             <div><IoTriangle color="#e8859b" /> {translate[0]["corporate_entity"][props.language]}</div>
             <div><ImDiamonds color="#bc0943" /> {translate[0]["event"][props.language]}</div>
+            <div><ImStarFull color="#70bc76" /> {translate[0]["publication"][props.language]}</div>
           </div>
           <div>
             <div>&nbsp;<GiPlainCircle color="white"/>&nbsp;&nbsp;{translate[0]["fewer_connections"][props.language]}</div>

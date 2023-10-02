@@ -132,7 +132,7 @@ export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial, lan
             else if (d.label === "Institution") {return d3.symbolSquare}
             else if (d.label === "CorporateEntity") {return d3.symbolTriangle}
             else if (d.label === "Event") {return d3.symbolDiamond}
-            else if (d.label === "Publication") {return d3.symbolDiamond}
+            else if (d.label === "Publication") {return d3.symbolStar}
           })
           .size(d => myScale(d.count))
         )
@@ -140,7 +140,7 @@ export function EgoGraph({ nodeArray, content, node_id, selectSwitchInitial, lan
           if (d.label === "Institution") {return "#f2905c"}
           else if (d.label === "CorporateEntity") {return "#e8859b"}
           else if (d.label === "Event") {return "#bc0943"}
-          else if (d.label === "Publication") {return "#bc0943"}
+          else if (d.label === "Publication") {return "#70bc76"}
           else if (d.properties.gender === "Male") {return "#5cbef2"}
           else if (d.properties.gender === "Female") {return "#f25c73"}
           else {return "#b18cf5"}
