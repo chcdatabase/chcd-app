@@ -21,14 +21,17 @@ export function fetchSearch() {
   const query = `
   CALL db.index.fulltext.queryNodes("allPropIndex", "`+ searchProp +`~") YIELD node
   WITH node MATCH (node)-[t]-(m) 
-  WHERE node:Person OR node:Institution OR node:CorporateEntity OR node:Event OR m:Person OR m:Institution OR m:CorporateEntity OR m:Event 
-  RETURN {key:id(node), properties:properties(node), label:labels(node)[0], rel:t.rel_type, other:properties(m), start_year:t.start_year, end_year:t.end_year} as Nodes LIMIT 300
+  WHERE (node:Person OR node:Institution OR node:CorporateEntity OR node:Event OR node:Publication OR m:Person OR m:Institution OR m:CorporateEntity OR m:Event OR m:Publication) 
+  AND NOT (m:GeneralArea OR m:Nation)
+  RETURN DISTINCT {key:id(node), properties:properties(node), label:labels(node)[0], rel:t.rel_type, other:properties(m), start_year:t.start_year, end_year:t.end_year} as Nodes LIMIT 1000
   UNION
   MATCH (node)-[t]-(m) 
-  WHERE node:Person OR node:Institution OR node:CorporateEntity OR node:Event OR m:Person OR m:Institution OR m:CorporateEntity OR m:Event 
+  WHERE (node:Person OR node:Institution OR node:CorporateEntity OR node:Event OR node:Publication OR m:Person OR m:Institution OR m:CorporateEntity OR m:Event OR m:Publication)
+  AND NOT (node:GeneralArea OR node:Nation)
   AND (any(prop in keys(m) WHERE m[prop] =~ '(?i).*`+ searchProp +`.*'))
-  RETURN {key:id(node), properties:properties(node), label:labels(node)[0], rel:t.rel_type, other_label:labels(m)[0], other:properties(m), start_year:t.start_year, end_year:t.end_year} as Nodes LIMIT 300
+  RETURN DISTINCT {key:id(node), properties:properties(node), label:labels(node)[0], rel:t.rel_type, other_label:labels(m)[0], other:properties(m), start_year:t.start_year, end_year:t.end_year} as Nodes LIMIT 1000
     `
+    console.log(query)
   session
   .run(query)
   .then((results) => {
@@ -169,16 +172,17 @@ export function fetchResults() {
     let query;
     if (this.state.kind === "People") {
         const query = `
-          MATCH (n:Person {`+ filterStaticClean +`})-[t]-(r:Institution)-[]-(e:CorporateEntity {`+ affFilter +`})`+ timeFilter + keyFilter + personNameFilter2 +`
+          MATCH (n:Person {`+ filterStaticClean +`})-[t]-(r)-[]-(e:CorporateEntity {`+ affFilter +`})`+ timeFilter + keyFilter + personNameFilter2 +`
           WITH n,r,e,t
           MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)`+ locatFilter +`
           RETURN {key:id(n),properties:properties(n),inst:properties(r),aff:properties(e),locat:properties(l),rel:properties(t),locat_name:properties(l).name_wes} AS Nodes
           `+ unAffFilter +`
-          UNION MATCH (e:CorporateEntity {`+ affFilter +`})-[]-(n:Person {`+ filterStaticClean +`})-[t]-(r:Institution)`+ timeFilter + keyFilter + personNameFilter2 +`
+          UNION MATCH (e:CorporateEntity {`+ affFilter +`})-[]-(n:Person {`+ filterStaticClean +`})-[t]-(r)`+ timeFilter + keyFilter + personNameFilter2 +`
           WITH n,r,e,t
           MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)`+ locatFilter +`
           RETURN {key:id(n),properties:properties(n),inst:properties(r),aff:properties(e),locat:properties(l),rel:properties(t),locat_name:properties(l).name_wes} AS Nodes
           `
+          console.log(query);
           session
           .run(query)
           .then((results) => {
@@ -195,7 +199,7 @@ export function fetchResults() {
               this.setState ({noresults: "noresults hide"});
               this.setState ({ content: "loaded" });
               this.setState ({sent_id: "init"});
-              session2.close()}})
+              session.close()}})
 
             const session2 = this.driver.session()
             const query2 = `
@@ -407,6 +411,7 @@ export function fetchNetworkConfines() {
         WITH (head(collect(distinct years))) as head, (last(collect(distinct years))) as last
         RETURN {start:head, end:last} as Confines
         `
+        console.log(query)
         session.run(query).then((results) => {
           const networkConfines = results.records.map((record) => record.get('Confines'));
           let start;
@@ -450,6 +455,7 @@ export function fetchNetworkResults() {
       WITH (head(collect(distinct years))) as head, (last(collect(distinct years))) as last
       RETURN {start:head, end:last} as Confines
       `
+      console.log(query2)
       session1.run(query2).then((results) => {
         const networkConfines = results.records.map((record) => record.get('Confines'));
         if (this.state.start_year === "") {start = networkConfines[0].start } else {start = this.state.start_year}
@@ -507,6 +513,7 @@ export function fetchNetworkResults() {
            [rel in relationships | rel {source:id(startNode(rel)), target:id(endNode(rel)), start_year:rel.start_year, end_year:rel.end_year}] as rels
       RETURN {nodes:nodes, links:rels} as Graph
       `
+      console.log(query)
       session
       .run(query)
       .then((results) => {
