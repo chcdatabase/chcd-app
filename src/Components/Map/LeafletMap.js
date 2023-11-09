@@ -74,11 +74,15 @@ function LeafletMap(props) {
 
    // REDUCES FILTERED NODES TO HEATMAP COMPLIANT LAYER
    const heatArray = uniqueArray.map( (i) =>[Number(i.locat.latitude), Number(i.locat.longitude), 50])
+   console.log('UNIQUE ARRAY IN THE LEAFLETMAP CLASS')
+   console.log(props.nodeArray)
+   console.log(uniqueArray)
 
    // TEMPLATES FOR POPUPS BASED ON NODE TYPE //////////////
    /////////////////////////////////////////////////////////
    function popup(node) {
-
+    console.log("INSIDE THE POPUP FUNCTION in LEAFLETMAP")
+    console.log(node)
      //Person Popup
      if (node.properties.given_name_western) {
        let pers_name;
