@@ -81,8 +81,6 @@ function LeafletMap(props) {
    // TEMPLATES FOR POPUPS BASED ON NODE TYPE //////////////
    /////////////////////////////////////////////////////////
    function popup(node) {
-    console.log("INSIDE THE POPUP FUNCTION in LEAFLETMAP")
-    console.log(node)
      //Person Popup
      if (node.properties.given_name_western) {
        let pers_name;

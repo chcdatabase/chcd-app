@@ -201,7 +201,7 @@ export async function fetchResults() {
       unAffFilter = `UNION MATCH (n:Person {` + filterStaticClean + `})-[t]-(r:Institution)` + timeFilter + keyFilter + personNameFilter2 + `
       WITH n,r,t
       MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province) `+ locatFilter + `
-      RETURN {key:n.id+r.id+l.id+t.id,
+      RETURN {key:id(n)+id(r)+id(l)+id(t),
         properties:properties(n),inst:properties(r),aff:properties(r),locat:properties(l),rel:properties(t),locat_name:properties(l).name_wes} AS Nodes`
     }
     else { unAffFilter = "" }
@@ -218,7 +218,7 @@ export async function fetchResults() {
           UNION MATCH (e:CorporateEntity {`+ affFilter + `})-[]-(n:Person {` + filterStaticClean + `})-[t]-(r)` + timeFilter + keyFilter + personNameFilter2 + `
           WITH n,r,e,t
           MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)`+ locatFilter + `
-          RETURN {key:n.id,properties:properties(n),inst:properties(r),aff:properties(e),locat:properties(l),rel:properties(t),locat_name:properties(l).name_wes} AS Nodes
+          RETURN {key:id(n)+id(r)+id(e)+id(t),properties:properties(n),inst:properties(r),aff:properties(e),locat:properties(l),rel:properties(t),locat_name:properties(l).name_wes} AS Nodes
           `
       console.log(query);
       session
@@ -268,6 +268,7 @@ export async function fetchResults() {
             WITH n,r,e,t
             MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)`+ locatFilter + `
             RETURN {
+              key: id(n)+id(t)+id(r)+id(e)+id(l)
               person_id:n.id, 
               person_name_western: CASE WHEN n.name_western IS NOT NULL THEN n.name_western ELSE n.given_name_western + ' ' + toUpper(n.family_name_western) END,
               person_name_chinese: CASE WHEN n.chinese_name_hanzi IS NOT NULL THEN n.chinese_name_hanzi ELSE n.chinese_family_name_hanzi + '' + n.chinese_given_name_hanzi END, 
@@ -302,7 +303,7 @@ export async function fetchResults() {
       MATCH (r)-[]->(l)
       WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)` + locatFilter + nameFilter2 + `
       RETURN {
-        key: r.id,
+        key: id(r)+id(t)+id(e)+id(l),
         properties: properties(r),
         aff: properties(e),
         locat: properties(l),
@@ -315,7 +316,7 @@ export async function fetchResults() {
       MATCH (r)-[]->(l)
       WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)` + locatFilter + nameFilter2 + `
       RETURN {
-        key: r.id,
+        key: id(r)+id(t)+id(e)+id(l),
         properties: properties(r),
         aff: properties(e),
         locat: properties(l),
@@ -350,6 +351,7 @@ export async function fetchResults() {
               MATCH (r:Institution {`+ instFilterStaticClean + `})-[t]-(e:CorporateEntity {` + corpFilterStaticClean + `})` + timeFilter + keyFilter + `
               WITH t,r,e MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)`+ locatFilter + nameFilter2 + `
               RETURN {
+                key: id(r)+id(t)+id(e)+id(l)
                 inst_id:r.id,
                 inst_name_western: r.name_western,
                 inst_name_chinese: r.chinese_name_hanzi,
@@ -369,6 +371,7 @@ export async function fetchResults() {
               UNION MATCH (r:Institution {`+ instFilterStaticClean + `})-[t*2]-(e:CorporateEntity {` + corpFilterStaticClean + `})` + timeFilter_t2 + keyFilter + `
               WITH t,r,e MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)`+ locatFilter + nameFilter2 + `
               RETURN {
+                key: id(r)+id(t[1])+id(e)+id(l)
                 inst_id:r.id,
                 inst_name_western: r.name_western,
                 inst_name_chinese: r.chinese_name_hanzi,
@@ -402,7 +405,8 @@ export async function fetchResults() {
       const query = `
           MATCH (r:Event {`+ instFilterStaticClean + `})-[t]-(l)` + timeFilter + keyFilter + `
           WITH r,t,l MATCH (r)-[t]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)`+ locatFilter + nameFilter2 + `
-          RETURN {key:r.id,properties:properties(r),locat:properties(l),rel:properties(t),locat_name:properties(l).name_wes} AS Nodes
+          RETURN {key: id(r)+id(t)+id(l),
+          properties:properties(r),locat:properties(l),rel:properties(t),locat_name:properties(l).name_wes} AS Nodes
           `
       session.run(query).then((results) => {
         let unfiltArray = results.records.map((record) => record.get('Nodes'));
@@ -427,6 +431,7 @@ export async function fetchResults() {
             MATCH (r:Event {`+ instFilterStaticClean + `})-[t]-(l)` + timeFilter + keyFilter + `
             WITH r,t,l MATCH (r)-[t]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)`+ locatFilter + nameFilter2 + `
             RETURN {
+              key: id(r)+id(t)+id(l)
               event_id:r.id,
               event_name_western: r.name_western,
               event_name_chinese: r.chinese_name_hanzi,
