@@ -159,7 +159,7 @@ function DataResults(props) {
             {props.genders
             ? <div className="h-100">
                 { props.genders && (
-                    <PieChart title={titletrans.all_people_gender[props.language]} queryResult={props.genders} />
+                    <PieChart title={titletrans.all_people_gender[props.language]} queryResult={props.genders} useGenderColors={true}/>
                 )}
             </div>
             : <Card className="d-flex h-100 justify-content-center" style={{minHeight: '400px'}}>
@@ -274,7 +274,8 @@ function DataResults(props) {
             ? <div className="h-100">
               { props.genders && (
                 <PieChart title={titletrans.aff_people_gender[props.language]}
-                queryResult={props.genders} 
+                queryResult={props.genders}
+                useGenderColors={true} 
                 />
               )}
               </div>
@@ -404,7 +405,8 @@ function DataResults(props) {
             ? <div className="h-100">
               { props.genders && (
                 <PieChart title={titletrans.aff_people_gender[props.language]}
-                queryResult={props.genders} 
+                queryResult={props.genders}
+                useGenderColors={true} 
                 />
               )}
             </div>
@@ -502,7 +504,8 @@ function DataResults(props) {
             {props.genders
             ? <div className="h-100">
               <PieChart title={titletrans.aff_people_gender[props.language]} 
-                queryResult={props.genders} />
+                queryResult={props.genders}
+                useGenderColors={true} />
               </div>
             : <Card className="d-flex h-100 justify-content-center" style={{minHeight: '400px'}}>
                 <Spinner className="d-flex m-auto jsutify-content-center" animation="border" role="status" variant="danger">

@@ -370,12 +370,13 @@ export function resetFilter() {
   this.setState ({ inst_include: false });
   this.setState ({ corp_include: false });
   this.setState ({ event_include: false });
+  this.setState ({ pub_include: false });
   this.setState({ inputValue: '' });
   this.setState({ selectedOption: "All" });
   this.setState ({node_id: ""});
   this.setState ({nodeArray: []});
 
-  const del = this.props.searchParams.delete('sent_id','node_id','selectedOption','degree','node_id','selectedOption','sentInputValue','given_name_western','family_name_western','name_western','religious_family','institution_category','institution_subcategory','event_category','event_subcategory','gender','nationality','location','affiliation','start_year','end_year','people_include','corp_include','inst_include','event_include')
+  const del = this.props.searchParams.delete('sent_id','node_id','selectedOption','degree','node_id','selectedOption','sentInputValue','given_name_western','family_name_western','name_western','religious_family','institution_category','institution_subcategory','event_category','event_subcategory','gender','nationality','location','affiliation','start_year','end_year','people_include','corp_include','inst_include','event_include', 'pub_include')
   this.props.setSearchParams(del);
 };
 

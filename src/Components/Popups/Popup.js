@@ -453,7 +453,7 @@ const getPubRels = () => {
         <div className="popup_card_header card-header">
           <Row>
             <Col className="text-left">{translate[0]["relationship"][props.language]}</Col>
-            <Col className="text-center">{translate[0]["event"][props.language]}</Col>
+            <Col className="text-center">{translate[0]["publication"][props.language]}</Col>
             <Col className="text-end">{translate[0]["years"][props.language]}</Col>
           </Row>
         </div>

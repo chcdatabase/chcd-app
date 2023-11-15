@@ -141,6 +141,7 @@ class NetworkView extends React.Component {
         this.setState({ inst_include: true });
         this.setState({ corp_include: true });
         this.setState({ event_include: true });
+        this.setState({ pub_include: true });
         this.setState({ selectedOption: this.props.match.params.state.selected_option  });
         this.setState({ inputValue: this.props.match.params.state.input_value  });
       };

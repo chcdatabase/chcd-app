@@ -43,6 +43,7 @@ class DataView extends React.Component {
             corp_include: false,
             inst_include: false,
             event_include: false,
+            pub_include: false,
             node_id: "",
             given: "",
             degree: 1,

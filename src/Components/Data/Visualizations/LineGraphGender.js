@@ -100,6 +100,39 @@ function LineGraphGender(props) {
         .attr("cy", function(d) { return y(d.male) })
         .attr("r", 4)
       } else {}
+          // Add the key (legend)
+    const legend = svg
+      .append('g')
+      .attr('transform', 'translate(0, -20)'); // Adjust the position as needed
+
+    // Add legend items
+    legend
+      .append('circle')
+      .attr('cx', 10)
+      .attr('cy', 10)
+      .attr('r', 5)
+      .style('fill', 'pink');
+
+    legend
+      .append('text')
+      .attr('x', 20)
+      .attr('y', 10)
+      .text('Female')
+      .attr('alignment-baseline', 'middle');
+
+    legend
+      .append('circle')
+      .attr('cx', 90)
+      .attr('cy', 10)
+      .attr('r', 5)
+      .style('fill', 'steelblue');
+
+    legend
+      .append('text')
+      .attr('x', 100)
+      .attr('y', 10)
+      .text('Male')
+      .attr('alignment-baseline', 'middle');
 
     }, [data]);
 
