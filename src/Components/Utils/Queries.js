@@ -124,7 +124,6 @@ export function fetchResults() {
     //CONSTRUCT FILTERS FROM USER INPUT
     fetchNeo4jId(this.state.sent_id, this.driver)
       .then((internalId) => {
-        console.log(internalId);
         let personNameFilter;
         if (this.state.family_name_western === "" && this.state.given_name_western === "") { personNameFilter = "" }
         else if (this.state.family_name_western !== "" && this.state.given_name_western === "") { personNameFilter = '(toLower(n.family_name_western)=~ "(?i)' + this.state.family_name_western.replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]").replace(".", "\\.") + '" OR toLower(n.family_name_western)=~ "(?i)' + this.state.family_name_western.replace("(", "\\(").replace(")", "\\)").replace("[", "\\[").replace("]", "\\]").replace(".", "\\.") + '.*")' }
@@ -481,7 +480,6 @@ export function fetchNetworkConfines() {
     let nodeIdFilter;
     fetchNeo4jId(this.state.node_id, this.driver)
       .then((internalId) => {
-        console.log(internalId);
         if (this.state.node_id !== "") {
           nodeIdFilter = 'WHERE id(n) =' + parseFloat(internalId) + ' '
         } else { nodeIdFilter = "" };
@@ -528,7 +526,6 @@ export function fetchNetworkResults() {
     let nodeIdFilter;
     fetchNeo4jId(this.state.node_id, this.driver)
       .then((internalId) => {
-        console.log(internalId);
         if (this.state.node_id !== "") {
           nodeIdFilter = '' + parseFloat(internalId) + ' '
         } else { nodeIdFilter = "" };
@@ -655,7 +652,6 @@ export function selectSwitchAppend(event) {
   this.setState({ nodeSelect: event });
   fetchNeo4jId(event, this.driver)
     .then((internalId) => {
-      console.log(internalId);
       const session = this.driver.session()
       const selectquery = `
     MATCH (n)-[t]-(p:Person) WHERE ID(n) =` + internalId + ` RETURN {key:n.id, select_kind:labels(n)[0], select_node:properties(n), key2:p.id, node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat:"none"} AS SelectNodes ORDER BY SelectNodes.rel.start_year
@@ -711,7 +707,6 @@ export function selectSwitchReduce(event, order) {
   this.setState({ nodeSelect: event });
   fetchNeo4jId(event, this.driver)
     .then((internalId) => {
-      console.log(internalId);
       const session = this.driver.session()
       const selectquery = `
     MATCH (n)-[t]-(p:Person) WHERE ID(n) =` + internalId + ` RETURN {key:n.id, select_kind:labels(n)[0], select_node:properties(n), key2:p.id, node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat:"none"} AS SelectNodes ORDER BY SelectNodes.rel.start_year
@@ -1262,7 +1257,6 @@ export function fetchInstitutionsData() {
     let nodeIdFilter;
     fetchNeo4jId(this.state.node_id, this.driver)
       .then((internalId) => {
-        console.log(internalId);
         if (this.state.node_id !== "") {
           nodeIdFilter = '' + parseFloat(internalId) + ' '
         } else { nodeIdFilter = "" };
@@ -1537,7 +1531,6 @@ export function fetchCorporateEntitiesData() {
     let nodeIdFilter;
     fetchNeo4jId(this.state.node_id, this.driver)
       .then((internalId) => {
-        console.log(internalId);
         if (this.state.node_id !== "") {
           nodeIdFilter = '' + parseFloat(internalId) + ' '
         } else { nodeIdFilter = "" };
@@ -1860,7 +1853,6 @@ export function fetchGeographyData() {
     let nodeIdFilter;
     fetchNeo4jId(this.state.node_id, this.driver)
       .then((internalId) => {
-        console.log(internalId);
         if (this.state.node_id !== "") {
           nodeIdFilter = '' + parseFloat(internalId) + ' '
         } else { nodeIdFilter = "" };
