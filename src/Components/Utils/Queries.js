@@ -545,9 +545,9 @@ export async function fetchNetworkResults() {
     let instFilter; if (this.state.inst_include === true) { instFilter = "+" } else { instFilter = "-" }
     let corpFilter; if (this.state.corp_include === true) { corpFilter = "+" } else { corpFilter = "-" }
     let eventFilter; if (this.state.event_include === true) { eventFilter = "+" } else { eventFilter = "-" }
-    let pubFilter; if (this.state.publ_include === true) { pubFilter = "+" } else { pubFilter = "-" }
-
-
+    let pubFilter; if (this.state.pub_include === true) { pubFilter = "+" } else { pubFilter = "-" }
+    console.log(pubFilter)
+    console.log(instFilter)
     //CONCAT FILTERS
     const filterStatic = [nodeIdFilter]
     const filterStaticClean = filterStatic.filter(value => value.length > 1).join();
@@ -555,10 +555,10 @@ export async function fetchNetworkResults() {
     //CONSTRUCT QUERY WITH VARIABLES
     const session = this.driver.session();
 
-    let startFilter;
-    let endFilter;
-    if (this.state.end_year === "") { endFilter = "last" } else { endFilter = this.state.end_year }
-    if (this.state.start_year === "") { startFilter = "head" } else { startFilter = this.state.start_year }
+    let startFilter = null;
+    let endFilter = null;
+    if (this.state.end_year !== "") { endFilter = this.state.end_year }
+    if (this.state.start_year !== "") { startFilter = this.state.start_year }
 
     const query = `MATCH (n)-[t]-(o)
       WHERE id(n) = ` + nodeIdFilter + `
@@ -571,7 +571,10 @@ export async function fetchNetworkResults() {
       WITH nodes, relationships
       UNWIND nodes AS ender
       MATCH (ender:Person)-[p]-(q)
-      WHERE p.start_year >= `+ endFilter + ` OR p.end_year <= ` + startFilter + `
+      WHERE ( 
+        (${endFilter} IS NOT NULL AND p.start_year >= ${endFilter}) OR
+        (${startFilter} IS NOT NULL AND p.end_year <= ${startFilter})
+      )
       WITH collect(DISTINCT ender) AS endNodes
       MATCH (y)
       WHERE id(y) = `+ nodeIdFilter + `

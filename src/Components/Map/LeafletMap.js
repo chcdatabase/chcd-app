@@ -65,15 +65,21 @@ function LeafletMap(props) {
   //CONSTRUCT MAP
   const group = L.featureGroup();
 
-   // FILTERS NODES TO UNIQUE INSTANCES
-   const uniqueArray = props.nodeArray.filter((e, i) => {
-     return props.nodeArray.findIndex((x) => {
-       return x.key === e.key && x.locat.id === e.locat.id
-     }) === i;
-   });
+   // FILTERS NODES TO UNIQUE INSTANCES AND REDUCES FILTERED NODES TO HEATMAP COMPLIANT LAYER
+   let uniqueArray;
+   let heatArray;
+   if (props.nodeArray.length > 0) {
+    uniqueArray = props.nodeArray.filter((e, i) => {
+      return props.nodeArray.findIndex((x) => {
+        return x.key === e.key && x.locat.id === e.locat.id
+      }) === i;
+    });
+    heatArray = uniqueArray.map( (i) =>[Number(i.locat.latitude), Number(i.locat.longitude), 50])
+  } else {
+    uniqueArray = props.nodeArray;
+    heatArray = props.nodeArray;
+  }
 
-   // REDUCES FILTERED NODES TO HEATMAP COMPLIANT LAYER
-   const heatArray = uniqueArray.map( (i) =>[Number(i.locat.latitude), Number(i.locat.longitude), 50])
    console.log('UNIQUE ARRAY IN THE LEAFLETMAP CLASS')
    console.log(props.nodeArray)
    console.log(uniqueArray)
@@ -245,6 +251,52 @@ function LeafletMap(props) {
     else {}
    };
 
+   // Conditionally render the MarkerClusterGroup and its contents
+  function renderMarkers() {
+    if (uniqueArray.length > 0) {
+      return (
+        <MarkerClusterGroup
+          spiderfyDistanceMultiplier={1}
+          showCoverageOnHover={false}
+          maxClusterRadius={60}
+          iconCreateFunction={createClusterCustomIcon}
+        >
+          {uniqueArray.map((node) => (
+            <Marker
+              key={node.properties.key}
+              position={[node.locat.latitude, node.locat.longitude]}
+              icon={myIcon}
+            >
+              {popup(node)}
+            </Marker>
+          ))}
+        </MarkerClusterGroup>
+      );
+    } else {
+      // If uniqueArray is empty, you can render a placeholder or null
+      return null;
+    }
+  }
+
+  function renderHeatMap() {
+    if (heatArray.length > 0) {
+      return (
+        <LayerGroup>
+          <HeatmapLayer
+            fitBoundsOnLoad
+            fitBoundsOnUpdate
+            points={heatArray}
+            longitudeExtractor={m => m[1]}
+            latitudeExtractor={m => m[0]}
+            intensityExtractor={m => parseFloat(m[2])}
+          />
+        </LayerGroup>
+      );
+    } else {
+      // If heatArray is empty, you can render a placeholder or null
+      return null;
+    }
+  }
    // MAP RETURN
    return (
      <div>
@@ -267,35 +319,11 @@ function LeafletMap(props) {
 
         {/* LAYER CONTROLS - POINT DATA OVERLAY */}
         <LayersControl.Overlay checked name={translate[0]["point_data"][props.language]}>
-          <MarkerClusterGroup
-            spiderfyDistanceMultiplier={1}
-            showCoverageOnHover={false}
-            maxClusterRadius={60}
-            iconCreateFunction={createClusterCustomIcon}
-          >
-          {uniqueArray.map(node => (
-            <Marker
-              key={node.properties.key}
-              position={[node.locat.latitude,node.locat.longitude]}
-              icon={myIcon}
-            >
-              {popup(node)}
-            </Marker>
-          ))}
-          </MarkerClusterGroup>
+          {renderMarkers()}
           </LayersControl.Overlay>
           {/* LAYER CONTROLS - HEATMAP OVERLAY */}
           <LayersControl.Overlay name={translate[0]["heat_map"][props.language]}>
-            <LayerGroup>
-              <HeatmapLayer
-                fitBoundsOnLoad
-                fitBoundsOnUpdate
-                points={heatArray}
-                longitudeExtractor={m => m[1]}
-                latitudeExtractor={m => m[0]}
-                intensityExtractor={m => parseFloat(m[2])}
-              />
-            </LayerGroup>
+            {renderHeatMap()}
           </LayersControl.Overlay>
         </LayersControl>
       {/* ZOOM POSITIONING */}
