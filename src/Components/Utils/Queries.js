@@ -13,21 +13,16 @@ import translate from "../../Assets/indexes/translate.json"
 // method to look up the neo4j id given the CHCD id
 export async function fetchNeo4jId(chcd_id, driver) {
   let internalIdQuery = `MATCH (n) WHERE n.id = "${chcd_id}" RETURN ID(n) AS internalId LIMIT 1;`;
-  console.log(internalIdQuery)
   // Execute the internal ID lookup query
   const session = driver.session();
-  console.log(driver)
-  console.log(session)
   let internalID = "init"
 
   return session.run(internalIdQuery)
     .then((result) => {
       session.close();
       if (result.records.length > 0) {
-        console.log('internalId:', result.records[0].get('internalId'))
         return result.records[0].get('internalId');
       } else {
-        console.log('internalId: init')
         return "init"; // Return null or handle the case where no records are found
       }
     })
@@ -244,9 +239,9 @@ export async function fetchResults() {
       const session2 = this.driver.session()
       const query2 = `
             CALL {
-            MATCH (n:Person {`+ filterStaticClean + `})-[t]-(r:Institution)-[]-(e:CorporateEntity {` + affFilter + `})` + timeFilter + keyFilter + personNameFilter2 + `
+            MATCH (n:Person {${filterStaticClean}})-[t]-(r:Institution)-[]-(e:CorporateEntity {${affFilter}}) ${timeFilter} ${keyFilter} ${personNameFilter2}
             WITH n,r,e,t
-            MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)`+ locatFilter + `
+            MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province) ${locatFilter}
             RETURN {
               person_id:n.id, 
               person_name_western: CASE WHEN n.name_western IS NOT NULL THEN n.name_western ELSE n.given_name_western + ' ' + toUpper(n.family_name_western) END,
@@ -263,8 +258,8 @@ export async function fetchResults() {
               end_year: CASE WHEN toInteger(t.end_year) > 0 THEN toInteger(t.end_year) ELSE "" END, 
               sources: COALESCE(t.source ,"")+ CASE WHEN r.source IS NOT NULL THEN ' / ' ELSE '' END + COALESCE(r.source ,""), 
               notes: COALESCE(t.notes ,"") + CASE WHEN r.notes IS NOT NULL THEN ' / ' ELSE '' END + COALESCE(r.notes ,"")} AS Nodes
-            `+ unAffFilter + `
-            UNION MATCH (e:CorporateEntity {`+ affFilter + `})-[]-(n:Person {` + filterStaticClean + `})-[t]-(r:Institution)` + timeFilter + keyFilter + personNameFilter2 + `
+            ${unAffFilter}
+            UNION MATCH (e:CorporateEntity {${affFilter}})-[]-(n:Person {${filterStaticClean}})-[t]-(r:Institution) ${timeFilter} ${keyFilter} ${personNameFilter2}
             WITH n,r,e,t
             MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)`+ locatFilter + `
             RETURN {
@@ -303,7 +298,7 @@ export async function fetchResults() {
       MATCH (r)-[]->(l)
       WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)` + locatFilter + nameFilter2 + `
       RETURN {
-        key: id(r)+id(t)+id(e)+id(l),
+        key: ID(r)+ID(e)+ID(l),
         properties: properties(r),
         aff: properties(e),
         locat: properties(l),
@@ -316,7 +311,7 @@ export async function fetchResults() {
       MATCH (r)-[]->(l)
       WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)` + locatFilter + nameFilter2 + `
       RETURN {
-        key: id(r)+id(t)+id(e)+id(l),
+        key: ID(r)+ID(e)+ID(l),
         properties: properties(r),
         aff: properties(e),
         locat: properties(l),
@@ -546,8 +541,6 @@ export async function fetchNetworkResults() {
     let corpFilter; if (this.state.corp_include === true) { corpFilter = "+" } else { corpFilter = "-" }
     let eventFilter; if (this.state.event_include === true) { eventFilter = "+" } else { eventFilter = "-" }
     let pubFilter; if (this.state.pub_include === true) { pubFilter = "+" } else { pubFilter = "-" }
-    console.log(pubFilter)
-    console.log(instFilter)
     //CONCAT FILTERS
     const filterStatic = [nodeIdFilter]
     const filterStaticClean = filterStatic.filter(value => value.length > 1).join();
@@ -2048,8 +2041,6 @@ export async function fetchGeographyData() {
         { instTypeList.push(instArray[i]) }
       }
       this.setState({ instTypeList });
-      console.log(instTypeList)
-      console.log(instArray)
       session9.close()
     })
   }

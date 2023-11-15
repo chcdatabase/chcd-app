@@ -80,10 +80,6 @@ function LeafletMap(props) {
     heatArray = props.nodeArray;
   }
 
-   console.log('UNIQUE ARRAY IN THE LEAFLETMAP CLASS')
-   console.log(props.nodeArray)
-   console.log(uniqueArray)
-
    // TEMPLATES FOR POPUPS BASED ON NODE TYPE //////////////
    /////////////////////////////////////////////////////////
    function popup(node) {
