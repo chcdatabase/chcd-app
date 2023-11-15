@@ -79,7 +79,7 @@ const printPub = print.filter(i => i.end_type === "Publication");
             else {datecheck = "Unknown"}
 
           return (
-            <ul key={node.id} className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1">
+            <ul className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1">
               <li className="list-group-item pt-0 pb-0 border-0">
                 <div className="card-body px-0 p-1 border-0">
                 <Row>
@@ -173,7 +173,7 @@ const printPub = print.filter(i => i.end_type === "Publication");
        else {datecheck = "Unknown"}
 
       return (
-        <ul key={node.id} className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1">
+        <ul className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1">
           <li className="list-group-item pt-0 pb-0 border-0">
             <div className="card-body px-0 p-1 border-0">
               <Row>
@@ -258,7 +258,7 @@ const printPub = print.filter(i => i.end_type === "Publication");
         else {datecheck = "Unknown"}
 
       return (
-        <ul key={node.id} className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1">
+        <ul className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1">
           <li className="list-group-item pt-0 pb-0 border-0">
             <div className="card-body px-0 p-1 border-0">
               <Row>
@@ -341,7 +341,7 @@ const printPub = print.filter(i => i.end_type === "Publication");
        else {datecheck = "Unknown"}
 
       return (
-        <ul key={node.id} className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1">
+        <ul className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1">
           <li className="list-group-item pt-0 pb-0 border-0">
             <div className="card-body px-0 p-1 border-0">
               <Row>
@@ -425,7 +425,7 @@ const getPubRels = () => {
      else {datecheck = "Unknown"}
 
     return (
-      <ul key={node.id} className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1">
+      <ul className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1">
         <li className="list-group-item pt-0 pb-0 border-0">
           <div className="card-body px-0 p-1 border-0">
             <Row>
@@ -682,7 +682,7 @@ const getPubRels = () => {
            
 
            return (
-             <ul key={node.id} className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1">
+             <ul className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1">
                <li className="list-group-item pt-0 pb-0 border-0">
                  <div className="card-body px-0 p-1 border-0">
                    <Row>
