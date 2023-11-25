@@ -47,52 +47,72 @@ const printPub = print.filter(i => i.end_type === "Publication");
 
     const persRels = props.selectArray.filter(type => type.rel_kind === "Person")
     if (persRels.length > 0) {
-      const persList = persRels.map(function(node) {
+      // group the list into a dictionary based on person ID (one dictionary entry per person ID)
+      let restructuredData = {};
+      persRels.forEach(node => {
+        let key2Value = node.key2;
+        if(restructuredData.hasOwnProperty(key2Value)){
+          restructuredData[key2Value].push(node);
+        }else{
+          restructuredData[key2Value] = [node];
+        }
+      });
 
-        function sourceCheck(node) { if (node.rel.source) {
-          return (<li className="card_sources list-group-item px-3 pt-0 pb-1 border-0 border-bottom-1"><span className="popup_card_header sources">{translate[0]["sources"][props.language]}:</span> {node.rel.source}</li>)
-        }}
-        let source = sourceCheck(node)
+      const persList = Object.keys(restructuredData).map(key => {
+        let nodeList = restructuredData[key];
+        let first = true;
+        const keyList = nodeList.map(function(node) {
+          function sourceCheck(node) { if (node.rel.source) {
+            return (<li className="card_sources list-group-item px-3 pt-0 pb-1 border-0 border-bottom-1"><span className="popup_card_header sources">{translate[0]["sources"][props.language]}:</span> {node.rel.source}</li>)
+          }}
+          let source = sourceCheck(node)
 
-        function noteCheck(node) { if (node.rel.notes) {
-          return (<li className="card_sources list-group-item px-3 pt-0 pb-1 border-0 border-bottom-1"><span className="popup_card_header sources">{translate[0]["note"][props.language]}:</span> {node.rel.notes}</li>)
-        }}
-        let note = noteCheck(node)
+          function noteCheck(node) { if (node.rel.notes) {
+            return (<li className="card_sources list-group-item px-3 pt-0 pb-1 border-0 border-bottom-1"><span className="popup_card_header sources">{translate[0]["note"][props.language]}:</span> {node.rel.notes}</li>)
+          }}
+          let note = noteCheck(node)
 
-        let rel_name;
-           if ((props.language == "zh" || props.language == "tw") && node.node2.chinese_family_name_hanzi && node.node2.chinese_given_name_hanzi) { rel_name = `${node.node2.chinese_family_name_hanzi} ${node.node2.chinese_given_name_hanzi}` }
-           if ((props.language == "zh" || props.language == "tw") && node.node2.chinese_family_name_hanzi) { rel_name = `${node.node2.chinese_family_name_hanzi} ${node.node2.given_name_western}` }
-           else { rel_name = `${node.node2.given_name_western} ${node.node2.family_name_western}` }
+          let rel_name;
+          if (first) {
+            if ((props.language == "zh" || props.language == "tw") && node.node2.chinese_family_name_hanzi && node.node2.chinese_given_name_hanzi) { rel_name = `${node.node2.chinese_family_name_hanzi} ${node.node2.chinese_given_name_hanzi}` }
+            if ((props.language == "zh" || props.language == "tw") && node.node2.chinese_family_name_hanzi) { rel_name = `${node.node2.chinese_family_name_hanzi} ${node.node2.given_name_western}` }
+            else { rel_name = `${node.node2.given_name_western} ${node.node2.family_name_western}` }
+            first = false;
+          }
 
-        let rel;
+          let rel;
           if (node.rel.rel_type) { rel = node.rel.rel_type }
           else {rel = "N/A"}
 
           let relcheck;
-            if (relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined ) {relcheck = titleize(rel)}
-            else {relcheck = relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
+          if (relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined ) {relcheck = titleize(rel)}
+          else {relcheck = relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
 
           let datecheck;
-            if (node.rel.start_year && node.rel.end_year)  {datecheck = node.rel.start_year+"-"+node.rel.end_year}
-            else if (node.rel.start_year) {datecheck = node.rel.start_year}
-            else if (node.rel.end_year) {datecheck = node.rel.start_year}
-            else {datecheck = "Unknown"}
+          if (node.rel.start_year && node.rel.end_year)  {datecheck = node.rel.start_year+"-"+node.rel.end_year}
+          else if (node.rel.start_year) {datecheck = node.rel.start_year}
+          else if (node.rel.end_year) {datecheck = node.rel.start_year}
+          else {datecheck = "Unknown"}
 
           return (
-            <ul className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1">
+            <Row>
+              <Col className="text-left"><span className="popup_link" onClick={() =>  props.selectSwitchAppend((node.key2))}>{rel_name}</span></Col>
+              <Col className="text-left">{relcheck}{source}{note}</Col>
+              <Col className="text-end">{datecheck}</Col>
+            </Row>     
+          )
+        });
+        return (
+          <ul className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1">
               <li className="list-group-item pt-0 pb-0 border-0">
                 <div className="card-body px-0 p-1 border-0">
-                <Row>
-                  <Col className="text-left">{relcheck}</Col>
-                  <Col className="text-center"><span className="popup_link" onClick={() =>  props.selectSwitchAppend((node.key2))}>{rel_name}</span></Col>
-                  <Col className="text-end">{datecheck}</Col>
-                </Row>
+                {keyList}
                 </div>
               </li>
-              {source}{note}
             </ul>
-      )
-    })
+        )
+      });
+
       return (
           <div>
           <div className="pb-3">
@@ -106,8 +126,8 @@ const printPub = print.filter(i => i.end_type === "Publication");
            <div className={props.addpers + ' card'}>
             <div className="popup_card_header card-header bg-light">
               <Row>
+                <Col className="text-left">{translate[0]["name"][props.language]}</Col>
                 <Col className="text-left">{translate[0]["relationship"][props.language]}</Col>
-                <Col className="text-center">{translate[0]["name"][props.language]}</Col>
                 <Col className="text-end">{translate[0]["years"][props.language]}</Col>
               </Row>
             </div>
