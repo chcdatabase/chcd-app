@@ -79,11 +79,13 @@ class MapView extends React.Component {
       addinst: "addinst",
       addevent: "addevent",
       addcorp: "addcorp",
+      addpub: "addpub",
       addinfortext: "hide_additional_info",
       addperstext: "hide_additional_info",
       addinsttext: "hide_additional_info",
       addeventtext: "hide_additional_info",
       addcorptext: "hide_additional_info",
+      addpubtext: "hide_additional_info",
       noresults: "noresults hide",
       nosend: "nosend hide",
       // FORM SELECTS

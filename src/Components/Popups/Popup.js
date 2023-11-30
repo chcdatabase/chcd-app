@@ -42,15 +42,13 @@ function Popup(props) {
   }
   
   function sourceCheck(node) {
-    if (node.rel.source) {
+    if (node.rel.source) 
       return (<li className="card_sources list-group-item px-3 pt-0 pb-1 border-0 border-bottom-1"><span className="popup_card_header sources">{translate[0]["sources"][props.language]}:</span> {node.rel.source}</li>)
-    }
   }
 
   function noteCheck(node) {
-    if (node.rel.notes) {
+    if (node.rel.notes) 
       return (<li className="card_sources list-group-item px-3 pt-0 pb-1 border-0 border-bottom-1"><span className="popup_card_header sources">{translate[0]["note"][props.language]}:</span> {node.rel.notes}</li>)
-    }
   }
 
   function dateCheck(node){
@@ -75,7 +73,7 @@ function Popup(props) {
       }
     });
 
-    const persList = Object.keys(restructuredData).map(key => {
+    const sortedRelList = Object.keys(restructuredData).map(key => {
       let nodeList = restructuredData[key];
       let first = true;
       const keyList = nodeList.map(function (node) {
@@ -91,6 +89,9 @@ function Popup(props) {
               else { rel_name = `${node.node2.given_name_western} ${node.node2.family_name_western}` }
               break;
             case "Institution":
+            case "CorporateEntity":
+            case "Event":
+            case "Publication":
               if ((props.language == "zh" || props.language == "tw") && node.node2.chinese_name_hanzi) { rel_name = node.node2.chinese_name_hanzi }
               else { rel_name = node.node2.name_western }
               break;
@@ -129,51 +130,71 @@ function Popup(props) {
       )
     });
 
-    return persList;
+    console.log(sortedRelList)
+    return sortedRelList;
   }
 
   const displayRelList = (relList, relListType) => {
-    let section_title;
-    let data_prop;
-    let button_text;
-    let data_for;
-    let download_text;
-    console.log('type: ' + relListType)
+    let section_title, data_prop, button_text, data_for, download_text, print_info, props_class;
     switch(relListType){
       case "Person":
-        console.log("Setting values for person")
         section_title = translate[0]["pers_relationships"][props.language];
         data_prop = "addpers"
         button_text = translate[0][props.addperstext][props.language];
         data_for = "pers_rels";
         download_text = translate[0]["download_pers_rels"][props.language];
+        print_info = printPers;
+        props_class = props.addpers;
         break;
       case "Institution":
-        console.log("Setting values for instituion")
         section_title = translate[0]["inst_relationships"][props.language];
         data_prop = "addinst"
         button_text = translate[0][props.addinsttext][props.language];
         data_for = "inst_rels";
         download_text = translate[0]["download_inst_rels"][props.language];
+        print_info = printInst;
+        props_class = props.addinst;
         break;
-
+      case "CorporateEntity":
+        section_title = translate[0]["corp_relationships"][props.language];
+        data_prop = "addcorp"
+        button_text = translate[0][props.addcorptext][props.language];
+        data_for = "corp_rels";
+        download_text = translate[0]["download_corp_rels"][props.language];
+        print_info = printCorp;
+        props_class = props.addcorp;
+        break;
+      case "Event":
+        section_title = translate[0]["event_relationships"][props.language];
+        data_prop = "addevent"
+        button_text = translate[0][props.addeventtext][props.language];
+        data_for = "event_rels";
+        download_text = translate[0]["download_event_rels"][props.language];
+        print_info = printEvent;
+        props_class = props.addevent;
+        break;
+      case "Publication":
+        section_title = translate[0]["publication_relationships"][props.language];
+        data_prop = "addpub"
+        button_text = translate[0][props.addpubtext][props.language];
+        data_for = "pub_rels";
+        download_text = translate[0]["download_pub_rels"][props.language];
+        print_info = printPub;
+        props_class = props.addpub;
+        break;
     }
-    console.log(section_title)
-    console.log(data_prop)
-    console.log(button_text)
-    console.log(data_for)
-    console.log(download_text)
+    
     return (
       <div>
         <div className="pb-3">
           <h2 className="popup_section_head mt-2">{section_title}
             <Button className="btn btn-sm btn-danger mx-2" data-prop={data_prop} onClick={(i) => props.toggleDisplay(i)} role="button" >{button_text}</Button>
-            <CsvDownloadButton delimiter="*" data={printPers} style={{ borderWidth: '0px', width: '0px', padding: '0px' }}>
+            <CsvDownloadButton delimiter="*" data={print_info} style={{ borderWidth: '0px', width: '0px', padding: '0px' }}>
               <BiDownload className="download-icons" data-tip data-for={data_for} />
               <ReactTooltip id={data_for} place="bottom" effect="solid">{download_text}</ReactTooltip>
             </CsvDownloadButton>
           </h2>
-          <div className={props.addpers + ' card'}>
+          <div className={props_class + ' card'}>
             <div className="popup_card_header card-header bg-light">
               <Row>
                 <Col className="text-left">{translate[0]["name"][props.language]}</Col>
@@ -212,272 +233,36 @@ function Popup(props) {
     });
 
     if (instRels.length > 0) {
-      const instList = groupRelsById(instRels, "Institution");
-      return displayRelList(instList, "Institution");
+      const sortedInstRels = groupRelsById(instRels, "Institution");
+      return displayRelList(sortedInstRels, "Institution");
     } else { }
   };
 
   // CORPORATE ENTITY RELATIONSHIPS CONSTRUCTOR ///////////////////////////////////////////////////////////////////////////////
   const getCorpRels = () => {
-
-    function titleize(str) {
-      str = str.toString().toLowerCase().replace('\(', '\( ').replace('\[', '\[ ').split(' ');
-      for (var i = 0; i < str.length; i++) {
-        str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
-      }
-      return str.join(' ').replace('\( ', '\(').replace('\[ ', '\[');
-    }
-
     const corpRels = props.selectArray
       .filter(type => type.rel_kind === "CorporateEntity")
     if (corpRels.length > 0) {
-      const corpList = corpRels.map(function (node) {
-
-        function sourceCheck(node) {
-          if (node.rel.source) {
-            return (<li className="card_sources list-group-item px-3 pt-0 pb-1 border-0 border-bottom-1"><span className="popup_card_header sources">{translate[0]["sources"][props.language]}:</span> {node.rel.source}</li>)
-          }
-        }
-        let source = sourceCheck(node)
-
-        function noteCheck(node) {
-          if (node.rel.notes) {
-            return (<li className="card_sources list-group-item px-3 pt-0 pb-1 border-0 border-bottom-1"><span className="popup_card_header sources">{translate[0]["note"][props.language]}:</span> {node.rel.notes}</li>)
-          }
-        }
-        let note = noteCheck(node)
-
-        let rel_name;
-        if ((props.language == "zh" || props.language == "tw") && node.node2.chinese_name_hanzi) { rel_name = node.node2.chinese_name_hanzi }
-        else { rel_name = node.node2.name_western }
-
-        let rel;
-        if (node.rel.rel_type) { rel = node.rel.rel_type }
-        else { rel = "N/A" }
-
-        let relcheck;
-        if (relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) { relcheck = titleize(rel) }
-        else { relcheck = relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language] }
-
-        let datecheck;
-        if (node.rel.start_year && node.rel.end_year) { datecheck = node.rel.start_year + "-" + node.rel.end_year }
-        else if (node.rel.start_year) { datecheck = node.rel.start_year }
-        else if (node.rel.end_year) { datecheck = node.rel.start_year }
-        else { datecheck = "Unknown" }
-
-        return (
-          <ul className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1">
-            <li className="list-group-item pt-0 pb-0 border-0">
-              <div className="card-body px-0 p-1 border-0">
-                <Row>
-                  <Col className="text-left">{relcheck}</Col>
-                  <Col className="text-center"><span className="popup_link" onClick={() => props.selectSwitchAppend((node.key2))}>{rel_name}</span></Col>
-                  <Col className="text-end">{datecheck}</Col>
-                </Row>
-              </div>
-            </li>
-            {source}{note}
-          </ul>
-        )
-      })
-      return (
-        <div>
-          <div className="pb-3">
-            <h2 className="popup_section_head mt-2">{translate[0]["corp_relationships"][props.language]}
-              <Button className="btn btn-sm btn-danger mx-2" data-prop="addcorp" onClick={(i) => props.toggleDisplay(i)} role="button" >{translate[0][props.addcorptext][props.language]}</Button>
-              <CsvDownloadButton delimiter="*" data={printCorp} style={{ borderWidth: '0px', width: '0px', padding: '0px' }}>
-                <BiDownload className="download-icons" data-tip data-for="corp_rels" />
-                <ReactTooltip id="corp_rels" place="bottom" effect="solid">{translate[0]["download_corp_rels"][props.language]}</ReactTooltip>
-              </CsvDownloadButton>
-            </h2>
-            <div className={props.addcorp + ' card'}>
-              <div className="popup_card_header card-header">
-                <Row>
-                  <Col className="text-left">{translate[0]["relationship"][props.language]}</Col>
-                  <Col className="text-center">{translate[0]["corporate_entity"][props.language]}</Col>
-                  <Col className="text-end">{translate[0]["years"][props.language]}</Col>
-                </Row>
-              </div>
-              {corpList}
-            </div>
-          </div>
-        </div>
-      )
+      const sortedCorpRels = groupRelsById(corpRels, "CorporateEntity");
+      return displayRelList(sortedCorpRels, "CorporateEntity");
     } else { }
   };
 
   // EVENT RELATIONSHIPS CONSTRUCTOR ///////////////////////////////////////////////////////////////////////////////
   const getEventRels = () => {
-
-    function titleize(str) {
-      str = str.toString().toLowerCase().replace('\(', '\( ').replace('\[', '\[ ').split(' ');
-      for (var i = 0; i < str.length; i++) {
-        str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
-      }
-      return str.join(' ').replace('\( ', '\(').replace('\[ ', '\[');
-    }
     const eventRels = props.selectArray.filter(type => type.rel_kind === "Event")
     if (eventRels.length > 0) {
-      const eventList = eventRels.map(function (node) {
-
-        function sourceCheck(node) {
-          if (node.rel.source) {
-            return (<li className="card_sources list-group-item px-3 pt-0 pb-1 border-0 border-bottom-1"><span className="popup_card_header sources">{translate[0]["sources"][props.language]}:</span> {node.rel.source}</li>)
-          }
-        }
-        let source = sourceCheck(node)
-
-        function noteCheck(node) {
-          if (node.rel.notes) {
-            return (<li className="card_sources list-group-item px-3 pt-0 pb-1 border-0 border-bottom-1"><span className="popup_card_header sources">{translate[0]["note"][props.language]}:</span> {node.rel.notes}</li>)
-          }
-        }
-        let note = noteCheck(node)
-
-        let rel_name;
-        if ((props.language == "zh" || props.language == "tw") && node.node2.chinese_name_hanzi) { rel_name = node.node2.chinese_name_hanzi }
-        else { rel_name = node.node2.name_western }
-
-        let rel;
-        if (node.rel.rel_type) { rel = node.rel.rel_type }
-        else { rel = "N/A" }
-
-        let relcheck;
-        if (relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) { relcheck = titleize(rel) }
-        else { relcheck = relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language] }
-
-        let datecheck;
-        if (node.rel.start_year && node.rel.end_year) { datecheck = node.rel.start_year + "-" + node.rel.end_year }
-        else if (node.rel.start_year) { datecheck = node.rel.start_year }
-        else if (node.rel.end_year) { datecheck = node.rel.start_year }
-        else { datecheck = "Unknown" }
-
-        return (
-          <ul className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1">
-            <li className="list-group-item pt-0 pb-0 border-0">
-              <div className="card-body px-0 p-1 border-0">
-                <Row>
-                  <Col className="text-left">{relcheck}</Col>
-                  <Col className="text-center"><span className="popup_link" onClick={() => props.selectSwitchAppend((node.key2))}>{rel_name}</span></Col>
-                  <Col className="text-end">{datecheck}</Col>
-                </Row>
-              </div>
-            </li>
-            {source}{note}
-          </ul>
-        )
-      })
-      return (
-        <div>
-          <div className="pb-3">
-            <h2 className="popup_section_head mt-2">{translate[0]["event_relationships"][props.language]}
-              <Button className="btn btn-sm btn-danger mx-2" data-prop="addevent" onClick={(i) => props.toggleDisplay(i)} role="button" >{translate[0][props.addeventtext][props.language]}</Button>
-              <CsvDownloadButton delimiter="*" data={printEvent} style={{ borderWidth: '0px', width: '0px', padding: '0px' }}>
-                <BiDownload className="download-icons" data-tip data-for="event_rels" />
-                <ReactTooltip id="event_rels" place="bottom" effect="solid">{translate[0]["download_event_rels"][props.language]}</ReactTooltip>
-              </CsvDownloadButton>
-            </h2>
-            <div className={props.addevent + ' card'}>
-              <div className="popup_card_header card-header">
-                <Row>
-                  <Col className="text-left">{translate[0]["relationship"][props.language]}</Col>
-                  <Col className="text-center">{translate[0]["event"][props.language]}</Col>
-                  <Col className="text-end">{translate[0]["years"][props.language]}</Col>
-                </Row>
-              </div>
-              {eventList}
-            </div>
-          </div>
-        </div>
-      )
+      const sortedEventRels = groupRelsById(eventRels, "Event");
+      return displayRelList(sortedEventRels, "Event");
     } else { }
   };
 
   // PUBLICATION RELATIONSHIPS CONSTRUCTOR ///////////////////////////////////////////////////////////////////////////////
   const getPubRels = () => {
-
-    function titleize(str) {
-      str = str.toString().toLowerCase().replace('\(', '\( ').replace('\[', '\[ ').split(' ');
-      for (var i = 0; i < str.length; i++) {
-        str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
-      }
-      return str.join(' ').replace('\( ', '\(').replace('\[ ', '\[');
-    }
-
     const pubRels = props.selectArray.filter(type => type.rel_kind === "Publication")
     if (pubRels.length > 0) {
-      const pubList = pubRels.map(function (node) {
-
-        function sourceCheck(node) {
-          if (node.rel.source) {
-            return (<li className="card_sources list-group-item px-3 pt-0 pb-1 border-0 border-bottom-1"><span className="popup_card_header sources">{translate[0]["sources"][props.language]}:</span> {node.rel.source}</li>)
-          }
-        }
-        let source = sourceCheck(node)
-
-        function noteCheck(node) {
-          if (node.rel.notes) {
-            return (<li className="card_sources list-group-item px-3 pt-0 pb-1 border-0 border-bottom-1"><span className="popup_card_header sources">{translate[0]["note"][props.language]}:</span> {node.rel.notes}</li>)
-          }
-        }
-        let note = noteCheck(node)
-
-        let rel_name;
-        if ((props.language == "zh" || props.language == "tw") && node.node2.chinese_name_hanzi) { rel_name = node.node2.chinese_name_hanzi }
-        else { rel_name = node.node2.name_western }
-
-        let rel;
-        if (node.rel.rel_type) { rel = node.rel.rel_type }
-        else { rel = "N/A" }
-
-        let relcheck;
-        if (relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined) { relcheck = titleize(rel) }
-        else { relcheck = relationships[0][rel.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language] }
-
-        let datecheck;
-        if (node.rel.start_year && node.rel.end_year) { datecheck = node.rel.start_year + "-" + node.rel.end_year }
-        else if (node.rel.start_year) { datecheck = node.rel.start_year }
-        else if (node.rel.end_year) { datecheck = node.rel.start_year }
-        else { datecheck = "Unknown" }
-
-        return (
-          <ul className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1">
-            <li className="list-group-item pt-0 pb-0 border-0">
-              <div className="card-body px-0 p-1 border-0">
-                <Row>
-                  <Col className="text-left">{relcheck}</Col>
-                  <Col className="text-center"><span className="popup_link" onClick={() => props.selectSwitchAppend((node.key2))}>{rel_name}</span></Col>
-                  <Col className="text-end">{datecheck}</Col>
-                </Row>
-              </div>
-            </li>
-            {source}{note}
-          </ul>
-        )
-      })
-      return (
-        <div>
-          <div className="pb-3">
-            <h2 className="popup_section_head mt-2">{translate[0]["publication_relationships"][props.language]}
-              <Button className="btn btn-sm btn-danger mx-2" data-prop="addpub" onClick={(i) => props.toggleDisplay(i)} role="button" >{translate[0][props.addeventtext][props.language]}</Button>
-              <CsvDownloadButton delimiter="*" data={printPub} style={{ borderWidth: '0px', width: '0px', padding: '0px' }}>
-                <BiDownload className="download-icons" data-tip data-for="pub_rels" />
-                <ReactTooltip id="pub_rels" place="bottom" effect="solid">{translate[0]["download_pub_rels"][props.language]}</ReactTooltip>
-              </CsvDownloadButton>
-            </h2>
-            <div className={props.addevent + ' card'}>
-              <div className="popup_card_header card-header">
-                <Row>
-                  <Col className="text-left">{translate[0]["relationship"][props.language]}</Col>
-                  <Col className="text-center">{translate[0]["publication"][props.language]}</Col>
-                  <Col className="text-end">{translate[0]["years"][props.language]}</Col>
-                </Row>
-              </div>
-              {pubList}
-            </div>
-          </div>
-        </div>
-      )
+      const sortedPubRels = groupRelsById(pubRels, "Publication");
+      return displayRelList(sortedPubRels, "Publication");
     } else { }
   };
 
