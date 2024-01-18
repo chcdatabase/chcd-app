@@ -15,6 +15,7 @@ import CsvDownloadButton from 'react-json-to-csv'
 import { ButtonExportExcel } from '@alckor127/react-button-export-excel'
 import ReactTooltip from "react-tooltip"
 import { useAlert } from 'react-alert'
+import { useState } from 'react'
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -32,6 +33,28 @@ function Popup(props) {
   const printCorp = print.filter(i => i.end_type === "CorporateEntity");
   const printEvent = print.filter(i => i.end_type === "Event");
   const printPub = print.filter(i => i.end_type === "Publication");
+
+  // Setting up reporting error
+  const [reportFormVisible, setReportFormVisible] = useState(false);
+  const [reportText, setReportText] = useState('');
+
+  const handleReportButtonClick = () => {
+    // Toggle the visibility of the report form
+    setReportFormVisible(!reportFormVisible);
+  };
+
+  const handleReportSubmit = () => {
+    // Send report to the backend
+    // Impelemnt your backend logic here to handle the reported issue 
+
+    // Display confirmation message to the user
+    // TODO: add translation here
+    window.alert('Issue was reported successfully, thank you for your contribution to the CHCD!')
+
+    // Optionally, you can close the form or reset state
+    setReportFormVisible(false);
+    setReportText('');
+  }
 
   function titleize(str) {
     str = str.toString().toLowerCase().replace('\(', '\( ').replace('\[', '\[ ').split(' ');
@@ -130,7 +153,6 @@ function Popup(props) {
       )
     });
 
-    console.log(sortedRelList)
     return sortedRelList;
   }
 
@@ -268,9 +290,7 @@ function Popup(props) {
 
   // BASIC INFORMATION CONSTRUCTOR ///////////////////////////////////////////////////////////////////////////////
   const getInfo = () => {
-
     if (props.selectArray.length > 0) {
-
       const info = props.selectArray[0];
 
       // SET STANDARD INFORMATION ////////////////////
@@ -451,14 +471,6 @@ function Popup(props) {
 
       const filter = ['id', 'name_wes', 'name_rom', 'name_zh', 'given_name_western', 'family_name_western', 'name_western', 'chinese_family_name_hanzi', 'chinese_given_name_hanzi', 'chinese_name_hanzi', 'chinese_family_name_romanized', 'chinese_given_name_romanized', 'chinese_name_romanized', 'alternative_name_western', 'alternative_chinese_name_hanzi', 'alternative_chinese_name_romanized', 'notes', 'source', 'gender', 'nationality', 'birth_day', 'birth_month', 'birth_year', 'birth_place', 'death_day', 'death_month', 'death_year', 'death_place', 'christian_tradition', 'religious_family', 'corporate_entity_category', 'institution_category', 'event_category', 'publication_category', 'corporate_entity_subcategory', 'institution_subcategory', 'event_subcategory', 'publication_subcategory'];
 
-      function titleize(str) {
-        str = str.toString().toLowerCase().replace('\(', '\( ').replace('\[', '\[ ').split(' ');
-        for (var i = 0; i < str.length; i++) {
-          str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
-        }
-        return str.join(' ').replace('\( ', '\(').replace('\[ ', '\[');
-      }
-
       const staticInfo = Array.from(selectNode).filter(x => !filter.includes(x[0])).map(function (node) {
         let key;
         let valueprep = node[1];
@@ -480,7 +492,6 @@ function Popup(props) {
           key = titleCase(keycheck)
         }
         else { key = translate[0][keycheck.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language] }
-
 
         return (
           <ul className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1">
@@ -608,6 +619,7 @@ function Popup(props) {
         return (name)
       }
 
+      console.log(props)
       return (
         <div className="pb-3">
           <Row><Col>
@@ -639,6 +651,23 @@ function Popup(props) {
               }}
             />
             <ReactTooltip id="cite" place="bottom" effect="solid">{translate[0]["citation"][props.language]}</ReactTooltip>
+            {/* Report Data Error Button */}
+              <button className="btn btn-sm btn-danger mx-5" role="button" onClick={handleReportButtonClick}>Report Data Error</button>
+              {/* Report Form/Modal */}
+              {reportFormVisible && (
+                <div className = "text-left">
+                  {/* Text area for user input */}
+                  <textarea
+                    value={reportText}
+                    onChange={(e) => setReportText(e.target.value)}
+                    placeholder="Describe the issue, providing sources for the changes requested as well as your contact information."
+                    rows={5}
+                  />
+
+                  {/* Submit button for the report */}
+                  <button onClick={handleReportSubmit}>Submit</button>
+                </div>
+              )}
           </Col></Row>
           <h2 className="popup_section_head mt-2">{translate[0]["additional_info_title"][props.language]}
             <Button className="btn btn-sm btn-danger mx-2" data-prop="addinfo" onClick={(i) => props.toggleDisplay(i)} role="button" >{translate[0][props.addinfortext][props.language]}</Button>
