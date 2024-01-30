@@ -1560,6 +1560,7 @@ export function fetchCorporateEntitiesData() {
       }
       CALL apoc.cypher.run('MATCH (t:CorporateEntity)-[]-(p) WHERE id(p)=`+ nodeIdFilter + ` WITH DISTINCT t RETURN count(*) as count',{}) YIELD value as corp
       RETURN n as node, person as count, instcount, eventcount, corp.count as corpcount`
+      console.log(query)
         session
           .run(query)
           .then((results) => {
@@ -1593,6 +1594,7 @@ export function fetchCorporateEntitiesData() {
       }
       WITH p.gender AS gender, count(*) AS count
       RETURN DISTINCT {gender: gender, count: count} AS List`
+      console.log(query2)
         session2.run(query2).then((results) => {
           const genderArray = results.records.map((record) => record.get('List', 'gender'));
           let genders = [];

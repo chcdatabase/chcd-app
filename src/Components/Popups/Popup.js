@@ -16,7 +16,8 @@ import { ButtonExportExcel } from '@alckor127/react-button-export-excel'
 import ReactTooltip from "react-tooltip"
 import { useAlert } from 'react-alert'
 import { useState } from 'react'
-
+import '../../Styles/Css/popup.css'
+import credentials from "../../credentials.json"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // COMPONENT ////////////////////////////////////////////////////////////////////////////////////////
@@ -37,25 +38,94 @@ function Popup(props) {
   // Setting up reporting error
   const [reportFormVisible, setReportFormVisible] = useState(false);
   const [reportText, setReportText] = useState('');
+  const { Octokit } = require('@octokit/rest');
+  const fs = require('fs').promises;
+
+  const updateFileInGitHub = async (data) => {
+    try {
+      const octokit = new Octokit({
+        auth: credentials.git_auth,
+      });
+
+      const owner = credentials.git_owner;
+      const repo = credentials.git_repo;
+      const path = credentials.git_path;
+
+      // Retrieve the current content of the file
+      const { data: currentContent } = await octokit.repos.getContent({
+        owner,
+        repo,
+        path,
+      });
+
+      // Decode the current content from base64
+      const decodedContent = Buffer.from(currentContent.content, 'base64').toString('utf-8');
+
+      // Modify the content
+      const newData = `${decodedContent}\n${data.field1}|${data.field2}`;
+
+      // Encode the new content to base64
+      const newContentBase64 = Buffer.from(newData).toString('base64');
+
+      // Update the file
+      await octokit.repos.createOrUpdateFileContents({
+        owner,
+        repo,
+        path,
+        message: 'Update file via API', // Commit message
+        content: newContentBase64,
+        sha: currentContent.sha, // SHA of the current content, to ensure you're updating the latest version
+      });
+
+      console.log('Data added to GitHub file successfully!');
+      return true;
+    } catch (error) {
+      // Log detailed error information
+      console.error('Error updating file in GitHub:', error.message);
+      console.error('GitHub API response:', error.response?.data || 'No response data');
+
+      // Optionally, log the stack trace for further debugging
+      console.error('Stack trace:', error.stack);
+
+      return false;
+    }
+  };
+
 
   const handleReportButtonClick = () => {
     // Toggle the visibility of the report form
     setReportFormVisible(!reportFormVisible);
   };
 
-  const handleReportSubmit = () => {
-    // Send report to the backend
-    // Impelemnt your backend logic here to handle the reported issue 
+  const handleReportSubmit = async () => {
+    try {
+      // Send report to the backend
+      const errorReported = await updateFileInGitHub({
+        field1: reportText,
+        field2: new Date().toISOString()
+      });
 
-    // Display confirmation message to the user
-    // TODO: add translation here
-    window.alert('Issue was reported successfully, thank you for your contribution to the CHCD!')
+      console.log("error reported:")
+      console.log(errorReported)
 
-    // Optionally, you can close the form or reset state
-    setReportFormVisible(false);
-    setReportText('');
-  }
+      // Display confirmation message to the user
+      // TODO: add translation here
+      if (errorReported) {
+        window.alert('Issue was reported successfully, thank you for your contribution to the CHCD!');
+      } else {
+        window.alert('Issue was NOT reported successfully. Please email us about this error at chcdmanager[a]gmail.com');
+      }
 
+      // Optionally, you can close the form or reset state
+      setReportFormVisible(false);
+      setReportText('');
+    } catch (error) {
+      console.error('Error handling report submission:', error);
+      // Handle any errors that might occur during the submission
+      // You might want to display an error message to the user or log the error for debugging.
+    }
+  };
+ 
   function titleize(str) {
     str = str.toString().toLowerCase().replace('\(', '\( ').replace('\[', '\[ ').split(' ');
     for (var i = 0; i < str.length; i++) {
@@ -619,7 +689,6 @@ function Popup(props) {
         return (name)
       }
 
-      console.log(props)
       return (
         <div className="pb-3">
           <Row><Col>
@@ -655,17 +724,19 @@ function Popup(props) {
               <button className="btn btn-sm btn-danger mx-5" role="button" onClick={handleReportButtonClick}>Report Data Error</button>
               {/* Report Form/Modal */}
               {reportFormVisible && (
-                <div className = "text-left">
+                <div className = "report-modal text-left">
+                  {/* Header for the error report box */}
+                  <h6 className='text-left'>Describe the error in the data. Please provide sources for the corrected data as well as your contact information.</h6>
                   {/* Text area for user input */}
                   <textarea
                     value={reportText}
                     onChange={(e) => setReportText(e.target.value)}
-                    placeholder="Describe the issue, providing sources for the changes requested as well as your contact information."
+                    placeholder="Report the data error here."
                     rows={5}
                   />
 
                   {/* Submit button for the report */}
-                  <button onClick={handleReportSubmit}>Submit</button>
+                  <button className="btn btn-danger btn-sm" onClick={handleReportSubmit}>Submit</button>
                 </div>
               )}
           </Col></Row>
