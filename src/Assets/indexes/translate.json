@@ -481,6 +481,31 @@
       "tw": "歷史事件子類別"
     },
 
+    "geography_relationships":
+    {
+      "en": "Geographic Locations",
+      "zh": "地理位置",
+      "tw": "地理位置"
+    },
+    "latitude":
+    {
+      "en": "Latitude",
+      "zh": "纬度",
+      "tw": "緯度"
+    },
+    "longitude":
+    {
+      "en": "Longitude",
+      "zh": "经度",
+      "tw": "經度"
+    },
+    "download_geo_rels":
+    {
+      "en": "Download Data on Geographic Locations",
+      "zh": "下载地理位置数据",
+      "tw": "下載地理位置數據"
+    },
+
 "network-parameters": {
   "en": "Network Parameters",
   "zh": "关系网范围",

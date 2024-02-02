@@ -14,7 +14,6 @@ import translate from "../../Assets/indexes/translate.json"
 export function fetchNeo4jId(chcd_id, driver) {
   return new Promise((resolve, reject) => {
     const internalIdQuery = `MATCH (n) WHERE n.id = "${chcd_id}" RETURN ID(n) AS internalId LIMIT 1;`;
-    console.log(internalIdQuery)
     // Execute the internal ID lookup query
     const session = driver.session();
 
@@ -57,11 +56,9 @@ export function fetchSearch() {
   AND (any(prop in keys(m) WHERE m[prop] =~ '(?i).*`+ searchProp + `.*'))
   RETURN DISTINCT {key:node.id, properties:properties(node), label:labels(node)[0], rel:t.rel_type, other_label:labels(m)[0], other:properties(m), start_year:t.start_year, end_year:t.end_year} as Nodes LIMIT 1000
     `
-    console.log(query)
     session
       .run(query)
       .then((results) => {
-        console.log(results)
         this.setState({ nodeArray: [], filterArray: [], genderList: [], nationalityList: [], labelList: [], relFamList: [], christTradList: [], instCatList: [], instSubCatList: [], corpCatList: [], corpSubCatList: [], eventCatList: [], eventSubCatList: [], pubCatList: [], pubSubCatList: [], affList: [] });
         this.setState({ label: "", nationality: "", gender: "", religious_family: "", christian_tradition: "", institution_category: "", institution_subcategory: "", corporate_entity_category: "", corporate_entity_subcategory: "", event_category: "", event_subcategory: "", name_western: "", inst_name_western: "" });
 
@@ -180,7 +177,6 @@ export function fetchResults() {
         else { timeFilter = "" };
         let timeFilter_t2;
         timeFilter_t2 = timeFilter.replace(/t\./g, 't[0].'); // Adjust the timeFilter for t*2
-        console.log(timeFilter_t2)
 
         let keyFilter;
         if (this.state.sent_id !== "init" && this.state.kind === "People") {
@@ -226,7 +222,6 @@ export function fetchResults() {
           MATCH (r)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)`+ locatFilter + `
           RETURN {key:n.id,properties:properties(n),inst:properties(r),aff:properties(e),locat:properties(l),rel:properties(t),locat_name:properties(l).name_wes} AS Nodes
           `
-          console.log(query);
           session
             .run(query)
             .then((results) => {
@@ -330,7 +325,6 @@ export function fetchResults() {
         locat_name: properties(l).name_wes
       } AS Nodes
       `
-          console.log(query)
           session.run(query).then((results) => {
             let unfiltArray = results.records.map((record) => record.get('Nodes'));
             let nodeArray;
@@ -492,7 +486,6 @@ export function fetchNetworkConfines() {
         WITH (head(collect(distinct years))) as head, (last(collect(distinct years))) as last
         RETURN {start:head, end:last} as Confines
         `
-        console.log(query)
         session.run(query).then((results) => {
           const networkConfines = results.records.map((record) => record.get('Confines'));
           let start;
@@ -543,7 +536,6 @@ export function fetchNetworkResults() {
           WITH (head(collect(distinct years))) as head, (last(collect(distinct years))) as last
           RETURN {start:head, end:last} as Confines
           `
-        console.log(query2)
         session1.run(query2).then((results) => {
           const networkConfines = results.records.map((record) => record.get('Confines'));
           if (this.state.start_year === "") { start = networkConfines[0].start } else { start = this.state.start_year }
@@ -603,7 +595,6 @@ export function fetchNetworkResults() {
             links: [rel in relationships | rel {source: startNode(rel).id, target: endNode(rel).id, start_year: rel.start_year, end_year: rel.end_year}]
           } as Graph`
 
-        console.log(query)
         session
           .run(query)
           .then((results) => {
@@ -654,14 +645,101 @@ export function selectSwitchAppend(event) {
     .then((internalId) => {
       const session = this.driver.session()
       const selectquery = `
-    MATCH (n)-[t]-(p:Person) WHERE ID(n) =` + internalId + ` RETURN {key:n.id, select_kind:labels(n)[0], select_node:properties(n), key2:p.id, node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat:"none"} AS SelectNodes ORDER BY SelectNodes.rel.start_year
-    UNION MATCH (n)-[t]-(p:Publication) WHERE ID(n) =` + internalId + ` RETURN {key:n.id, select_kind:labels(n)[0], select_node:properties(n), key2:p.id, node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat:"none"} AS SelectNodes ORDER BY SelectNodes.rel.start_year
-    UNION MATCH (n)-[t]-(p:CorporateEntity) WHERE ID(n) =` + internalId + ` RETURN {key:n.id, select_kind:labels(n)[0], select_node:properties(n), key2:p.id, node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat:"none"} AS SelectNodes ORDER BY SelectNodes.rel.start_year
-    UNION MATCH (n)-[t]-(p:Event) WHERE ID(n) =` + internalId + ` RETURN {key:n.id, select_kind:labels(n)[0], select_node:properties(n), key2:p.id, node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat:"none"} AS SelectNodes ORDER BY SelectNodes.rel.start_year
-    UNION MATCH (n)-[t]-(p:Institution) WHERE ID(n) =` + internalId + `
-    RETURN {key:n.id, select_kind:labels(n)[0], select_node:properties(n), key2:p.id, node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat: t.notes} AS SelectNodes
-    ORDER BY SelectNodes.rel.start_year IS NULL
-    `
+        MATCH (n)-[t]-(p:Person)
+        WHERE ID(n) = ${internalId}
+        RETURN {
+            key: n.id,
+            select_kind: labels(n)[0],
+            select_node: properties(n),
+            key2: p.id,
+            node2: properties(p),
+            rel_kind: labels(p)[0],
+            rel: properties(t),
+            rel_locat: "none"
+        } AS SelectNodes
+        ORDER BY SelectNodes.rel.start_year
+
+        UNION
+
+        MATCH (n)-[t]-(p:Publication)
+        WHERE ID(n) = ${internalId}
+        RETURN {
+            key: n.id,
+            select_kind: labels(n)[0],
+            select_node: properties(n),
+            key2: p.id,
+            node2: properties(p),
+            rel_kind: labels(p)[0],
+            rel: properties(t),
+            rel_locat: "none"
+        } AS SelectNodes
+        ORDER BY SelectNodes.rel.start_year
+
+        UNION
+
+        MATCH (n)-[t]-(p:CorporateEntity)
+        WHERE ID(n) = ${internalId}
+        RETURN {
+            key: n.id,
+            select_kind: labels(n)[0],
+            select_node: properties(n),
+            key2: p.id,
+            node2: properties(p),
+            rel_kind: labels(p)[0],
+            rel: properties(t),
+            rel_locat: "none"
+        } AS SelectNodes
+        ORDER BY SelectNodes.rel.start_year
+
+        UNION
+
+        MATCH (n)-[t]-(p:Event)
+        WHERE ID(n) = ${internalId}
+        RETURN {
+            key: n.id,
+            select_kind: labels(n)[0],
+            select_node: properties(n),
+            key2: p.id,
+            node2: properties(p),
+            rel_kind: labels(p)[0],
+            rel: properties(t),
+            rel_locat: "none"
+        } AS SelectNodes
+        ORDER BY SelectNodes.rel.start_year
+
+        UNION
+
+        MATCH (n)-[t]-(p:Institution)
+        WHERE ID(n) = ${internalId}
+        RETURN {
+            key: n.id,
+            select_kind: labels(n)[0],
+            select_node: properties(n),
+            key2: p.id,
+            node2: properties(p),
+            rel_kind: labels(p)[0],
+            rel: properties(t),
+            rel_locat: "none"
+        } AS SelectNodes
+        ORDER BY SelectNodes.rel.start_year
+
+        UNION
+
+        MATCH (n)-[t]-(p:Geography)
+        WHERE ID(n) = ${internalId}
+        RETURN {
+            key: n.id,
+            select_kind: labels(n)[0],
+            select_node: properties(n),
+            key2: p.id,
+            node2: properties(p),
+            rel_kind: "Geography",
+            rel: properties(t),
+            rel_locat: t.notes
+        } AS SelectNodes
+        ORDER BY SelectNodes.rel.start_year IS NULL
+        `;
+
       session.run(selectquery).then((results) => {
         const selectArray = results.records.map((record) => record.get('SelectNodes')); this.setState({ selectArray });
         this.breadCrumbChainer();
@@ -678,7 +756,8 @@ export function selectSwitchAppend(event) {
       end_id:p.id,
       end_name_western: CASE WHEN p.name_western IS NOT NULL THEN p.name_western ELSE p.given_name_western + ' ' + toUpper(p.family_name_western) END, 
       end_name_chinese: CASE WHEN p.chinese_name_hanzi IS NOT NULL THEN p.chinese_name_hanzi ELSE p.chinese_family_name_hanzi + '' + p.chinese_given_name_hanzi END, 
-      end_type:labels(p)[0], rel_kind: type(t), rel_type: t.rel_type, start_year: CASE WHEN toInteger(t.start_year) > 0 THEN toInteger(t.start_year) ELSE "" END, 
+      end_type: CASE WHEN size(labels(p)) = 1 THEN labels(p)[0] ELSE "Geography" END,  // Check the number of labels for p
+      rel_kind: type(t), rel_type: t.rel_type, start_year: CASE WHEN toInteger(t.start_year) > 0 THEN toInteger(t.start_year) ELSE "" END, 
       end_year: CASE WHEN toInteger(t.end_year) > 0 THEN toInteger(t.end_year) ELSE "" END, 
       sources: COALESCE(t.source ,"")+ CASE WHEN p.source IS NOT NULL THEN ' / ' ELSE '' END + COALESCE(p.source ,""), 
     notes: COALESCE(t.notes ,"") + CASE WHEN p.notes IS NOT NULL THEN ' / ' ELSE '' END + COALESCE(p.notes ,"")
@@ -709,14 +788,101 @@ export function selectSwitchReduce(event, order) {
     .then((internalId) => {
       const session = this.driver.session()
       const selectquery = `
-    MATCH (n)-[t]-(p:Person) WHERE ID(n) =` + internalId + ` RETURN {key:n.id, select_kind:labels(n)[0], select_node:properties(n), key2:p.id, node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat:"none"} AS SelectNodes ORDER BY SelectNodes.rel.start_year
-    UNION MATCH (n)-[t]-(p:Publication) WHERE ID(n) =` + internalId + ` RETURN {key:n.id, select_kind:labels(n)[0], select_node:properties(n), key2:p.id, node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat:"none"} AS SelectNodes ORDER BY SelectNodes.rel.start_year
-    UNION MATCH (n)-[t]-(p:CorporateEntity) WHERE ID(n) =` + internalId + ` RETURN {key:n.id, select_kind:labels(n)[0], select_node:properties(n), key2:p.id, node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat:"none"} AS SelectNodes ORDER BY SelectNodes.rel.start_year
-    UNION MATCH (n)-[t]-(p:Event) WHERE ID(n) =` + internalId + ` RETURN {key:n.id, select_kind:labels(n)[0], select_node:properties(n), key2:p.id, node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat:"none"} AS SelectNodes ORDER BY SelectNodes.rel.start_year
-    UNION MATCH (n)-[t]-(p:Institution) WHERE ID(n) =` + internalId + `
-    RETURN {key:n.id, select_kind:labels(n)[0], select_node:properties(n), key2:p.id, node2:properties(p), rel_kind:labels(p)[0], rel:properties(t), rel_locat: t.notes} AS SelectNodes
-    ORDER BY SelectNodes.rel.start_year IS NULL
-    `
+        MATCH (n)-[t]-(p:Person)
+        WHERE ID(n) = ${internalId}
+        RETURN {
+            key: n.id, 
+            select_kind: labels(n)[0],
+            select_node: properties(n),
+            key2: p.id,
+            node2: properties(p),
+            rel_kind: labels(p)[0],
+            rel: properties(t),
+            rel_locat: "none"
+        } AS SelectNodes
+        ORDER BY SelectNodes.rel.start_year
+
+        UNION
+
+        MATCH (n)-[t]-(p:Publication)
+        WHERE ID(n) = ${internalId}
+        RETURN {
+            key: n.id,
+            select_kind: labels(n)[0],
+            select_node: properties(n),
+            key2: p.id,
+            node2: properties(p),
+            rel_kind: labels(p)[0],
+            rel: properties(t),
+            rel_locat: "none"
+        } AS SelectNodes
+        ORDER BY SelectNodes.rel.start_year
+
+        UNION
+
+        MATCH (n)-[t]-(p:CorporateEntity)
+        WHERE ID(n) = ${internalId}
+        RETURN {
+            key: n.id,
+            select_kind: labels(n)[0],
+            select_node: properties(n),
+            key2: p.id,
+            node2: properties(p),
+            rel_kind: labels(p)[0],
+            rel: properties(t),
+            rel_locat: "none"
+        } AS SelectNodes
+        ORDER BY SelectNodes.rel.start_year
+
+        UNION
+
+        MATCH (n)-[t]-(p:Event)
+        WHERE ID(n) = ${internalId}
+        RETURN {
+            key: n.id,
+            select_kind: labels(n)[0],
+            select_node: properties(n),
+            key2: p.id,
+            node2: properties(p),
+            rel_kind: labels(p)[0],
+            rel: properties(t),
+            rel_locat: "none"
+        } AS SelectNodes
+        ORDER BY SelectNodes.rel.start_year
+
+        UNION
+
+        MATCH (n)-[t]-(p:Institution)
+        WHERE ID(n) = ${internalId}
+        RETURN {
+            key: n.id,
+            select_kind: labels(n)[0],
+            select_node: properties(n),
+            key2: p.id,
+            node2: properties(p),
+            rel_kind: labels(p)[0],
+            rel: properties(t),
+            rel_locat: "none"
+        } AS SelectNodes
+        ORDER BY SelectNodes.rel.start_year
+
+        UNION
+
+        MATCH (n)-[t]-(p:Geography)
+        WHERE ID(n) = ${internalId}
+
+        RETURN {
+            key: n.id,
+            select_kind: labels(n)[0],
+            select_node: properties(n),
+            key2: p.id,
+            node2: properties(p),
+            rel_kind: "Geography",
+            rel: properties(t),
+            rel_locat: t.notes
+        } AS SelectNodes
+        ORDER BY SelectNodes.rel.start_year IS NULL
+        `;
       session.run(selectquery).then((results) => {
         const selectArray = results.records.map((record) => record.get('SelectNodes')); this.setState({ selectArray });
         this.breadCrumbReducer(event, order);
@@ -725,23 +891,23 @@ export function selectSwitchReduce(event, order) {
 
       const session2 = this.driver.session()
       const selectquery2 = `
-    MATCH (n)-[t]-(p) WHERE ID(n) =` + internalId + `
-    RETURN {
-      start_id:n.id, 
-      start_name_western: CASE WHEN n.name_western IS NOT NULL THEN n.name_western ELSE n.given_name_western + ' ' + toUpper(n.family_name_western) END,
-      start_name_chinese: CASE WHEN n.chinese_name_hanzi IS NOT NULL THEN n.chinese_name_hanzi ELSE n.chinese_family_name_hanzi + '' + n.chinese_given_name_hanzi END,
-      start_type: labels(n)[0], 
-      end_id:p.id,
-      end_name_western: CASE WHEN p.name_western IS NOT NULL THEN p.name_western ELSE p.given_name_western + ' ' + toUpper(p.family_name_western) END, 
-      end_name_chinese: CASE WHEN p.chinese_name_hanzi IS NOT NULL THEN p.chinese_name_hanzi ELSE p.chinese_family_name_hanzi + '' + p.chinese_given_name_hanzi END, 
-      end_type:labels(p)[0], 
-      rel_kind: type(t), 
-      rel_type: t.rel_type, 
-      start_year: CASE WHEN toInteger(t.start_year) > 0 THEN toInteger(t.start_year) ELSE "" END, 
-      end_year: CASE WHEN toInteger(t.end_year) > 0 THEN toInteger(t.end_year) ELSE "" END, 
-      sources: COALESCE(t.source ,"")+ CASE WHEN p.source IS NOT NULL THEN ' / ' ELSE '' END + COALESCE(p.source ,""), 
-      notes: COALESCE(t.notes ,"") + CASE WHEN p.notes IS NOT NULL THEN ' / ' ELSE '' END + COALESCE(p.notes ,"")
-    } as SelectNodes `
+        MATCH (n)-[t]-(p) WHERE ID(n) = ${internalId}
+        RETURN {
+          start_id:n.id, 
+          start_name_western: CASE WHEN n.name_western IS NOT NULL THEN n.name_western ELSE n.given_name_western + ' ' + toUpper(n.family_name_western) END,
+          start_name_chinese: CASE WHEN n.chinese_name_hanzi IS NOT NULL THEN n.chinese_name_hanzi ELSE n.chinese_family_name_hanzi + '' + n.chinese_given_name_hanzi END,
+          start_type: labels(n)[0], 
+          end_id:p.id,
+          end_name_western: CASE WHEN p.name_western IS NOT NULL THEN p.name_western ELSE p.given_name_western + ' ' + toUpper(p.family_name_western) END, 
+          end_name_chinese: CASE WHEN p.chinese_name_hanzi IS NOT NULL THEN p.chinese_name_hanzi ELSE p.chinese_family_name_hanzi + '' + p.chinese_given_name_hanzi END, 
+          end_type: CASE WHEN size(labels(p)) = 1 THEN labels(p)[0] ELSE "Geography" END,  // Check the number of labels for p
+          rel_kind: type(t), 
+          rel_type: t.rel_type, 
+          start_year: CASE WHEN toInteger(t.start_year) > 0 THEN toInteger(t.start_year) ELSE "" END, 
+          end_year: CASE WHEN toInteger(t.end_year) > 0 THEN toInteger(t.end_year) ELSE "" END, 
+          sources: COALESCE(t.source ,"")+ CASE WHEN p.source IS NOT NULL THEN ' / ' ELSE '' END + COALESCE(p.source ,""), 
+          notes: COALESCE(t.notes ,"") + CASE WHEN p.notes IS NOT NULL THEN ' / ' ELSE '' END + COALESCE(p.notes ,"")
+        } as SelectNodes `
       session2.run(selectquery2).then((results) => {
         const printArray = results.records.map((record) => record.get('SelectNodes'));
         this.setState({ printArray });
