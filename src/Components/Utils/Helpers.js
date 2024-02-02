@@ -585,7 +585,7 @@ export function getCitation(title, link) {
 
   const date = new Date();
   let day = date.getDate();
-  let month = date.getMonth() + 1;
+  let month = date.getMonth();
   let year = date.getFullYear();
 
   const monthlist = ["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -595,8 +595,8 @@ export function getCitation(title, link) {
   else {access_date = year + " 年 " + month + "月" + day + " 日"}
 
   let publish_date;
-  if (this.state.language === "en") { publish_date = "June 24, 2022" } 
-  else {publish_date = "2022 年 6 月 24 日" }
+  if (this.state.language === "en") { publish_date = "January 19, 2024" } 
+  else {publish_date = "2024 年 1 月 19 日" }
 
-  return (<div>{alex}, {daryl}{eugenio}. "{title}." <i>{translate[0].chcd_name[this.state.language]}.</i> V1. {publish_date}. {translate[0].accessed[this.state.language]} {access_date}. {link}.</div>)
+  return (<div>{alex}, {daryl}{eugenio}. "{title}." <i>{translate[0].chcd_name[this.state.language]}.</i> V2.1. {publish_date}. {translate[0].accessed[this.state.language]} {access_date}. {link}.</div>)
 };
