@@ -38,6 +38,9 @@ function Popup(props) {
   // Setting up reporting error
   const [reportFormVisible, setReportFormVisible] = useState(false);
   const [reportText, setReportText] = useState('');
+  const [reporterName, setName] = useState('');
+  const [reporterEmail, setEmail] = useState('');
+
   const { Octokit } = require('@octokit/rest');
   const fs = require('fs').promises;
 
@@ -62,7 +65,7 @@ function Popup(props) {
       const decodedContent = Buffer.from(currentContent.content, 'base64').toString('utf-8');
 
       // Modify the content
-      const newData = `${decodedContent}\n${data.field1}|${data.field2}`;
+      const newData = `${decodedContent}\n${data.date}|${data.report}|${data.reporterName}|${data.reporterEmail}`;
 
       // Encode the new content to base64
       const newContentBase64 = Buffer.from(newData).toString('base64');
@@ -98,11 +101,20 @@ function Popup(props) {
   };
 
   const handleReportSubmit = async () => {
+    // Check if all three fields have at least one character
+    if (reportText.trim().length === 0 || reporterName.trim().length === 0 || reporterEmail.trim().length === 0) {
+      // If any field is empty, display an alert or handle it as needed
+      window.alert("Please fill in all fields.");
+      return;
+    }
+
     try {
       // Send report to the backend
       const errorReported = await updateFileInGitHub({
-        field1: reportText,
-        field2: new Date().toISOString()
+        date: new Date().toISOString(),
+        report: reportText,
+        reporterName: reporterName,
+        reporterEmail: reporterEmail
       });
 
       console.log("error reported:")
@@ -116,13 +128,12 @@ function Popup(props) {
         window.alert('Issue was NOT reported successfully. Please email us about this error at chcdmanager[a]gmail.com');
       }
 
-      // Optionally, you can close the form or reset state
       setReportFormVisible(false);
       setReportText('');
+      setName('');
+      setEmail('');
     } catch (error) {
       console.error('Error handling report submission:', error);
-      // Handle any errors that might occur during the submission
-      // You might want to display an error message to the user or log the error for debugging.
     }
   };
  
@@ -731,10 +742,23 @@ function Popup(props) {
                   <textarea
                     value={reportText}
                     onChange={(e) => setReportText(e.target.value)}
-                    placeholder="Report the data error here."
+                    placeholder="Describe the data error here."
                     rows={5}
                   />
-
+                  {/* Name input field */}
+                  <input
+                    type="text"
+                    value={reporterName}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Your Name"
+                  />
+                  {/* Email input field */}
+                  <input
+                    type="email"
+                    value={reporterEmail}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Your Email"
+                  />
                   {/* Submit button for the report */}
                   <button className="btn btn-danger btn-sm" onClick={handleReportSubmit}>Submit</button>
                 </div>
