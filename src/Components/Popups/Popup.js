@@ -94,7 +94,6 @@ function Popup(props) {
     }
   };
 
-
   const handleReportButtonClick = () => {
     // Toggle the visibility of the report form
     setReportFormVisible(!reportFormVisible);
@@ -104,7 +103,7 @@ function Popup(props) {
     // Check if all three fields have at least one character
     if (reportText.trim().length === 0 || reporterName.trim().length === 0 || reporterEmail.trim().length === 0) {
       // If any field is empty, display an alert or handle it as needed
-      window.alert("Please fill in all fields.");
+      window.alert(translate[0]["unfilled_fields"][props.language]);
       return;
     }
 
@@ -117,15 +116,11 @@ function Popup(props) {
         reporterEmail: reporterEmail
       });
 
-      console.log("error reported:")
-      console.log(errorReported)
-
       // Display confirmation message to the user
-      // TODO: add translation here
       if (errorReported) {
-        window.alert('Issue was reported successfully, thank you for your contribution to the CHCD!');
+        window.alert(translate[0]['issue_reported_successfully'][props.language]);
       } else {
-        window.alert('Issue was NOT reported successfully. Please email us about this error at chcdmanager[a]gmail.com');
+        window.alert(translate[0]['issue_not_reported_successfully'][props.language]);
       }
 
       setReportFormVisible(false);
@@ -732,17 +727,17 @@ function Popup(props) {
             />
             <ReactTooltip id="cite" place="bottom" effect="solid">{translate[0]["citation"][props.language]}</ReactTooltip>
             {/* Report Data Error Button */}
-              <button className="btn btn-sm btn-danger mx-5" role="button" onClick={handleReportButtonClick}>Report Data Error</button>
+              <button className="btn btn-sm btn-danger mx-5" role="button" onClick={handleReportButtonClick}>{translate[0]["report_data_error"][props.language]}</button>
               {/* Report Form/Modal */}
               {reportFormVisible && (
                 <div className = "report-modal text-left">
                   {/* Header for the error report box */}
-                  <h6 className='text-left'>Describe the error in the data. Please provide sources for the corrected data as well as your contact information.</h6>
+                  <h6 className='text-left'>{translate[0]['describe_error'][props.language]}</h6>
                   {/* Text area for user input */}
                   <textarea
                     value={reportText}
                     onChange={(e) => setReportText(e.target.value)}
-                    placeholder="Describe the data error here."
+                    placeholder={translate[0]['describe_data_error'][props.language]}
                     rows={5}
                   />
                   {/* Name input field */}
@@ -750,17 +745,19 @@ function Popup(props) {
                     type="text"
                     value={reporterName}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Your Name"
+                    placeholder={translate[0]['your_name'][props.language]}
+                    style={{ marginBottom: '10px', marginRight: '10px'}}
                   />
                   {/* Email input field */}
                   <input
                     type="email"
                     value={reporterEmail}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Your Email"
+                    placeholder={translate[0]['your_email'][props.language]}
+                    style={{ marginBottom: '10px', marginRight: '10px'}}
                   />
                   {/* Submit button for the report */}
-                  <button className="btn btn-danger btn-sm" onClick={handleReportSubmit}>Submit</button>
+                  <button className="btn btn-danger btn-sm" onClick={handleReportSubmit}>{translate[0]['submit'][props.language]}</button>
                 </div>
               )}
           </Col></Row>

@@ -50,6 +50,47 @@
   "tw": "下載數據"
   },
 
+    "unfilled_fields": {
+      "en": "Please fill in all fields",
+      "zh": "请填写所有的字段",
+      "tw": "請填寫所有的字段"
+    },
+    "report_data_error": {
+      "en": "Report data error",
+      "zh": "报告数据错误",
+      "tw": "報告數據錯誤"
+    },
+    "describe_data_error": {
+      "en": "Describe the data error here",
+      "zh": "请在这里描述数据错误情况",
+      "tw": "請在這裡描述數據錯誤情況"
+    },
+    "your_name": {
+      "en": "Your name",
+      "zh": "您的名字",
+      "tw": "您的名字"
+    },
+    "your_email": {
+      "en": "Your email",
+      "zh": "您的email",
+      "tw": "您的email"
+    },
+    "describe_error": {
+      "en": "Describe the error in the data. Please provide sources for the corrected data as well as your contact information.",
+      "zh": "请描述数据的错误情况。 请提供更正数据的资料来源以及您的联系方式。",
+      "tw": "請描述數據的錯誤情況。 請提供更正數據的資料來源以及您的聯繫方式。"
+    },
+    "issue_reported_successfully": {
+      "en": "Issue was reported successfully, thank you for your contribution to the CHCD!",
+      "zh": "问题已成功报告，感谢您对 CHCD 的贡献！",
+      "tw": "問題已成功報告，感謝您對 CHCD 的貢獻！"
+    },
+    "issue_not_reported_successfully": {
+      "en": "Issue was NOT reported successfully. Please email us about this error at chcdmanager[a]gmail.com",
+      "zh": "问题没有报告成功。 请通过 chcdmanager[a]gmail.com 向我们发送有关此错误的电子邮件。",
+      "tw": "問題沒有報告成功。 請透過 chcdmanager[a]gmail.com 向我們發送有關此錯誤的電子郵件。"
+    },  
+
 "_COMMENT": "POPUP MESSAGES ==========================================",
 
 "sorry": {
