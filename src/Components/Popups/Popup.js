@@ -15,7 +15,9 @@ import CsvDownloadButton from 'react-json-to-csv'
 import { ButtonExportExcel } from '@alckor127/react-button-export-excel'
 import ReactTooltip from "react-tooltip"
 import { useAlert } from 'react-alert'
-
+import { useState } from 'react'
+import '../../Styles/Css/popup.css'
+import credentials from "../../credentials.json"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // COMPONENT ////////////////////////////////////////////////////////////////////////////////////////
@@ -35,7 +37,104 @@ function Popup(props) {
   const geoTypes = ["Village", "Township", "Country", "Prefecture", "Province", "Nation"];
   //const printGeo = print.filter(i => geoTypes.includes(i.end_type));
   const printGeo = print.filter(i => i.end_type === "Geography");
-  
+
+  // Setting up reporting error
+  const [reportFormVisible, setReportFormVisible] = useState(false);
+  const [reportText, setReportText] = useState('');
+  const [reporterName, setName] = useState('');
+  const [reporterEmail, setEmail] = useState('');
+
+  const { Octokit } = require('@octokit/rest');
+  const fs = require('fs').promises;
+
+  const updateFileInGitHub = async (data) => {
+    try {
+      const octokit = new Octokit({
+        auth: credentials.git_auth,
+      });
+
+      const owner = credentials.git_owner;
+      const repo = credentials.git_repo;
+      const path = credentials.git_path;
+
+      // Retrieve the current content of the file
+      const { data: currentContent } = await octokit.repos.getContent({
+        owner,
+        repo,
+        path,
+      });
+
+      // Decode the current content from base64
+      const decodedContent = Buffer.from(currentContent.content, 'base64').toString('utf-8');
+
+      // Modify the content
+      const newData = `${decodedContent}\n${data.date}|${data.report}|${data.reporterName}|${data.reporterEmail}`;
+
+      // Encode the new content to base64
+      const newContentBase64 = Buffer.from(newData).toString('base64');
+
+      // Update the file
+      await octokit.repos.createOrUpdateFileContents({
+        owner,
+        repo,
+        path,
+        message: 'Update file via API', // Commit message
+        content: newContentBase64,
+        sha: currentContent.sha, // SHA of the current content, to ensure you're updating the latest version
+      });
+
+      console.log('Data added to GitHub file successfully!');
+      return true;
+    } catch (error) {
+      // Log detailed error information
+      console.error('Error updating file in GitHub:', error.message);
+      console.error('GitHub API response:', error.response?.data || 'No response data');
+
+      // Optionally, log the stack trace for further debugging
+      console.error('Stack trace:', error.stack);
+
+      return false;
+    }
+  };
+
+  const handleReportButtonClick = () => {
+    // Toggle the visibility of the report form
+    setReportFormVisible(!reportFormVisible);
+  };
+
+  const handleReportSubmit = async () => {
+    // Check if all three fields have at least one character
+    if (reportText.trim().length === 0 || reporterName.trim().length === 0 || reporterEmail.trim().length === 0) {
+      // If any field is empty, display an alert or handle it as needed
+      window.alert(translate[0]["unfilled_fields"][props.language]);
+      return;
+    }
+
+    try {
+      // Send report to the backend
+      const errorReported = await updateFileInGitHub({
+        date: new Date().toISOString(),
+        report: reportText,
+        reporterName: reporterName,
+        reporterEmail: reporterEmail
+      });
+
+      // Display confirmation message to the user
+      if (errorReported) {
+        window.alert(translate[0]['issue_reported_successfully'][props.language]);
+      } else {
+        window.alert(translate[0]['issue_not_reported_successfully'][props.language]);
+      }
+
+      setReportFormVisible(false);
+      setReportText('');
+      setName('');
+      setEmail('');
+    } catch (error) {
+      console.error('Error handling report submission:', error);
+    }
+  };
+ 
   function titleize(str) {
     str = str.toString().toLowerCase().replace('\(', '\( ').replace('\[', '\[ ').split(' ');
     for (var i = 0; i < str.length; i++) {
@@ -308,9 +407,7 @@ function Popup(props) {
 
   // BASIC INFORMATION CONSTRUCTOR ///////////////////////////////////////////////////////////////////////////////
   const getInfo = () => {
-
     if (props.selectArray.length > 0) {
-
       const info = props.selectArray[0];
 
       // SET STANDARD INFORMATION ////////////////////
@@ -491,14 +588,6 @@ function Popup(props) {
 
       const filter = ['id', 'name_wes', 'name_rom', 'name_zh', 'given_name_western', 'family_name_western', 'name_western', 'chinese_family_name_hanzi', 'chinese_given_name_hanzi', 'chinese_name_hanzi', 'chinese_family_name_romanized', 'chinese_given_name_romanized', 'chinese_name_romanized', 'alternative_name_western', 'alternative_chinese_name_hanzi', 'alternative_chinese_name_romanized', 'notes', 'source', 'gender', 'nationality', 'birth_day', 'birth_month', 'birth_year', 'birth_place', 'death_day', 'death_month', 'death_year', 'death_place', 'christian_tradition', 'religious_family', 'corporate_entity_category', 'institution_category', 'event_category', 'publication_category', 'corporate_entity_subcategory', 'institution_subcategory', 'event_subcategory', 'publication_subcategory'];
 
-      function titleize(str) {
-        str = str.toString().toLowerCase().replace('\(', '\( ').replace('\[', '\[ ').split(' ');
-        for (var i = 0; i < str.length; i++) {
-          str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
-        }
-        return str.join(' ').replace('\( ', '\(').replace('\[ ', '\[');
-      }
-
       const staticInfo = Array.from(selectNode).filter(x => !filter.includes(x[0])).map(function (node) {
         let key;
         let valueprep = node[1];
@@ -520,7 +609,6 @@ function Popup(props) {
           key = titleCase(keycheck)
         }
         else { key = translate[0][keycheck.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language] }
-
 
         return (
           <ul className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1">
@@ -679,6 +767,40 @@ function Popup(props) {
               }}
             />
             <ReactTooltip id="cite" place="bottom" effect="solid">{translate[0]["citation"][props.language]}</ReactTooltip>
+            {/* Report Data Error Button */}
+              <button className="btn btn-sm btn-danger mx-5" role="button" onClick={handleReportButtonClick}>{translate[0]["report_data_error"][props.language]}</button>
+              {/* Report Form/Modal */}
+              {reportFormVisible && (
+                <div className = "report-modal text-left">
+                  {/* Header for the error report box */}
+                  <h6 className='text-left'>{translate[0]['describe_error'][props.language]}</h6>
+                  {/* Text area for user input */}
+                  <textarea
+                    value={reportText}
+                    onChange={(e) => setReportText(e.target.value)}
+                    placeholder={translate[0]['describe_data_error'][props.language]}
+                    rows={5}
+                  />
+                  {/* Name input field */}
+                  <input
+                    type="text"
+                    value={reporterName}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder={translate[0]['your_name'][props.language]}
+                    style={{ marginBottom: '10px', marginRight: '10px'}}
+                  />
+                  {/* Email input field */}
+                  <input
+                    type="email"
+                    value={reporterEmail}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder={translate[0]['your_email'][props.language]}
+                    style={{ marginBottom: '10px', marginRight: '10px'}}
+                  />
+                  {/* Submit button for the report */}
+                  <button className="btn btn-danger btn-sm" onClick={handleReportSubmit}>{translate[0]['submit'][props.language]}</button>
+                </div>
+              )}
           </Col></Row>
           <h2 className="popup_section_head mt-2">{translate[0]["additional_info_title"][props.language]}
             <Button className="btn btn-sm btn-danger mx-2" data-prop="addinfo" onClick={(i) => props.toggleDisplay(i)} role="button" >{translate[0][props.addinfortext][props.language]}</Button>
