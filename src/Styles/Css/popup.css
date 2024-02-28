@@ -11188,6 +11188,19 @@ textarea.form-control-lg {
   font-weight: bold;
 }
 
+.report-modal {
+  padding: 15px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.report-modal textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .add_info {
   display: block;
 }
