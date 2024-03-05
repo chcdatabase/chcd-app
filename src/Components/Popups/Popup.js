@@ -34,6 +34,9 @@ function Popup(props) {
   const printCorp = print.filter(i => i.end_type === "CorporateEntity");
   const printEvent = print.filter(i => i.end_type === "Event");
   const printPub = print.filter(i => i.end_type === "Publication");
+  const geoTypes = ["Village", "Township", "Country", "Prefecture", "Province", "Nation"];
+  //const printGeo = print.filter(i => geoTypes.includes(i.end_type));
+  const printGeo = print.filter(i => i.end_type === "Geography");
 
   // Setting up reporting error
   const [reportFormVisible, setReportFormVisible] = useState(false);
@@ -175,7 +178,12 @@ function Popup(props) {
     const sortedRelList = Object.keys(restructuredData).map(key => {
       let nodeList = restructuredData[key];
       let first = true;
-      const keyList = nodeList.map(function (node) {
+      const keyList = nodeList.sort((a, b) => {
+        const yearA = a.rel.start_year || 0;
+        const yearB = b.rel.start_year || 0;
+        return yearA - yearB;
+      })
+      .map(function (node) {
         let source = sourceCheck(node)        
         let note = noteCheck(node)
 
@@ -194,6 +202,9 @@ function Popup(props) {
               if ((props.language == "zh" || props.language == "tw") && node.node2.chinese_name_hanzi) { rel_name = node.node2.chinese_name_hanzi }
               else { rel_name = node.node2.name_western }
               break;
+            case "Geography":
+              rel_name = `${node.node2.name_zh} (${node.node2.name_wes})`
+              break;
           }
           first = false;
         }
@@ -210,7 +221,15 @@ function Popup(props) {
         
         return (
           <Row>
-            <Col className="text-left"><span className="popup_link" onClick={() => props.selectSwitchAppend((node.key2))}>{rel_name}</span></Col>
+            <Col className="text-left">
+              {nodeType !== "Geography" ? (
+                <span className="popup_link" onClick={() => props.selectSwitchAppend(node.key2)}>
+                  {rel_name}
+                </span>
+              ) : (
+                <span>{rel_name}</span>
+              )}
+            </Col>
             <Col className="text-left">{relcheck}
               <span className='light-gray-text'>{source}{note}</span></Col>
             <Col className="text-end">{datecheck}</Col>
@@ -234,6 +253,12 @@ function Popup(props) {
 
   const displayRelList = (relList, relListType) => {
     let section_title, data_prop, button_text, data_for, download_text, print_info, props_class;
+    let columnHeaders = [
+        { label: translate[0]["name"][props.language], align: "text-left" },
+        { label: translate[0]["relationship"][props.language], align: "text-left" },
+        { label: translate[0]["years"][props.language], align: "text-end" }
+      ];
+
     switch(relListType){
       case "Person":
         section_title = translate[0]["pers_relationships"][props.language];
@@ -280,6 +305,15 @@ function Popup(props) {
         print_info = printPub;
         props_class = props.addpub;
         break;
+      case "Geography":
+        section_title = translate[0]["geography_relationships"][props.language];
+        data_prop = "addgeo"
+        button_text = translate[0][props.addgeotext][props.language];
+        data_for = "geo_rels";
+        download_text = translate[0]["download_geo_rels"][props.language];
+        print_info = printGeo;
+        props_class = props.addgeo;
+        break;
     }
     
     return (
@@ -295,9 +329,7 @@ function Popup(props) {
           <div className={props_class + ' card'}>
             <div className="popup_card_header card-header bg-light">
               <Row>
-                <Col className="text-left">{translate[0]["name"][props.language]}</Col>
-                <Col className="text-left">{translate[0]["relationship"][props.language]}</Col>
-                <Col className="text-end">{translate[0]["years"][props.language]}</Col>
+                {columnHeaders.map((header, index) => (<Col key={index} className={header.align}>{header.label}</Col>))}
               </Row>
             </div>
             {relList}
@@ -361,6 +393,15 @@ function Popup(props) {
     if (pubRels.length > 0) {
       const sortedPubRels = groupRelsById(pubRels, "Publication");
       return displayRelList(sortedPubRels, "Publication");
+    } else { }
+  };
+
+  // PUBLICATION RELATIONSHIPS CONSTRUCTOR ///////////////////////////////////////////////////////////////////////////////
+  const getGeoRels = () => {
+    const geoRels = props.selectArray.filter(type => type.rel_kind === "Geography")
+    if (geoRels.length > 0) {
+      const sortedGeoRels = groupRelsById(geoRels, "Geography");
+      return displayRelList(sortedGeoRels, "Geography");
     } else { }
   };
 
@@ -897,6 +938,7 @@ function Popup(props) {
       <div className={'border-1 border-top-0 rounded-bottom ' + props.popupcontainer} style={{ border: 'solid 1px #a9a9a9' }}>
         <div className="popupbody">
           {getInfo()}
+          {getGeoRels()}
           {getPersRels()}
           {getInstRels()}
           {getCorpRels()}
