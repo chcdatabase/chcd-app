@@ -68,7 +68,7 @@ function Popup(props) {
       const decodedContent = Buffer.from(currentContent.content, 'base64').toString('utf-8');
 
       // Modify the content
-      const newData = `${decodedContent}\n${data.date}|${data.report}|${data.reporterName}|${data.reporterEmail}`;
+      const newData = `${decodedContent}\n${data.date}|${data.report}|${data.reporterName}|${data.reporterEmail}|${props.nodeSelect}`;
 
       // Encode the new content to base64
       const newContentBase64 = Buffer.from(newData).toString('base64');
