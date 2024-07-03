@@ -85,16 +85,14 @@ function SearchResults(props) {
         else {otherVal = node.other.name_western}
       }
       //SET ALTERNATE NAME VALUES
-      let altVal; let altDisp; let a1; let a2; let a3; let a4; let a5; let a6; let a7;
+      let altVal; let altDisp; let a1; let a2; let a3; let a4; let a5;
       if (node.label === "Person") {
         if (node.properties.alternative_name_western) {a1 = node.properties.alternative_name_western}
-        if (node.properties.chinese_family_name_hanzi) {a2 =node.properties.chinese_name_hanzi}
-        if (node.properties.chinese_given_name_hanzi) {a3 =node.properties.chinese_name_hanzi}
-        if (node.properties.alternative_chinese_name_hanzi) {a4 = node.properties.alternative_chinese_name_hanzi}
-        if (node.properties.chinese_family_name_romanized) {a5 = node.properties.chinese_name_romanized}
-        if (node.properties.chinese_given_name_romanized) {a6 = node.properties.chinese_name_romanized}
-        if (node.properties.alternative_chinese_name_romanized) {a7 = node.properties.alternative_chinese_name_romanized}
-        altVal = [a1, a2, a3, a4, a5, a6, a7].filter(Boolean).join("; ");
+        if (props.language === "en" && (node.properties.chinese_family_name_hanzi || node.properties.chinese_given_name_hanzi)) {a2 = `${node.properties.chinese_family_name_hanzi}${node.properties.chinese_given_name_hanzi}`}
+        else if ((props.language === "zh" || props.language === "tw") && (node.properties.family_name_western || node.properties.given_name_western)) {a2 = `${node.properties.given_name_western} ${node.properties.family_name_western}`}
+        if (node.properties.alternative_chinese_name_hanzi) {a3 = node.properties.alternative_chinese_name_hanzi}
+        if (node.properties.chinese_family_name_romanized || node.properties.chinese_given_name_romanized) {a4 = `${node.properties.chinese_family_name_romanized}${node.properties.chinese_given_name_romanized}`}
+        if (node.properties.alternative_chinese_name_romanized) {a5 = node.properties.alternative_chinese_name_romanized}
       }
       else {
         if (node.properties.alternative_name_western) {a1 = node.properties.alternative_name_western}
@@ -102,8 +100,8 @@ function SearchResults(props) {
         if (node.properties.alternative_chinese_name_hanzi) {a3 = node.properties.alternative_chinese_name_hanzi}
         if (node.properties.chinese_name_romanized) {a4 = node.properties.chinese_name_romanized}
         if (node.properties.alternative_chinese_name_romanized) {a5 = node.properties.alternative_chinese_name_romanized}
-        altVal = [a1, a2, a3, a4, a5, a6, a7].filter(Boolean).join("; ");
       }
+        altVal = [a1, a2, a3, a4, a5].filter(Boolean).join("; ");
         if (altVal.length > 0) {altDisp = altVal+" | "}
       //SET NAME
       let nameVal;
