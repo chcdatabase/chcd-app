@@ -313,7 +313,7 @@ function Popup(props) {
         props_class = props.addgeo;
         break;
     }
-    
+
     return (
       <div>
         <div className="pb-3">
@@ -742,12 +742,53 @@ function Popup(props) {
         return (name)
       }
 
+      function flattenObject(obj) {
+        const result = {};
+        
+        function recurse(currentObj, currentKey) {
+          for (let key in currentObj) {
+            let newKey = currentKey ? `${currentKey}_${key}` : key;
+            if (typeof currentObj[key] === 'object' && currentObj[key] !== null) {
+              recurse(currentObj[key], newKey);
+            } else {
+              result[newKey] = currentObj[key];
+            }
+          }
+        }
+
+        recurse(obj, '');
+        return result;
+      }
+
+      // Assuming `all` contains one biographical object followed by relationship objects
+      const biographicalObject = flattenObject(all[0]);
+
+      // Separate the biographical data as its own row
+      const biographicalData = { ...biographicalObject };
+
+      // Flatten the relationship objects and keep them separate
+      const relationshipData = all.slice(1).map(relObj => flattenObject(relObj));
+
+      // Combine biographical and relationship data for CSV export
+      const flattenedData = [biographicalData, ...relationshipData];
+
+      // Get all unique keys across all objects in flattenedData
+      const allHeaders = Array.from(new Set(flattenedData.flatMap(obj => Object.keys(obj))));
+
+      const normalizedData = flattenedData.map(obj => {
+        const normalizedObj = {};
+        allHeaders.forEach(header => {
+          normalizedObj[header] = obj[header] || "";  // Use empty string if the key is missing
+        });
+        return normalizedObj;
+      });
+
       return (
         <div className="pb-3">
           <Row><Col>
             <h1 className="popup_title" >{name} </h1>
             {props.linkCheck(props, info)}
-            <CsvDownloadButton delimiter='*' data={all} filename={name} style={{ borderWidth: '0px', background: 'none' }}>
+            <CsvDownloadButton delimiter='*' data={normalizedData} filename={name} style={{ borderWidth: '0px', width: '0px', padding: '0px', background: 'none' }}>
               <BiDownload className="download-icons" data-tip data-for="all_rels" />
               <ReactTooltip id="all_rels" place="bottom" effect="solid">{translate[0]["download_all_data"][props.language]}</ReactTooltip>
             </CsvDownloadButton>
