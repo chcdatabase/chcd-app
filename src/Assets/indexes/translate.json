@@ -475,6 +475,12 @@
   "tw": "另類中文標題"
 },
 
+"alt_pub_title_rom": {
+  "en": "Alternative Romanized Chinese Title(s)",
+  "zh": "另类罗马拼音中文标题",
+  "tw": "另類罗马拼音中文标题"
+},
+
 "download_pub_rels": {
   "en": "Download Publication Relationships",
   "zh": "下载与出版物相关的数据",
