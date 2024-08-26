@@ -1711,6 +1711,8 @@ export function fetchCorporateEntitiesData() {
         MATCH (n)--(q:Institution)-[t]-(p:Person) 
         OPTIONAL MATCH (n)--(p:Person)--(q)
         RETURN count(DISTINCT p) as person
+
+        
       }
       CALL {
         WITH n
@@ -1727,6 +1729,8 @@ export function fetchCorporateEntitiesData() {
       CALL apoc.cypher.run('MATCH (t:CorporateEntity)-[]-(p) WHERE id(p)=`+ nodeIdFilter + ` WITH DISTINCT t RETURN count(*) as count',{}) YIELD value as corp
       RETURN n as node, person as count, instcount, eventcount, corp.count as corpcount`
       console.log(query)
+
+
         session
           .run(query)
           .then((results) => {
@@ -1754,7 +1758,7 @@ export function fetchCorporateEntitiesData() {
         const query2 = `MATCH (n) WHERE id(n)=` + nodeIdFilter + `
       CALL {
           WITH n
-          MATCH (n)--(p:Person)--(q) 
+          MATCH (n)--(q:Institution)-[t]-(p:Person)
           OPTIONAL MATCH (n)--(q:Institution)-[t]-(p:Person)
           RETURN DISTINCT p
       }

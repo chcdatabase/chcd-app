@@ -4,7 +4,7 @@
 
 import { BsX } from 'react-icons/bs'
 import { Row, Col, Button, Card } from 'react-bootstrap';
-import { FaRegFileExcel, FaLink, FaQuoteRight } from 'react-icons/fa'
+import { FaLink, FaQuoteRight } from 'react-icons/fa'
 import { BiDownload } from 'react-icons/bi'
 import translate from "../../Assets/indexes/translate.json"
 import nationality from "../../Assets/indexes/nationality.json"
@@ -12,7 +12,6 @@ import family_trans from "../../Assets/indexes/religious_family.json"
 import cat_trans from "../../Assets/indexes/categories.json"
 import relationships from "../../Assets/indexes/relationships.json"
 import CsvDownloadButton from 'react-json-to-csv'
-import { ButtonExportExcel } from '@alckor127/react-button-export-excel'
 import ReactTooltip from "react-tooltip"
 import { useAlert } from 'react-alert'
 import { useState } from 'react'
@@ -45,7 +44,6 @@ function Popup(props) {
   const [reporterEmail, setEmail] = useState('');
 
   const { Octokit } = require('@octokit/rest');
-  const fs = require('fs').promises;
 
   const updateFileInGitHub = async (data) => {
     try {
@@ -315,7 +313,7 @@ function Popup(props) {
         props_class = props.addgeo;
         break;
     }
-    
+
     return (
       <div>
         <div className="pb-3">
@@ -411,22 +409,6 @@ function Popup(props) {
       const info = props.selectArray[0];
 
       // SET STANDARD INFORMATION ////////////////////
-
-      //Set Header Name
-      let name;
-      if (info.select_node.given_name_western) {
-        if ((props.language == "zh" || props.language == "tw") && info.select_node.chinese_family_name_hanzi) { name = `${info.select_node.chinese_family_name_hanzi} ${info.select_node.chinese_given_name_hanzi}` }
-        else { name = `${info.select_node.given_name_western} ${info.select_node.family_name_western}` }
-      }
-      else if (info.select_node.name_western) {
-        if ((props.language == "zh" || props.language == "tw") && info.select_node.chinese_name_hanzi) { name = info.select_node.chinese_name_hanzi }
-        else { name = info.select_node.name_western }
-      }
-      else if (info.select_node.name_wes) {
-        if (props.language == "zh" || props.language == "tw") { name = info.select_node.name_zh }
-        else { name = info.select_node.name_wes }
-      };
-
       //Set Western Name
       let wes_name;
       if (info.select_node.given_name_western) { wes_name = `${info.select_node.given_name_western} ${info.select_node.family_name_western}` }
@@ -435,7 +417,7 @@ function Popup(props) {
 
       //Set Alternative Western Name
       let alt_wes_name;
-      if (info.select_node.alternative_name_western) { alt_wes_name = `${info.select_node.alternative_name_western} ${info.select_node.alternative_name_western}` }
+      if (info.select_node.alternative_name_western) { alt_wes_name = `${info.select_node.alternative_name_western}` }
       else { alt_wes_name = translate[0]["n_a"][props.language] };
 
       //Set Hanzi Name
@@ -454,6 +436,30 @@ function Popup(props) {
       else if (info.select_node.chinese_given_name_romanized) { rom_name = info.select_node.chinese_given_name_romanized }
       else if (info.select_node.name_rom) { rom_name = info.select_node.name_rom }
       else { rom_name = translate[0]["n_a"][props.language] }
+      
+      //Set Alternative Romanized Name
+      let alt_rom_name;
+      if (info.select_node.alternative_chinese_name_romanizedn) { alt_wes_name = `${info.select_node.alternative_chinese_name_romanized}` }
+      else { alt_rom_name = translate[0]["n_a"][props.language] };
+      
+      //Set Alternative Hanzi Name
+      let alt_hanzi_name;
+      if (info.select_node.alternative_chinese_name_hanzi) { alt_hanzi_name = `${info.select_node.alternative_chinese_name_hanzi}` }
+      else { alt_hanzi_name = translate[0]["n_a"][props.language] };
+
+      // Set Header Name
+      let name;
+      if (props.language == "zh" || props.language == "tw") {
+        if (hanzi_name) { name = hanzi_name }
+        else if (rom_name) { name = rom_name }
+        else if (wes_name) { name = wes_name }
+        else if (alt_wes_name) { name = alt_wes_name }
+      } else {
+        if (wes_name) { name = wes_name }
+        else if (rom_name) { name = rom_name }
+        else if (hanzi_name) { name = hanzi_name }
+        else if (alt_wes_name) { name = alt_wes_name }
+      }
 
       //Set Gender
       let gender;
@@ -736,15 +742,56 @@ function Popup(props) {
         return (name)
       }
 
+      function flattenObject(obj) {
+        const result = {};
+        
+        function recurse(currentObj, currentKey) {
+          for (let key in currentObj) {
+            let newKey = currentKey ? `${currentKey}_${key}` : key;
+            if (typeof currentObj[key] === 'object' && currentObj[key] !== null) {
+              recurse(currentObj[key], newKey);
+            } else {
+              result[newKey] = currentObj[key];
+            }
+          }
+        }
+
+        recurse(obj, '');
+        return result;
+      }
+
+      // Assuming `all` contains one biographical object followed by relationship objects
+      const biographicalObject = flattenObject(all[0]);
+
+      // Separate the biographical data as its own row
+      const biographicalData = { ...biographicalObject };
+
+      // Flatten the relationship objects and keep them separate
+      const relationshipData = all.slice(1).map(relObj => flattenObject(relObj));
+
+      // Combine biographical and relationship data for CSV export
+      const flattenedData = [biographicalData, ...relationshipData];
+
+      // Get all unique keys across all objects in flattenedData
+      const allHeaders = Array.from(new Set(flattenedData.flatMap(obj => Object.keys(obj))));
+
+      const normalizedData = flattenedData.map(obj => {
+        const normalizedObj = {};
+        allHeaders.forEach(header => {
+          normalizedObj[header] = obj[header] || "";  // Use empty string if the key is missing
+        });
+        return normalizedObj;
+      });
+
       return (
         <div className="pb-3">
           <Row><Col>
             <h1 className="popup_title" >{name} </h1>
             {props.linkCheck(props, info)}
-            <ButtonExportExcel data={all} filename='export'>
-              <FaRegFileExcel className="link-icons" data-tip data-for="all_rels" />
+            <CsvDownloadButton delimiter='*' data={normalizedData} filename={name} style={{ borderWidth: '0px', width: '0px', padding: '0px', background: 'none' }}>
+              <BiDownload className="download-icons" data-tip data-for="all_rels" />
               <ReactTooltip id="all_rels" place="bottom" effect="solid">{translate[0]["download_all_data"][props.language]}</ReactTooltip>
-            </ButtonExportExcel>
+            </CsvDownloadButton>
             <FaLink
               className="ms-3 link-icons"
               data-tip data-for="permalink"
@@ -846,11 +893,25 @@ function Popup(props) {
                   <Col className="text-left col-9">{hanzi_name}</Col>
                 </Row>
               </div></li></ul>
+              
+              <ul className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1"><li className="list-group-item pt-0 pb-0 border-0"><div className="card-body px-0 p-1 border-0">
+                <Row>
+                  <Col className="text-left">{pubCheck("alt_pub_title_zh", "alternate_chinese_names")}</Col>
+                  <Col className="text-left col-9">{alt_hanzi_name}</Col>
+                </Row>
+              </div></li></ul>
 
               <ul className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1"><li className="list-group-item pt-0 pb-0 border-0"><div className="card-body px-0 p-1 border-0">
                 <Row>
                   <Col className="text-left">{pubCheck("pub_title_rom", "chinese_name_romanization")}</Col>
                   <Col className="text-left col-9">{rom_name}</Col>
+                </Row>
+              </div></li></ul>
+              
+              <ul className="list-group list-group-flush border border-top-0 border-right-0 border-left-0 border-bottom-1"><li className="list-group-item pt-0 pb-0 border-0"><div className="card-body px-0 p-1 border-0">
+                <Row>
+                  <Col className="text-left">{pubCheck("alt_pub_title_rom", "alternate_chinese_name_romanizations")}</Col>
+                  <Col className="text-left col-9">{alt_rom_name}</Col>
                 </Row>
               </div></li></ul>
 
