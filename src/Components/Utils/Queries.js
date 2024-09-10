@@ -44,7 +44,7 @@ export function fetchSearch() {
     const searchProp = this.state.search.replace(/[\(\)\[\]\{\}\.\\\/\-\_\^\~\`\|\^\*\^\"\"/'/']/g, " ");
 
     const query = `
-  CALL db.index.fulltext.queryNodes("allPropIndex", "`+ searchProp + `~") YIELD node
+  CALL db.index.fulltext.queryNodes("allPropIndex", "\` `+ searchProp + ` \`~") YIELD node
   WITH node MATCH (node)-[t]-(m) 
   WHERE (node:Person OR node:Institution OR node:CorporateEntity OR node:Event OR node:Publication OR m:Person OR m:Institution OR m:CorporateEntity OR m:Event OR m:Publication) 
   AND NOT (m:GeneralArea OR m:Nation)
@@ -53,7 +53,7 @@ export function fetchSearch() {
   MATCH (node)-[t]-(m) 
   WHERE (node:Person OR node:Institution OR node:CorporateEntity OR node:Event OR node:Publication OR m:Person OR m:Institution OR m:CorporateEntity OR m:Event OR m:Publication)
   AND NOT (node:GeneralArea OR node:Nation)
-  AND (any(prop in keys(m) WHERE m[prop] =~ '(?i).*`+ searchProp + `.*'))
+  AND (any(prop in keys(m) WHERE m[prop] =~ '(?i).*\` `+ searchProp + ` \`.*'))
   RETURN DISTINCT {key:node.id, properties:properties(node), label:labels(node)[0], rel:t.rel_type, other_label:labels(m)[0], other:properties(m), start_year:t.start_year, end_year:t.end_year} as Nodes LIMIT 1000
     `
     session
