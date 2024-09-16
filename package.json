@@ -32,6 +32,7 @@
     "mapbox-gl-leaflet": "0.0.15",
     "mini-css-extract-plugin": "^2.9.1",
     "neo4j-driver": "^4.3.2",
+    "npm": "^6.14.4",
     "prunecluster": "^2.1.0",
     "react": "^17.0.2",
     "react-alert": "^7.0.3",
