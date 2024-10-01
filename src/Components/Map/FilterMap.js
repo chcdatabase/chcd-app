@@ -220,7 +220,7 @@ function FilterMap(props) {
               </Row>
 
               {/* NAME SELECT ////////////////////////////////////////////////////////////////// */}
-              <Row className="mb-1">
+              {/* <Row className="mb-1">
                 <Col>
                   <Form.Group>
                     <Row>
@@ -283,7 +283,7 @@ function FilterMap(props) {
                     </Row>
                   </Form.Group>
                 </Col>
-              </Row>
+              </Row> */}
 
               {/* PERS AFF SELECT ////////////////////////////////////////////////////////////////// */}
               <Form.Group className="mb-1">
