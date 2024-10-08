@@ -25,7 +25,7 @@ export function withRouter(Children){
       {...props}  
       match = {match} 
       searchParams = {searchParams} 
-      setSearchParams={setSearchParams} 
+      setSearchParams={setSearchParams}   //here check
     />
  }
 }
@@ -144,7 +144,7 @@ class MapView extends React.Component {
       const urlSearch = "permalink";
       this.setState({ search: urlSearch });
       console.log(urlSearch)
-      };
+      };  //check here
 
     this.fetchMapIndexes();
 

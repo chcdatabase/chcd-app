@@ -13,6 +13,7 @@ import translate from "../../Assets/indexes/translate.json";
 import nationality from "../../Assets/indexes/nationality.json";
 import family_trans from "../../Assets/indexes/religious_family.json";
 import cat_trans from "../../Assets/indexes/categories.json";
+import '../../Styles/Css/map.css';
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // COMPONENT ////////////////////////////////////////////////////////////////////////////////////////
@@ -107,6 +108,8 @@ function FilterMap(props) {
     } else {
     }
   }
+
+
 
   // PEOPLE FORM CONSTRUCTOR  ////////////////////////////////////////////////////////////////////////
   // PEOPLE FORM CONSTRUCTOR  ////////////////////////////////////////////////////////////////////////
@@ -419,11 +422,11 @@ function FilterMap(props) {
                   </Col>
                 </Row>
               </Form.Group>
-            </Form>
+            </Form> 
           </div>
-
+          
           {/* BUTTONS SELECT ////////////////////////////////////////////////////////////////// */}
-          <div className="filter-buttons">
+          <div className="filter-buttons"> 
             <Row className="mb-1">
               <Col>
                 <Button
