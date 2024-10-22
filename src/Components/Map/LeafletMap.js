@@ -165,6 +165,7 @@ function LeafletMap(props) {
        let loc_name;
           if ((props.language == "zh" || props.language == "tw") && node.locat.name_zh) { loc_name = node.locat.name_zh }
           else { loc_name = node.locat.name_wes }
+          //check here
        let category = node.properties.event_category
          if (node.properties.event_category === undefined) {let na = "N/A"; category = translate[0][na.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}
          else if (cat_trans[0][node.properties.event_category.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()] === undefined ) {category = node.properties.event_category}
@@ -196,9 +197,16 @@ function LeafletMap(props) {
      if (props.content === "loading") { return (
          <div className="list_container">
            <div className="list_float d-flex align-items-center justify-content-center">
-             <Row><Col>
-               <Spinner animation="border" role="status" variant="light"><span className="visually-hidden hide">{translate[0]["loading"][props.language]}</span></Spinner>
-             </Col></Row>
+           <Row className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+  <Col className="text-center">
+    <Spinner animation="border" role="status" variant="light">
+      <span className="visually-hidden hide">{translate[0]["loading"][props.language]}</span>
+    </Spinner>
+    <div className="p-2 text-danger" style={{ marginTop: '20px' }}>
+      {translate[0]["long_load_message"][props.language]}
+    </div>
+  </Col>
+</Row>
            </div>
          </div>
       )} else {return null}

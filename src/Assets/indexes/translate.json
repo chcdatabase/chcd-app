@@ -1108,7 +1108,7 @@
 },
 
 "long_load_message" : {
-  "en": "This query can take up to 30 seconds for larger entities. Thank you for your patience.",
+  "en": "This query can take up to a few minutes for larger entities. Thank you for your patience.",
   "zh": "对于较大的实体，此查询最多可能需要 30 秒。 感谢您的耐心等待。",
   "tw": "對於較大的實體，此查詢最多可能需要 30 秒。 感謝您的耐心等待。"
 },
