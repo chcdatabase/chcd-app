@@ -52,7 +52,7 @@ function FilterMap(props) {
     // Return filtered options
     setTimeout(() => {
       callback(filteredOptions);
-    }, 1000); // Simulate async
+    }, 1000);
   };
 
   //PROPERTY SORTER
