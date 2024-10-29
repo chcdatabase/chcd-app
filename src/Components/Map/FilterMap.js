@@ -13,6 +13,7 @@ import translate from "../../Assets/indexes/translate.json";
 import nationality from "../../Assets/indexes/nationality.json";
 import family_trans from "../../Assets/indexes/religious_family.json";
 import cat_trans from "../../Assets/indexes/categories.json";
+import '../../Styles/Css/map.css'
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // COMPONENT ////////////////////////////////////////////////////////////////////////////////////////
@@ -39,12 +40,19 @@ function FilterMap(props) {
     }, 1000);
   };
 
-  const loadNatIndex = (
-    inputValueNat: string,
-    callback: (options: props.natIndex) => void
-  ) => {
+  // FILTER THE NATIONALITY OPTIONS BASED ON INPUT
+  const loadNatIndex = (inputValueNat, callback) => {
+    // Filter nationalities based on the input value
+    const filteredOptions = Object.keys(nationality[0])
+      .filter((key) => key.toLowerCase().includes(inputValueNat.toLowerCase()))
+      .map((key) => ({
+        value: key,
+        label: nationality[0][key][props.language], // Return the appropriate language value
+      }));
+
+    // Return filtered options
     setTimeout(() => {
-      callback(props.fetchNatIndex(inputValueNat));
+      callback(filteredOptions);
     }, 1000);
   };
 
@@ -219,72 +227,6 @@ function FilterMap(props) {
                 </Col>
               </Row>
 
-              {/* NAME SELECT ////////////////////////////////////////////////////////////////// */}
-              <Row className="mb-1">
-                <Col>
-                  <Form.Group>
-                    <Row>
-                      <Col>
-                        <Form.Label
-                          className="filter_label mb-0"
-                          data-tip
-                          data-for="family_name"
-                        >
-                          {translate[0]["family_name"][props.language]}
-                        </Form.Label>
-                        <ReactTooltip
-                          id="family_name"
-                          place="right"
-                          effect="solid"
-                        >
-                          {translate[0]["enter_name"][props.language]}
-                        </ReactTooltip>
-                        <Form.Control
-                          type="text"
-                          name="family_name_western"
-                          aria-label={
-                            translate[0]["family_name"][props.language]
-                          }
-                          value={props.family_name_western}
-                          onChange={(value) => props.handleChange(value)}
-                        />
-                      </Col>
-                    </Row>
-                  </Form.Group>
-                </Col>
-                <Col>
-                  <Form.Group>
-                    <Row>
-                      <Col>
-                        <Form.Label
-                          className="filter_label mb-0"
-                          data-tip
-                          data-for="given_name"
-                        >
-                          {translate[0]["given_name"][props.language]}
-                        </Form.Label>
-                        <ReactTooltip
-                          id="given_name"
-                          place="right"
-                          effect="solid"
-                        >
-                          {translate[0]["enter_name"][props.language]}
-                        </ReactTooltip>
-                        <Form.Control
-                          type="text"
-                          name="given_name_western"
-                          aria-label={
-                            translate[0]["given_name"][props.language]
-                          }
-                          value={props.given_name_western}
-                          onChange={(value) => props.handleChange(value)}
-                        />
-                      </Col>
-                    </Row>
-                  </Form.Group>
-                </Col>
-              </Row>
-
               {/* PERS AFF SELECT ////////////////////////////////////////////////////////////////// */}
               <Form.Group className="mb-1">
                 <Row>
@@ -334,9 +276,7 @@ function FilterMap(props) {
                       placeholder={translate[0]["type_to"][props.language]}
                       onInputChange={props.handleMapNatInputChange}
                       getOptionLabel={(option) =>
-                        nationality[0][
-                          option.value.replace(/\s|\//g, "_").toLowerCase()
-                        ][props.language]
+                        nationality[0][option.value][props.language]
                       }
                       defaultInputValue={props.inputValueNat}
                       onChange={(option) => props.handleChangeData(option)}

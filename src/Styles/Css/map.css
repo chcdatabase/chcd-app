@@ -3082,8 +3082,8 @@ textarea.form-control-lg {
 }
 .btn-danger:hover {
   color: #000;
-  background-color: #f89191;
-  border-color: #f88b8b;
+  background-color: #dc3545;
+  border-color: #dc3545;
 }
 .btn-check:focus + .btn-danger, .btn-danger:focus {
   color: #000;
