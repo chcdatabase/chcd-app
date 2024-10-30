@@ -43,12 +43,17 @@ function FilterMap(props) {
   const loadNatIndex = (inputValueNat, callback) => {
     // Filter nationalities based on the input value
     const filteredOptions = Object.keys(nationality[0])
-      .filter((key) => key.toLowerCase().includes(inputValueNat.toLowerCase()))
+      .filter((key) => key.includes(inputValueNat))
       .map((key) => ({
+        // value: nationality[0][key]["en"],
+        labeltwo: nationality[0][key]["en"],
+        // value: "TEST",
         value: key,
-        label: nationality[0][key][props.language], // Return the appropriate language value
+        label: nationality[0][key][props.language], //lang
+        type: "nationality",
       }));
 
+    console.log(filteredOptions);
     // Return filtered options
     setTimeout(() => {
       callback(filteredOptions);
@@ -256,7 +261,7 @@ function FilterMap(props) {
                 </Row>
               </Form.Group>
 
-              {/* PERS AFF SELECT ////////////////////////////////////////////////////////////////// */}
+              {/* NATIONALITY SELECT ////////////////////////////////////////////////////////////////// */}
               <Form.Group className="mb-1">
                 <Row>
                   <Col>
