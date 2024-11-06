@@ -579,6 +579,10 @@ export function getCitation(title, link) {
   if (this.state.language === "en") {daryl = "Daryl Ireland"}
   else {daryl = "艾德恩"}
 
+  let greta;
+  if (this.state.language === "en") {greta = "Greta Frei"}
+  else {greta = "詹家睿"}
+
   let eugenio;
   if (this.state.language === "en") {eugenio = ", and Eugenio Menegon"}
   else {eugenio = "和梅欧金"}
@@ -598,5 +602,5 @@ export function getCitation(title, link) {
   if (this.state.language === "en") { publish_date = "January 19, 2024" } 
   else {publish_date = "2024 年 1 月 19 日" }
 
-  return (<div>{alex}, {daryl}{eugenio}. "{title}." <i>{translate[0].chcd_name[this.state.language]}.</i> V2.1. {publish_date}. {translate[0].accessed[this.state.language]} {access_date}. {link}.</div>)
+  return (<div>{alex}, {daryl}, {greta}{eugenio}. "{title}." <i>{translate[0].chcd_name[this.state.language]}.</i> V2.1. {publish_date}. {translate[0].accessed[this.state.language]} {access_date}. {link}.</div>)
 };
