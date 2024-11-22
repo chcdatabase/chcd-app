@@ -544,12 +544,6 @@ export function fetchResults() {
             `
           RETURN {key:n.id,properties:properties(n),inst:properties(r),aff:properties(e),locat:properties(l),rel:properties(t),locat_name:properties(l).name_wes} AS Nodes
           `;
-          console.log(filterStaticClean);
-          console.log(filterStatic);
-          console.log(genderFilter);
-          console.log(nationalityFilter);
-          console.log(this.state.nationality);
-          console.log(query);
 
           session.run(query).then((results) => {
             let unfiltArray = results.records.map((record) =>

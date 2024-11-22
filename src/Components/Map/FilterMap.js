@@ -130,37 +130,18 @@ function FilterMap(props) {
 
   // FILTER THE NATIONALITY OPTIONS BASED ON INPUT
   const loadNatIndex = (inputValueNat, callback) => {
-    // Normalize the input for case-insensitive matching
-    // Ensures the input string matches nationality keys regardless of case
     const normalizedInput = inputValueNat.toLowerCase();
     const filteredOptions = [];
 
-    for (const key in nationalities) {
+    for (const key in nationality[0]) {
       if (key.toLowerCase().includes(normalizedInput)) {
         filteredOptions.push({
-          value: nationalities[key].en,
-          label: nationalities[key].en,
+          value: nationality[0][key].en,
+          label: nationality[0][key].en,
           type: "nationality",
         });
       }
     }
-
-    console.log(`Input Value: ${inputValueNat}`);
-    console.log(`Filtered Options:`, filteredOptions);
-
-    // const filteredOptions = Object.entries(nationalities[0])
-    //   .filter(
-    //     ([key, value]) =>
-    //       value[props.language] && value[props.language].includes(inputValueNat)
-    //   )
-    //   .map(([key, value]) => {
-    //     return {
-    //       key: key,
-    //       value: value["en"],
-    //       label: value[props.language],
-    //       type: "nationality",
-    //     };
-    //   });
 
     // Return filtered options
     setTimeout(() => {
@@ -388,7 +369,7 @@ function FilterMap(props) {
                       placeholder={translate[0]["type_to"][props.language]}
                       onInputChange={props.handleMapNatInputChange}
                       getOptionLabel={(option) =>
-                        nationality[0][option.value]["en"]
+                        option?.label || "Unknown Label"
                       }
                       defaultInputValue={props.inputValueNat}
                       onChange={(option) => props.handleChangeData(option)}

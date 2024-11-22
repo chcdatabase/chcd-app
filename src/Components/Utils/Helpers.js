@@ -397,11 +397,8 @@ export function handleChange(event) {
 
 // HANDLE CHANGES IN FILTER
 export function handleChangeData(event) {
-  console.log(event);
   this.setState({ [event.type]: event.value });
   this.setState({ sentInputValue: event.label });
-  console.log(event.type);
-  console.log(event.value);
 }
 
 // HANDLE CHANGES IN DD FILTER
@@ -468,8 +465,6 @@ export function handleMapNatInputChange(newValue: string) {
   const inputValue = newValue;
 
   this.setState({ inputValueNat: inputValue });
-  console.log(inputValue);
-  console.log(newValue);
 }
 
 // HANDLE CHECKS IN NETWORK FILTER
