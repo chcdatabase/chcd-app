@@ -137,7 +137,7 @@ class MapView extends React.Component {
     this.getCitation = helper.getCitation.bind(this); 
   };
 
-
+ 
 //RUN ON COMPONENT MOUNT /////////////////////////////////////////////////////////////////////////////
   componentDidMount() {
 
