@@ -467,6 +467,12 @@ export function handleMapNatInputChange(newValue: string) {
   this.setState({ inputValueNat: inputValue });
 }
 
+export function handleMapRelInputChange(newValue: string) {
+  const inputValue = newValue;
+
+  this.setState({ inputValueRel: inputValue });
+}
+
 // HANDLE CHECKS IN NETWORK FILTER
 export function handleCheck(event) {
   const target = event.target;
@@ -538,6 +544,7 @@ export function resetFilter() {
   this.setState({ inputValuePAff: "" });
   this.setState({ inputValueAff: "" });
   this.setState({ inputValueNat: "" });
+  this.setState({ inputValueRel: "" });
   this.setState({ nodeArray: [] });
   this.setState({ degree: 1 });
   this.setState({ people_include: false });
