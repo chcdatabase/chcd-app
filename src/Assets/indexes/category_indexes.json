@@ -1,0 +1,42 @@
+{
+    "instCatsIndex": [
+    ["All", ["All"]],
+    ["Religious", ["All","Mission"]],
+    ["Ecclesial", ["All",
+      "Mission", "Church",
+      "Monastary", "Community Center", 
+      "Missionary Training Home", "Residence", "Missionary Home", 
+      "Seminary", "Orphanage for Blind", "General Work", "Missionary Hostel", 
+      "Missionary Training Institute", "Religious Residence", "Administration"
+    ]],
+    ["Other", ["All",
+      "Children's Work", "Recreation Club", "Military", "Governmental", 
+      "Non-Christian Site", "Business"
+    ]],
+    ["Education", ["All",
+      "Seminary", "School", "Bible School", "Higher Education", "Mission", "Museum", 
+      "Catechist School", "Trade School", "Art", "Blind School", "Residence", 
+      "Nursing School", "Minor Seminary", "Catechetical School", "Language School"
+    ]],
+    ["Press", ["All", "Mission Press"]],
+    ["Medical", ["All",
+      "Leperosy Asylum", "Clinic", "Dispensary", "Hospital", "Sanitarium", 
+      "Leprosy Asylum", "Community Center", "Education"
+    ]],
+    ["Mission", ["All","Missionary Home"]],
+    ["Rescue", ["All",
+      "Orphanage", "Women's Home", "Children's Work", "Industrial Home", 
+      "Blind School", "Orphanage for Blind"
+    ]],
+    ["Scientific", ["All","Research"]],
+    ["Government", ["All","Internment Camp"]]
+  ],
+  "eventsCatsIndex":[ 
+  ["All", ["All"]],
+  ["Other", ["All","Earthquake"]],
+  ["Journey", ["All","Escape", "Ecclesial Mission"]],
+  ["Conflict", ["All","Detainment", "General Chapter"]],
+  ["Meeting", ["All","Ecclesial Mission", "Synod"]]
+]
+
+}
