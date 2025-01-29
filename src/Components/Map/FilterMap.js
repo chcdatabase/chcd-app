@@ -11,7 +11,7 @@ import ReactTooltip from "react-tooltip";
 import locations from "../../Assets/indexes/location-index.json";
 import translate from "../../Assets/indexes/translate.json";
 import nationality from "../../Assets/indexes/nationality.json";
-import family_trans from "../../Assets/indexes/religious_family.json";
+import religious_family from "../../Assets/indexes/religious_family.json";
 import cat_trans from "../../Assets/indexes/categories.json";
 import '../../Styles/Css/map.css'
 
@@ -42,13 +42,39 @@ function FilterMap(props) {
 
   // FILTER THE NATIONALITY OPTIONS BASED ON INPUT
   const loadNatIndex = (inputValueNat, callback) => {
-    // Filter nationalities based on the input value
-    const filteredOptions = Object.keys(nationality[0])
-      .filter((key) => key.toLowerCase().includes(inputValueNat.toLowerCase()))
-      .map((key) => ({
-        value: key,
-        label: nationality[0][key][props.language], // Return the appropriate language value
-      }));
+    const normalizedInput = inputValueNat.toLowerCase();
+    const filteredOptions = [];
+
+    for (const key in nationality[0]) {
+      if (key.toLowerCase().includes(normalizedInput)) {
+        filteredOptions.push({
+          value: nationality[0][key].en,
+          label: nationality[0][key].en,
+          type: "nationality",
+        });
+      }
+    }
+
+    // Return filtered options
+    setTimeout(() => {
+      callback(filteredOptions);
+    }, 1000);
+  };
+
+  // FILTER THE RELIGIOUS FAMILY OPTIONS BASED ON INPUT
+  const loadRelIndex = (inputValueRel, callback) => {
+    const normalizedInput = inputValueRel.toLowerCase();
+    const filteredOptions = [];
+
+    for (const key in religious_family[0]) {
+      if (key.toLowerCase().includes(normalizedInput)) {
+        filteredOptions.push({
+          value: religious_family[0][key].en,
+          label: religious_family[0][key].en,
+          type: "religious_family",
+        });
+      }
+    }
 
     // Return filtered options
     setTimeout(() => {
@@ -581,6 +607,50 @@ function FilterMap(props) {
                 </Row>
               </Form.Group>
 
+              {/* CHRISTIAN TRADITION SELECT ////////////////////////////////////////////////////////////////// */}
+              <Form.Group className="mb-1">
+                <Row>
+                  <Col>
+                    <Form.Label
+                      className="filter_label mb-0"
+                      data-tip
+                      data-for="christian_tradition"
+                    >
+                      {translate[0]["christian_tradition"][props.language]}
+                    </Form.Label>
+                    <ReactTooltip
+                      id="christian_tradition"
+                      place="right"
+                      effect="solid"
+                    >
+                      {translate[0]["select_start"][props.language]}{" "}
+                      {translate[0]["christian_tradition"][props.language]}
+                    </ReactTooltip>
+                    <Form.Select
+                      name="christian_tradition"
+                      aria-label={
+                        translate[0]["christian_tradition"][props.language]
+                      }
+                      value={props.christian_tradition}
+                      onChange={(e) => props.handleChange(e)}
+                    >
+                      <option value="All">
+                        {translate[0]["all"][props.language]}
+                      </option>
+                      <option value="Catholic">
+                        {translate[0]["catholic"][props.language]}
+                      </option>
+                      <option value="Protestant">
+                        {translate[0]["protestant"][props.language]}
+                      </option>
+                      <option value="Orthodox">
+                        {translate[0]["orthodox"][props.language]}
+                      </option>
+                    </Form.Select>
+                  </Col>
+                </Row>
+              </Form.Group>
+
               {/* RELIGIOUS FAMILY SELECT ////////////////////////////////////////////////////////////////// */}
               <Form.Group className="mb-1">
                 <Row>
@@ -603,23 +673,19 @@ function FilterMap(props) {
                         ]
                       }
                     </ReactTooltip>
-                    <Select
-                      name="religious_family"
-                      aria-label={
-                        translate[0]["religious_family"][props.language]
-                      }
-                      placeholder={translate[0]["select"][props.language]}
-                      options={props.relFamIndex}
+                    <AsyncSelect
+                      loadOptions={loadRelIndex}
+                      placeholder={translate[0]["type_to"][props.language]}
+                      onInputChange={props.handleMapRelInputChange}
                       getOptionLabel={(option) =>
-                        family_trans[0][
-                          option.value
-                            .replace(/\s+$/, "")
-                            .replace(/\s|\//g, "_")
-                            .toLowerCase()
-                        ][props.language]
+                        option?.label || "Unknown Label"
                       }
-                      onChange={(e) => props.handleChangeData(e)}
-                      components={{ IndicatorSeparator: () => null }}
+                      defaultInputValue={props.inputValueRel}
+                      onChange={(option) => props.handleChangeData(option)}
+                      components={{
+                        DropdownIndicator: () => null,
+                        IndicatorSeparator: () => null,
+                      }}
                     />
                   </Col>
                 </Row>
@@ -914,6 +980,90 @@ function FilterMap(props) {
                       aria-label={translate[0]["event_name"][props.language]}
                       value={props.name_western}
                       onChange={(value) => props.handleChange(value)}
+                    />
+                  </Col>
+                </Row>
+              </Form.Group>
+
+              {/* CHRISTIAN TRADITION SELECT ////////////////////////////////////////////////////////////////// */}
+              <Form.Group className="mb-1">
+                <Row>
+                  <Col>
+                    <Form.Label
+                      className="filter_label mb-0"
+                      data-tip
+                      data-for="christian_tradition"
+                    >
+                      {translate[0]["christian_tradition"][props.language]}
+                    </Form.Label>
+                    <ReactTooltip
+                      id="christian_tradition"
+                      place="right"
+                      effect="solid"
+                    >
+                      {translate[0]["select_start"][props.language]}{" "}
+                      {translate[0]["christian_tradition"][props.language]}
+                    </ReactTooltip>
+                    <Form.Select
+                      name="christian_tradition"
+                      aria-label={
+                        translate[0]["christian_tradition"][props.language]
+                      }
+                      value={props.christian_tradition}
+                      onChange={(e) => props.handleChange(e)}
+                    >
+                      <option value="All">
+                        {translate[0]["all"][props.language]}
+                      </option>
+                      <option value="Catholic">
+                        {translate[0]["catholic"][props.language]}
+                      </option>
+                      <option value="Protestant">
+                        {translate[0]["protestant"][props.language]}
+                      </option>
+                      <option value="Orthodox">
+                        {translate[0]["orthodox"][props.language]}
+                      </option>
+                    </Form.Select>
+                  </Col>
+                </Row>
+              </Form.Group>
+
+              {/* RELIGIOUS FAMILY SELECT ////////////////////////////////////////////////////////////////// */}
+              <Form.Group className="mb-1">
+                <Row>
+                  <Col>
+                    <Form.Label
+                      className="filter_label mb-0"
+                      data-tip
+                      data-for="religious_family"
+                    >
+                      {translate[0]["religious_family"][props.language]}
+                    </Form.Label>
+                    <ReactTooltip
+                      id="religious_family"
+                      place="right"
+                      effect="solid"
+                    >
+                      {
+                        translate[0]["type_to_select_religious_family"][
+                          props.language
+                        ]
+                      }
+                    </ReactTooltip>
+                    <AsyncSelect
+                      loadOptions={loadRelIndex}
+                      placeholder={translate[0]["type_to"][props.language]}
+                      onInputChange={props.handleMapRelInputChange}
+                      getOptionLabel={(option) =>
+                        option?.label || "Unknown Label"
+                      }
+                      defaultInputValue={props.inputValueRel}
+                      onChange={(option) => props.handleChangeData(option)}
+                      components={{
+                        DropdownIndicator: () => null,
+                        IndicatorSeparator: () => null,
+                      }}
                     />
                   </Col>
                 </Row>
