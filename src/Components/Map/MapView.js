@@ -16,6 +16,7 @@ import * as helper from "../Utils/Helpers.js";
 import * as query from "../Utils/Queries.js";
 import translate from "../../Assets/indexes/translate.json"
 import { useLocation, useSearchParams } from 'react-router-dom';
+import categoryIndex from "../../Assets/indexes/category_indexes.json";
 
 export function withRouter(Children){
   return(props)=>{
@@ -89,8 +90,8 @@ class MapView extends React.Component {
       noresults: "noresults hide",
       nosend: "nosend hide",
       // FORM SELECTS
-      instCatsIndex: [],
-      eventsCatsIndex: [],
+      instCatsIndex: categoryIndex.instCatsIndex,
+      eventsCatsIndex: categoryIndex.eventsCatsIndex,
       relFamIndex: [],
       affIndex: [],
       pAffIndex: [],
@@ -136,7 +137,7 @@ class MapView extends React.Component {
     this.getCitation = helper.getCitation.bind(this); 
   };
 
-
+ 
 //RUN ON COMPONENT MOUNT /////////////////////////////////////////////////////////////////////////////
   componentDidMount() {
 

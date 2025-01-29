@@ -13,6 +13,7 @@ import translate from "../../Assets/indexes/translate.json";
 import nationality from "../../Assets/indexes/nationality.json";
 import religious_family from "../../Assets/indexes/religious_family.json";
 import cat_trans from "../../Assets/indexes/categories.json";
+import '../../Styles/Css/map.css'
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // COMPONENT ////////////////////////////////////////////////////////////////////////////////////////
@@ -60,7 +61,7 @@ function FilterMap(props) {
     }, 1000);
   };
 
-  // FILTER THE NATIONALITY OPTIONS BASED ON INPUT
+  // FILTER THE RELIGIOUS FAMILY OPTIONS BASED ON INPUT
   const loadRelIndex = (inputValueRel, callback) => {
     const normalizedInput = inputValueRel.toLowerCase();
     const filteredOptions = [];
@@ -301,7 +302,7 @@ function FilterMap(props) {
                       placeholder={translate[0]["type_to"][props.language]}
                       onInputChange={props.handleMapNatInputChange}
                       getOptionLabel={(option) =>
-                        option?.label || "Unknown Label"
+                        nationality[0][option.value][props.language]
                       }
                       defaultInputValue={props.inputValueNat}
                       onChange={(option) => props.handleChangeData(option)}

@@ -233,7 +233,8 @@ export function fetchResults() {
     this.setState({ content: "loading" });
     this.setState({ printArray: [] });
     const session = this.driver.session();
-
+    // log the selection instituion filter
+    console.log(this.state.institution_category);
     //CONSTRUCT FILTERS FROM USER INPUT
     fetchNeo4jId(this.state.sent_id, this.driver)
       .then((internalId) => {
@@ -1665,24 +1666,6 @@ export function fetchNatIndex() {
 
 //QUERY TO FETCH LISTS FOR MAP SELECTS
 export function fetchMapIndexes() {
-  //GET CATEGORY AND SUBCATEGORY LISTS
-  const session = this.driver.session();
-  const query = `MATCH (p:Institution) WHERE NOT p.institution_category = "General Area" AND p.institution_category IS NOT NULL
-    CALL {
-      WITH p
-      RETURN p.institution_subcategory
-    }
-    RETURN {category: p.institution_category, subcategory:collect (distinct  p.institution_subcategory)} as List
-      `;
-  session.run(query).then((results) => {
-    const resultIndex = results.records.map((record) => record.get("List"));
-    const addAll = [{ category: "All", subcategory: ["All"] }];
-    const test = addAll.concat(resultIndex);
-    const instCatsIndex = test.map((i) => [i.category, i.subcategory]);
-    this.setState({ instCatsIndex });
-    session.close();
-  });
-
   //GET RELIGIOUS FAMILY LIST
   const session3 = this.driver.session();
   const query3 = `MATCH (r:Institution)-[]->(e:CorporateEntity) WHERE e.religious_family IS NOT NULL
@@ -1698,26 +1681,7 @@ export function fetchMapIndexes() {
     this.setState({ relFamIndex });
     session3.close();
   });
-
-  //GET CATEGORY AND SUBCATEGORY LISTS
-  const session6 = this.driver.session();
-  const query6 = `MATCH (p:Event) WHERE p.event_category IS NOT NULL
-    WITH p MATCH (p)-[]->(l) WHERE (l:Township OR l:Village OR l:County OR l:Prefecture OR l:Province)
-    CALL {
-      WITH p
-      RETURN p.event_subcategory
-    }
-    RETURN {category: p.event_category, subcategory:collect (distinct  p.event_subcategory)} as List
-      `;
-  session6.run(query6).then((results) => {
-    const resultIndex = results.records.map((record) => record.get("List"));
-    const addAll = [{ category: "All", subcategory: ["All"] }];
-    const test = addAll.concat(resultIndex);
-    const eventsCatsIndex = test.map((i) => [i.category, i.subcategory]);
-    this.setState({ eventsCatsIndex });
-    session.close();
-  });
-}
+};
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // QUERIES FOR DATAVIEW /////////////////////////////////////////////////////////////////////////////

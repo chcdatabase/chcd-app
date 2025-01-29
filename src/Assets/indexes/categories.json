@@ -104,7 +104,7 @@
     "ephemera": {"en": "ephemera", "zh": "蜉蝣", "tw": "蜉蝣"},
     "religious;_mission_news": {"en": "religious; mission news", "zh": "宗教; 使命新闻", "tw": "宗教; 使命新聞"},
     "report": {"en": "report", "zh": "报告", "tw": "報告"},
-    "religious;_general_information": {"en": "religious; general information", "zh": "宗教; 一般信息", "tw": "宗教; 一般資訊"},
+    "religious": {"en": "Religious", "zh": "宗教的", "tw": "宗教的"},
     "society_bulletin": {"en": "society bulletin", "zh": "社会公报", "tw": "社會公報"},
     "mission_news": {"en": "mission news", "zh": "使命新闻", "tw": "使命新聞"},
     "library_journal": {"en": "library journal", "zh": "图书馆期刊", "tw": "圖書館期刊"},
