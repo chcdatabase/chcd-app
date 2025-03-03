@@ -62,14 +62,14 @@ function Popup(props) {
         path,
       });
 
-      // Decode the current content from base64
-      const decodedContent = Buffer.from(currentContent.content, 'base64').toString('utf-8');
+      // Decode the current content from base64 using atob()
+      const decodedContent = atob(currentContent.content);
 
       // Modify the content
       const newData = `${decodedContent}\n${data.date}|${data.report}|${data.reporterName}|${data.reporterEmail}|${props.nodeSelect}`;
 
-      // Encode the new content to base64
-      const newContentBase64 = Buffer.from(newData).toString('base64');
+      // Encode the new content to base64 using btoa()
+      const newContentBase64 = btoa(newData);
 
       // Update the file
       await octokit.repos.createOrUpdateFileContents({
@@ -78,59 +78,56 @@ function Popup(props) {
         path,
         message: 'Update file via API', // Commit message
         content: newContentBase64,
-        sha: currentContent.sha, // SHA of the current content, to ensure you're updating the latest version
+        sha: currentContent.sha, // SHA of the current content, required for updating
       });
 
       console.log('Data added to GitHub file successfully!');
       return true;
     } catch (error) {
-      // Log detailed error information
       console.error('Error updating file in GitHub:', error.message);
       console.error('GitHub API response:', error.response?.data || 'No response data');
-
-      // Optionally, log the stack trace for further debugging
       console.error('Stack trace:', error.stack);
-
       return false;
     }
   };
 
-  const handleReportButtonClick = () => {
-    // Toggle the visibility of the report form
-    setReportFormVisible(!reportFormVisible);
-  };
 
-  const handleReportSubmit = async () => {
-    // Check if all three fields have at least one character
-    if (reportText.trim().length === 0 || reporterName.trim().length === 0 || reporterEmail.trim().length === 0) {
-      // If any field is empty, display an alert or handle it as needed
-      window.alert(translate[0]["unfilled_fields"][props.language]);
-      return;
-    }
+    const handleReportButtonClick = () => {
+      // Toggle the visibility of the report form
+      setReportFormVisible(!reportFormVisible);
+    };
 
-    try {
-      // Send report to the backend
-      const errorReported = await updateFileInGitHub({
-        date: new Date().toISOString(),
-        report: reportText,
-        reporterName: reporterName,
-        reporterEmail: reporterEmail
-      });
-
-      // Display confirmation message to the user
-      if (errorReported) {
-        window.alert(translate[0]['issue_reported_successfully'][props.language]);
-      } else {
-        window.alert(translate[0]['issue_not_reported_successfully'][props.language]);
+    const handleReportSubmit = async () => {
+      // Check if all three fields have at least one character
+      if (reportText.trim().length === 0 || reporterName.trim().length === 0 || reporterEmail.trim().length === 0) {
+        // If any field is empty, display an alert or handle it as needed
+        window.alert(translate[0]["unfilled_fields"][props.language]);
+        return;
       }
 
-      setReportFormVisible(false);
-      setReportText('');
-      setName('');
-      setEmail('');
-    } catch (error) {
-      console.error('Error handling report submission:', error);
-    }
+      try {
+        // Send report to the backend
+        const errorReported = await updateFileInGitHub({
+          date: new Date().toISOString(),
+          report: reportText,
+          reporterName: reporterName,
+          reporterEmail: reporterEmail
+        });
+
+        // Display confirmation message to the user
+        if (errorReported) {
+          window.alert(translate[0]['issue_reported_successfully'][props.language]);
+        } else {
+          window.alert(translate[0]['issue_not_reported_successfully'][props.language]);
+        }
+
+        setReportFormVisible(false);
+        setReportText('');
+        setName('');
+        setEmail('');
+      } catch (error) {
+        console.error('Error handling report submission:', error);
+      }
   };
  
   function titleize(str) {
