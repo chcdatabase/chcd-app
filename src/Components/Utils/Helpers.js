@@ -62,6 +62,8 @@ export function toggleDisplay(event) {
     t = "addcorptext";
   } else if (event.target.dataset.prop === "addpub") {
     t = "addpubtext";
+  } else if (event.target.dataset.prop === "addgeo") {
+    t = "addgeotext";
   }
 
   if ((this.state[v] === v && v === p) || (this.state[v] === v2 && v2 === f)) {
