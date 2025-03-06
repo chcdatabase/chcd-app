@@ -44,12 +44,14 @@ function FilterMap(props) {
   const loadNatIndex = (inputValueNat, callback) => {
     const normalizedInput = inputValueNat.toLowerCase();
     const filteredOptions = [];
-
     for (const key in nationality[0]) {
-      if (key.toLowerCase().includes(normalizedInput)) {
+      const natData = nationality[0][key];
+      if(natData["en"].toLowerCase().includes(normalizedInput) ||
+          natData["zh"].includes(normalizedInput) ||
+          natData["tw"].includes(normalizedInput)) {
         filteredOptions.push({
-          value: nationality[0][key].en,
-          label: nationality[0][key].en,
+          value: natData["en"],
+          label: natData[props.language],
           type: "nationality",
         });
       }
@@ -302,7 +304,7 @@ function FilterMap(props) {
                       placeholder={translate[0]["type_to"][props.language]}
                       onInputChange={props.handleMapNatInputChange}
                       getOptionLabel={(option) =>
-                        nationality[0][option.value][props.language]
+                        option.label
                       }
                       defaultInputValue={props.inputValueNat}
                       onChange={(option) => props.handleChangeData(option)}
