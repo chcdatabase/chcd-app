@@ -384,6 +384,34 @@ export function fetchResults() {
           isubcatFilter = "";
         }
 
+        let ecatFilter;
+        if (this.state.event_category === "All") {
+          ecatFilter = "";
+        } else if (
+          this.state.event_category !== "All" ||
+          this.state.event_category !== ""
+        ) {
+          ecatFilter =
+            'event_category: "' + this.state.event_category + '"';
+        } else {
+          ecatFilter = "";
+        }
+
+        let esubcatFilter;
+        if (this.state.event_subcategory === "All") {
+          esubcatFilter = "";
+        } else if (
+          this.state.event_subcategory !== "All" ||
+          this.state.event_subcategory !== ""
+        ) {
+          esubcatFilter =
+            'event_subcategory: "' +
+            this.state.event_subcategory +
+            '"';
+        } else {
+          esubcatFilter = "";
+        }
+
         let genderFilter;
         if (this.state.gender !== "All") {
           genderFilter = 'gender: "' + this.state.gender + '"';
@@ -479,8 +507,14 @@ export function fetchResults() {
         const corpFilterStaticClean = corpFilterStatic
           .filter((value) => value.length > 1)
           .join();
+
         const instFilterStatic = [icatFilter, isubcatFilter];
         const instFilterStaticClean = instFilterStatic
+          .filter((value) => value.length > 1)
+          .join();
+        
+        const eventFilterStatic = [ecatFilter, esubcatFilter];
+        const eventFilterStaticClean = eventFilterStatic
           .filter((value) => value.length > 1)
           .join();
 
@@ -790,7 +824,7 @@ export function fetchResults() {
           const query =
             `
           MATCH (r:Event {` +
-            instFilterStaticClean +
+            eventFilterStaticClean +
             `})-[t]-(l)` +
             timeFilter +
             keyFilter +
@@ -830,7 +864,7 @@ export function fetchResults() {
           const query2 =
             `
             MATCH (r:Event {` +
-            instFilterStaticClean +
+            eventFilterStaticClean +
             `})-[t]-(l)` +
             timeFilter +
             keyFilter +

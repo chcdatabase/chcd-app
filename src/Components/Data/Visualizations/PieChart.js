@@ -5,8 +5,6 @@ import * as d3 from "d3";
 import React, { useEffect, useRef } from "react";
 import { Card, Spinner } from 'react-bootstrap';
 
-
-
 // FUNCTIONAL COMPONENT ////////////////////////////////////////////////////////
 
 function PieChart(props) {
@@ -14,49 +12,52 @@ function PieChart(props) {
   const legend = useRef();
   const cardWidth = 450;
 
+  // Define color mapping based on useGenderColors flag
+  const getColorScale = (useGenderColors) => {
+    return useGenderColors
+      ? d3.scaleOrdinal()
+        .domain(['Male', 'Female', 'Unknown'])  // Explicit mapping
+        .range([d3.schemeTableau10[0], d3.schemeTableau10[7], d3.schemeTableau10[9]]) // Male = Blue, Female = Red, Unknown = Gray
+      : d3.scaleOrdinal(d3.schemeTableau10);
+  };
 
   const drawChart = (data, ref, useGenderColors) => {
+    // Get the appropriate color scale
+    const color = getColorScale(useGenderColors);
 
-    // transform the value of each group to a radius that will be displayed on the chart
-    const pie = d3.pie()
-      .value(function (d) { return d.value })
-      .sort(null)
-      .padAngle(.03);
+    // Convert data to ensure consistent category mapping
+    const pieData = d3.pie()
+      .value(d => d.value)
+      .sort(null)  // 🔹 Prevents sorting, preserving original order
+      .padAngle(0.03)(data);
 
     const w = cardWidth;
     const h = 320;
     const outerRadius = 250 / 2;
     const innerRadius = 50;
 
-    const color = useGenderColors
-      ? d3.scaleOrdinal().domain(['Male', 'Female', 'Unknown']).range([d3.schemeTableau10[0], d3.schemeTableau10[7], d3.schemeTableau10[9]])
-      : d3.scaleOrdinal(d3.schemeTableau10);
-
-    // draws on arc per group
     const arc = d3.arc()
       .outerRadius(outerRadius)
       .innerRadius(innerRadius);
 
-    // initialize svg element with width and height
+    // Initialize SVG
     const svg = d3.select(ref.current)
       .append("svg")
       .attr("height", h)
       .attr("width", w)
       .append("g")
-      .attr("transform", 'translate(' + 300 / 2 + ',' + h / 2 + ')');
+      .attr("transform", `translate(${300 / 2},${h / 2})`);
 
-    // draw each path (pie chart section)
+    // Draw pie chart sections
     const path = svg.selectAll('path')
-      .data(pie(data))
+      .data(pieData)
       .enter()
       .append("path")
       .attr("d", arc)
       .attr("class", "shadow-filter section")
-      .attr("fill", function (d, i) {
-        return color(d.data.key);
-      });
+      .attr("fill", d => color(d.data.key));  // 🔹 Ensures colors always match key
 
-    // create transition
+    // Create transition animation
     path.transition()
       .duration(1000)
       .attrTween('d', function (d) {
@@ -66,101 +67,80 @@ function PieChart(props) {
         };
       });
 
-
-    // add labels
-    const text = svg.selectAll('text')
-      .data(pie(data))
+    // Add labels
+    svg.selectAll('text')
+      .data(pieData)
       .enter()
       .append("text")
       .transition()
       .delay(1000)
       .duration(0)
-      .attr("transform", function (d) {
+      .attr("transform", d => {
         let c = arc.centroid(d);
-        return "translate(" + c[0] * 1.6 + "," + c[1] * 1.6 + ")";
+        return `translate(${c[0] * 1.6}, ${c[1] * 1.6})`;
       })
       .attr("text-anchor", "middle")
-      .text(function (d) {
-        return d.data.value;
-      })
-      .style("font-size", "10px")
-  }
+      .text(d => d.data.value)
+      .style("font-size", "10px");
+  };
 
   const drawLegend = (data, ref, useGenderColors) => {
-    console.log(data)
-    console.log(ref)
-    // transform the value of each group to a radius that will be displayed on the chart
     const w = 150;
-    const h = 320
+    const h = 320;
+    const legendRectSize = 15;
+    const legendSpacing = 7;
+    const legendHeight = legendRectSize + legendSpacing;
 
-    // Construct Invisibale Placeholder Piechart
-    const color = useGenderColors
-      ? d3.scaleOrdinal().domain(['Male', 'Female', 'Unknown']).range([d3.schemeTableau10[0], d3.schemeTableau10[7], d3.schemeTableau10[9]])
-      : d3.scaleOrdinal(d3.schemeTableau10);
-    const pie = d3.pie().value(function (d) { return d.value }).sort(null).padAngle(.03);
-    const arc = d3.arc().outerRadius(0).innerRadius(0);
+    // Get the appropriate color scale
+    const color = getColorScale(useGenderColors);
+
     const svg = d3.select(ref.current)
       .append("svg")
       .attr("height", h)
       .attr("width", w)
       .append("g")
-      .attr("transform", 'translate(0,' + h / 2 + ')');
-    const path = svg.selectAll('path').data(pie(data)).enter().append("path").attr("d", arc).attr("class", "shadow-filter section").attr("fill", function (d, i) { return color(d.data.key); });
+      .attr("transform", `translate(0,${h / 2})`);
 
-    // add legend
-    const legendRectSize = 15;
-    const legendSpacing = 7;
-    const legendHeight = legendRectSize + legendSpacing;
+    // Use explicit order only if using gender colors
+    const legendKeys = useGenderColors ? ['Male', 'Female', 'Unknown'] : data.map(d => d.key);
 
     const legend = svg.selectAll('.legend')
-      .data(color.domain())
+      .data(legendKeys)
       .enter()
       .append('g')
       .attr("class", "legend")
-      .attr("class", function (d, i) {
-        // Check if data[i] and data[i].key are defined before using them
-        if (data[i] && data[i].key) {
-          return `legend ${data[i].key}`;
-        } else {
-          // Handle the case where data[i] or data[i].key is undefined
-          return 'legend';
-        }
-      })
-      // Just a calculation for x and y position
-      .attr("transform", function (d, i) {
+      .attr("transform", (d, i) => {
         if (data.length > 2) {
-          return 'translate(5,' + ((i * legendHeight) - 11 * data.length) + ')';
+          return `translate(5, ${(i * legendHeight) - 11 * data.length})`;
         } else {
-          return 'translate(5,' + ((i * legendHeight) - 40) + ')';
+          return `translate(5, ${(i * legendHeight) - 40})`;
         }
       });
 
+    // Add color squares
     legend.append('rect')
       .attr("width", legendRectSize)
       .attr("height", legendRectSize)
       .attr("rx", 30)
       .attr("ry", 30)
-      .style("fill", color)
-      .style("stroke", color)
+      .style("fill", d => color(d))  // 🔹 Ensure legend colors match pie chart
+      .style("stroke", d => color(d));
 
+    // Add text labels with correct values
     legend.append('text')
       .attr("x", 20)
       .attr("y", 12)
       .attr("font-size", "12px")
-      .text(function (d, i) {
-        if (data[i] && data[i].value) {
-          return `${d} (${data[i].value})`;
-        } else {
-          // Handle the case where data[i] or data[i].key is undefined
-          return d
-        }
-      })
-  }
+      .text(d => {
+        const found = data.find(item => item.key === d);
+        return `${d} (${found ? found.value : 0})`; // Show 0 if missing
+      });
+  };
 
   useEffect(() => {
     drawChart(props.queryResult, chart, props.useGenderColors);
     drawLegend(props.queryResult, legend, props.useGenderColors);
-  }, []);
+  }, [props.queryResult, props.useGenderColors]);
 
   // RETURNS PLACEHOLDER
   return (
@@ -180,4 +160,4 @@ function PieChart(props) {
   )
 }
 
-export default PieChart
+export default PieChart;
