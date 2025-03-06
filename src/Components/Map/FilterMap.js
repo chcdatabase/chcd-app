@@ -69,10 +69,13 @@ function FilterMap(props) {
     const filteredOptions = [];
 
     for (const key in religious_family[0]) {
-      if (key.toLowerCase().includes(normalizedInput)) {
+      const relfamData = religious_family[0][key];
+      if(relfamData["en"].toLowerCase().includes(normalizedInput) ||
+          relfamData["zh"].includes(normalizedInput) ||
+          relfamData["tw"].includes(normalizedInput)) {
         filteredOptions.push({
-          value: religious_family[0][key].en,
-          label: religious_family[0][key].en,
+          value: relfamData["en"],
+          label: relfamData[props.language],
           type: "religious_family",
         });
       }
