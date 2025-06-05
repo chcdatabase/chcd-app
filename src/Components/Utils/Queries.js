@@ -42,11 +42,15 @@ export function fetchSearch() {
   if (this.state.search !== "") {
     this.setState({ content: "loading" });
     const session = this.driver.session();
-    const searchProp = this.state.search.replace(
+    let searchProp = this.state.search.replace(
       /[\(\)\[\]\{\}\.\\\/\-\_\^\~\`\|\^\*\^\"\"/'/']/g,
       " "
     );
+    
+    // limit the lenght of the searchProp to avoid crashing
 
+    searchProp = searchProp.trim().split(/\s+/).slice(0, 10)
+    console.log(searchProp)
     const query =
       `
   CALL db.index.fulltext.queryNodes("allPropIndex", "\` ` +
@@ -463,13 +467,13 @@ export function fetchResults() {
 
         let timeFilter;
         if (this.state.start_year !== "" && this.state.end_year !== "") {
-          timeFilter = ` WHERE ((t.start_year IS NOT NULL) AND (t.start_year >= ${this.state.start_year}) AND (t.start_year <= ${this.state.end_year})) OR
-          ((t.end_year IS NOT NULL) AND (t.end_year >= ${this.state.start_year}) AND (t.end_year <= ${this.state.end_year})) OR
-          ((t.start_year IS NOT NULL) AND (t.start_year < ${this.state.start_year}) AND (t.end_year IS NOT NULL) AND (t.end_year > ${this.state.end_year}))`;
+          timeFilter = ` WHERE ((t.start_year IS NOT NULL) AND (toInteger(toFloat(t.start_year)) >= ${this.state.start_year}) AND (toInteger(toFloat(t.start_year)) <= ${this.state.end_year})) OR
+          ((t.end_year IS NOT NULL) AND (toInteger(toFloat(t.end_year)) >= ${this.state.start_year}) AND (toInteger(toFloat(t.end_year)) <= ${this.state.end_year})) OR
+          ((t.start_year IS NOT NULL) AND (toInteger(toFloat(t.start_year)) < ${this.state.start_year}) AND (t.end_year IS NOT NULL) AND (toInteger(toFloat(t.end_year)) > ${this.state.end_year}))`;
         } else if (this.state.start_year === "" && this.state.end_year !== "") {
-          timeFilter = ` WHERE (t.start_year <= ${this.state.end_year}) OR (t.end_year <= ${this.state.end_year})`;
+          timeFilter = ` WHERE (toInteger(toFloat(t.start_year)) <= ${this.state.end_year}) OR (toInteger(toFloat(t.end_year)) <= ${this.state.end_year})`;
         } else if (this.state.start_year !== "" && this.state.end_year === "") {
-          timeFilter = ` WHERE (t.start_year >= ${this.state.start_year}) OR (t.end_year >= ${this.state.start_year})`;
+          timeFilter = ` WHERE (toInteger(toFloat(t.start_year)) >= ${this.state.start_year}) OR (toInteger(toFloat(t.end_year)) >= ${this.state.start_year})`;
         } else {
           timeFilter = "";
         }
@@ -653,6 +657,7 @@ export function fetchResults() {
             }
             RETURN DISTINCT Nodes
             `;
+          console.log(query2)
           session2.run(query2).then((results) => {
             let unfiltArrayPrint = results.records.map((record) =>
               record.get("Nodes")
@@ -1839,11 +1844,17 @@ export function fetchDBWide() {
 
   //QUERY TO GET ACTIVITY FOR PROVINCES.
   const session8 = this.driver.session();
-  const query8 = `MATCH (p:Province)
-      UNWIND p as x
+  const query8 = `
+      MATCH (p:Province)
+      UNWIND p AS x
       MATCH (x:Province)<-[:LOCATED_IN|INSIDE_OF*1..5]-(q)<-[:PRESENT_AT]-(n:Person)
-      RETURN DISTINCT {Province: {en: x.name_wes, zh: x.name_zh, tw: x.name_zh}, Activity: count(n)} AS List
-      ORDER BY List.Activity DESC LIMIT 10
+      WITH x.name_wes AS name_wes, x.name_zh AS name_zh, count(n) AS activity_count
+      RETURN {
+        Province: {en: name_wes, zh: name_zh, tw: name_zh},
+        Activity: activity_count
+      } AS List
+      ORDER BY List.Activity DESC
+      LIMIT 10
     `;
   session8.run(query8).then((results) => {
     const provinces = results.records.map((record) =>
@@ -1855,11 +1866,17 @@ export function fetchDBWide() {
 
   //QUERY TO GET ACTIVITY FOR PREFECTURES.
   const session9 = this.driver.session();
-  const query9 = `MATCH (p:Prefecture)
-      UNWIND p as x
-      MATCH (x:Prefecture)<-[:LOCATED_IN|INSIDE_OF*1..4]-(q)<-[:PRESENT_AT]-(n:Person)
-      RETURN DISTINCT {Prefecture: {en: x.name_wes, zh: x.name_zh, tw: x.name_zh}, Activity: count(n)} AS List
-      ORDER BY List.Activity DESC LIMIT 10
+  const query9 = `
+    MATCH (p:Prefecture)
+  UNWIND p AS x
+  MATCH (x:Prefecture)<-[:LOCATED_IN|INSIDE_OF*1..4]-(q)<-[:PRESENT_AT]-(n:Person)
+  WITH x.name_wes AS name_wes, x.name_zh AS name_zh, count(n) AS activity_count
+  RETURN {
+    Prefecture: {en: name_wes, zh: name_zh, tw: name_zh},
+    Activity: activity_count
+  } AS List
+  ORDER BY List.Activity DESC
+  LIMIT 10
     `;
   session9.run(query9).then((results) => {
     const prefectures = results.records.map((record) =>
@@ -1871,11 +1888,18 @@ export function fetchDBWide() {
 
   //QUERY TO GET ACTIVITY FOR COUNTIES.
   const session10 = this.driver.session();
-  const query10 = `MATCH (p:County)
-      UNWIND p as x
-      MATCH (x:County)<-[:LOCATED_IN|INSIDE_OF*1..3]-(q)<-[:PRESENT_AT]-(n:Person)
-      RETURN DISTINCT {County: {en: x.name_wes, zh: x.name_zh, tw: x.name_zh}, Activity: count(n)} AS List
-      ORDER BY List.Activity DESC LIMIT 10
+  const query10 = `
+    MATCH (p:County)
+    UNWIND p AS x
+    MATCH (x:County)<-[:LOCATED_IN|INSIDE_OF*1..3]-(q)<-[:PRESENT_AT]-(n:Person)
+    WITH x.name_wes AS name_wes, x.name_zh AS name_zh, count(n) AS activity_count
+    RETURN {
+      County: {en: name_wes, zh: name_zh, tw: name_zh},
+      Activity: activity_count
+    } AS List
+    ORDER BY List.Activity DESC
+    LIMIT 10
+
     `;
   session10.run(query10).then((results) => {
     const counties = results.records.map((record) =>
@@ -2165,34 +2189,50 @@ export function fetchInstitutionsData() {
 
         // FETCH GENDER ACTIVITY
         const session2b = this.driver.session();
-        const query2b =
-          `
-    MATCH (n) WHERE id(n)=` +
-          nodeIdFilter +
-          `
-    CALL {
-      WITH n
-      MATCH (n)-[t]-(p:Person) WHERE p.gender IS NOT NULL AND t.start_year IS NOT NULL
-      WITH p, t.start_year as min, CASE WHEN t.end_year IS NOT NULL THEN t.end_year ELSE t.start_year END as max
-      RETURN DISTINCT p, p.gender as gender, range(toInteger(min), toInteger(max)) as range
-    }
-    WITH DISTINCT gender, apoc.coll.flatten(COLLECT(range)) as years
-    WITH gender,  apoc.coll.frequencies(years) as freq UNWIND freq as freq_occur
-    WITH apoc.map.fromValues([toLower(gender), freq_occur.count]) as gender_count, freq_occur.item as year
-    UNWIND keys(gender_count) as key 
-    WITH CASE
-      WHEN key = "male" THEN {info: year, male: gender_count[key], female: 0, unknown: 0}
-      WHEN key = "female" THEN {info: year, male: 0, female: gender_count[key], unknown: 0}
-      ELSE {info: year, male: 0, female: 0, unknown: gender_count[key]}
-      END as List
-    WITH List UNWIND List as item
-    WITH {
-      info: item.info,
-      female:apoc.coll.sumLongs(apoc.coll.toSet(apoc.coll.flatten(collect(item.female)))),
-      male:apoc.coll.sumLongs(apoc.coll.toSet(apoc.coll.flatten(collect(item.male)))),
-      unknown:apoc.coll.sumLongs(apoc.coll.toSet(apoc.coll.flatten(collect(item.unknown))))
-    } as item2 ORDER BY item2.info
-    RETURN item2 as List
+        const query2b = `
+          MATCH (n) 
+          WHERE id(n) = ${nodeIdFilter}
+
+          CALL {
+            WITH n
+            MATCH (n)-[t]-(p:Person) 
+            WHERE p.gender IS NOT NULL AND t.start_year IS NOT NULL
+            WITH p, 
+                t.start_year AS min, 
+                CASE WHEN t.end_year IS NOT NULL THEN t.end_year ELSE t.start_year END AS max
+            RETURN DISTINCT p, p.gender AS gender, range(toInteger(min), toInteger(max)) AS range
+          }
+
+          WITH gender, apoc.coll.flatten(COLLECT(range)) AS years
+          WITH gender, apoc.coll.frequencies(years) AS freq 
+          UNWIND freq AS freq_occur
+
+          WITH 
+            freq_occur.item AS year,
+            toLower(gender) AS g,
+            freq_occur.count AS c
+
+          WITH 
+            year,
+            CASE g 
+              WHEN "male" THEN {info: year, male: c, female: 0, unknown: 0}
+              WHEN "female" THEN {info: year, male: 0, female: c, unknown: 0}
+              ELSE {info: year, male: 0, female: 0, unknown: c}
+            END AS row
+
+          // 👇 Group by year to aggregate male, female, unknown values
+          WITH row.info AS year, 
+              SUM(row.male) AS male,
+              SUM(row.female) AS female,
+              SUM(row.unknown) AS unknown
+
+          RETURN {
+            info: year,
+            male: male,
+            female: female,
+            unknown: unknown
+          } AS List
+          ORDER BY List.info 
       `;
         session2b.run(query2b).then((results) => {
           const genderListInit = results.records.map((record) =>
@@ -2249,20 +2289,30 @@ export function fetchInstitutionsData() {
 
         //FETCH PEOPLE PRESENT BY YEAR
         const session8 = this.driver.session();
-        const query8 =
-          `
-    MATCH (p) WHERE id(p)=` +
-          nodeIdFilter +
-          `
-    CALL {
-      WITH p
-      MATCH (p)-[t]-(q:Person) WHERE t.start_year IS NOT NULL
-      WITH DISTINCT q, t.start_year as min, CASE WHEN t.end_year IS NOT NULL THEN t.end_year ELSE t.start_year END as max
-      RETURN q.id as name, range(toInteger(min), toInteger(max)) as years
-      }
-    WITH name, apoc.coll.flatten(collect(years)) as year_list
-    UNWIND year_list as all_years
-    RETURN {info: toInteger(all_years), count: toInteger(count(distinct name))} as List  ORDER BY List.info`;
+        const query8 =`
+          MATCH (p) 
+        WHERE id(p) = ${nodeIdFilter}
+
+        CALL {
+          WITH p
+          MATCH (p)-[t]-(q:Person) 
+          WHERE t.start_year IS NOT NULL
+          WITH DISTINCT q, t.start_year AS min, 
+              CASE WHEN t.end_year IS NOT NULL THEN t.end_year ELSE t.start_year END AS max
+          RETURN q.id AS name, range(toInteger(min), toInteger(max)) AS years
+        }
+
+        WITH name, apoc.coll.flatten(COLLECT(years)) AS year_list
+        UNWIND year_list AS year
+
+        // 👇 Explicit group by year
+        WITH toInteger(year) AS year, COUNT(DISTINCT name) AS person_count
+        RETURN {
+          info: year,
+          count: person_count
+        } AS List
+        ORDER BY List.info
+          `;
         session8.run(query8).then((results) => {
           const instList = results.records.map((record) =>
             record.get("List", "info")
@@ -2283,7 +2333,7 @@ export function fetchInstitutionsData() {
           `
     CALL {
       WITH p
-      MATCH (p)--(n:Person)--(t:CorporateEntity) WHERE EXISTS(t.christian_tradition)
+      MATCH (p)--(n:Person)--(t:CorporateEntity) WHERE t.christian_tradition is not NULL
       WITH DISTINCT t.christian_tradition as name, count(DISTINCT n) AS count
       RETURN name, count AS Count
     }
@@ -2531,40 +2581,57 @@ export function fetchCorporateEntitiesData() {
 
         // FETCH GENDER ACTIVITY
         const session2b = this.driver.session();
-        const query2b =
-          `
-    MATCH (n) WHERE id(n)=` +
-          nodeIdFilter +
-          `
-    CALL {
-      WITH n
-      MATCH (n)-[t]-(p:Person)--(q) WHERE id(n)=` +
-          nodeIdFilter +
-          ` AND p.gender IS NOT NULL AND t.start_year IS NOT NULL 
-      OPTIONAL MATCH (n)--(q:Institution)-[t]-(p:Person) WHERE id(n)=` +
-          nodeIdFilter +
-          ` AND p.gender IS NOT NULL AND t.start_year IS NOT NULL
-      WITH p, t.start_year as min, CASE WHEN t.end_year IS NOT NULL THEN t.end_year ELSE t.start_year END as max
-      RETURN DISTINCT p, p.gender as gender, range(toInteger(min), toInteger(max)) as range
-    }
-    WITH DISTINCT gender, apoc.coll.flatten(COLLECT(range)) as years
-    WITH gender,  apoc.coll.frequencies(years) as freq UNWIND freq as freq_occur
-    WITH apoc.map.fromValues([toLower(gender), freq_occur.count]) as gender_count, freq_occur.item as year
-    UNWIND keys(gender_count) as key 
-    WITH CASE
-      WHEN key = "male" THEN {info: year, male: gender_count[key], female: 0, unknown: 0}
-      WHEN key = "female" THEN {info: year, male: 0, female: gender_count[key], unknown: 0}
-      ELSE {info: year, male: 0, female: 0, unknown: gender_count[key]}
-      END as List
-    WITH List UNWIND List as item
-    WITH {
-      info: item.info,
-      female:apoc.coll.sumLongs(apoc.coll.toSet(apoc.coll.flatten(collect(item.female)))),
-      male:apoc.coll.sumLongs(apoc.coll.toSet(apoc.coll.flatten(collect(item.male)))),
-      unknown:apoc.coll.sumLongs(apoc.coll.toSet(apoc.coll.flatten(collect(item.unknown))))
-    } as item2 ORDER BY item2.info
-    RETURN item2 as List
-      `;
+        const query2b = `
+          MATCH (n) 
+          WHERE id(n) = ${nodeIdFilter}
+
+          CALL {
+            WITH n
+            MATCH (n)-[t]-(p:Person)--(q)
+            WHERE p.gender IS NOT NULL AND t.start_year IS NOT NULL
+
+            OPTIONAL MATCH (n)--(q:Institution)-[t2]-(p2:Person)
+            WHERE p2.gender IS NOT NULL AND t2.start_year IS NOT NULL
+
+            WITH 
+              coalesce(p, p2) AS person,
+              coalesce(t.start_year, t2.start_year) AS min,
+              CASE 
+                WHEN coalesce(t.end_year, t2.end_year) IS NOT NULL 
+                THEN coalesce(t.end_year, t2.end_year) 
+                ELSE coalesce(t.start_year, t2.start_year) 
+              END AS max
+
+            RETURN DISTINCT person, person.gender AS gender, range(toInteger(min), toInteger(max)) AS range
+          }
+
+          WITH DISTINCT gender, apoc.coll.flatten(COLLECT(range)) AS years
+          WITH gender, apoc.coll.frequencies(years) AS freq 
+          UNWIND freq AS freq_occur
+
+          WITH 
+            freq_occur.item AS year,
+            CASE 
+              WHEN toLower(gender) = "male" THEN {year: freq_occur.item, male: freq_occur.count, female: 0, unknown: 0}
+              WHEN toLower(gender) = "female" THEN {year: freq_occur.item, male: 0, female: freq_occur.count, unknown: 0}
+              ELSE {year: freq_occur.item, male: 0, female: 0, unknown: freq_occur.count}
+            END AS row
+
+          // 👇 Group by year
+          WITH row.year AS year, collect(row.male) AS males, collect(row.female) AS females, collect(row.unknown) AS unknowns
+          WITH year,
+              apoc.coll.sumLongs(males) AS male,
+              apoc.coll.sumLongs(females) AS female,
+              apoc.coll.sumLongs(unknowns) AS unknown
+          RETURN {
+            info: year,
+            male: male,
+            female: female,
+            unknown: unknown
+          } AS List
+          ORDER BY List.info
+        `;
+          
         session2b.run(query2b).then((results) => {
           const genderListInit = results.records.map((record) =>
             record.get("List", "Activity")
@@ -2634,30 +2701,37 @@ export function fetchCorporateEntitiesData() {
 
         // FETCH COUNTY ACTIVITY
         const session5 = this.driver.session();
-        const query5 =
-          `MATCH (e)--(p:Person)--(i:Institution)--(o) 
-    WHERE id(e)=` +
-          nodeIdFilter +
-          ` AND (o:Village OR o:Township OR o:County OR o:Prefecture OR o:Province)
-    WITH count(distinct p) as count, o
-    CALL apoc.path.subgraphAll(o, {
-      relationshipFilter: "INSIDE_OF>",
-        labelFilter:'/County',
-        maxLevel: 4
-    })
-    YIELD nodes, relationships
-    WITH count, 
-    CASE labels(o)[0] WHEN "Province" THEN NULL WHEN "Prefecture" THEN NULL
-    ELSE 
-      CASE labels(nodes[0])[0]  WHEN NULL THEN o.name_wes ELSE nodes[0].name_wes END
-    END AS prov,
-    CASE labels(o)[0] WHEN "Province" THEN NULL WHEN "Prefecture" THEN NULL
-    ELSE 
-      CASE labels(nodes[0])[0]  WHEN NULL THEN o.name_zh ELSE nodes[0].name_zh END
-    END AS provzh
-    WITH {County: {en: prov, zh: provzh, tw: provzh}, Activity: sum(count)} AS Lister ORDER BY Lister.Activity DESC
-    WITH [prov in COLLECT(Lister) WHERE prov.County IS NOT NULL] as filter1 UNWIND filter1 as List
-    RETURN List LIMIT 10`;
+        const query5 = `
+          MATCH (e)--(p:Person)--(i:Institution)--(o) 
+          WHERE id(e) = ${nodeIdFilter} AND (o:Village OR o:Township OR o:County OR o:Prefecture OR o:Province)
+          WITH DISTINCT p, o
+          WITH count(DISTINCT p) AS count, o
+          CALL apoc.path.subgraphAll(o, {
+            relationshipFilter: "INSIDE_OF>",
+            labelFilter: "/County",
+            maxLevel: 4
+          })
+          YIELD nodes, relationships
+
+          WITH count,
+              CASE 
+                WHEN labels(o)[0] IN ["Province", "Prefecture"] THEN NULL
+                ELSE COALESCE(nodes[0].name_wes, o.name_wes)
+              END AS prov,
+              CASE 
+                WHEN labels(o)[0] IN ["Province", "Prefecture"] THEN NULL
+                ELSE COALESCE(nodes[0].name_zh, o.name_zh)
+              END AS provzh
+
+          WITH prov, provzh, count
+          WITH prov, provzh, SUM(count) AS totalActivity
+          WITH {County: {en: prov, zh: provzh, tw: provzh}, Activity: totalActivity} AS Lister
+          ORDER BY Lister.Activity DESC
+          WITH [prov IN COLLECT(Lister) WHERE prov.County IS NOT NULL] AS filter1
+          UNWIND filter1 AS List
+          RETURN List
+          LIMIT 10
+          `;
 
         session5.run(query5).then((results) => {
           const counties1 = results.records.map((record) =>
@@ -2670,28 +2744,41 @@ export function fetchCorporateEntitiesData() {
 
         // FETCH PREFECTURE ACTIVITY
         const session6 = this.driver.session();
-        const query6 =
-          `MATCH (e)--(p:Person)--(i:Institution)--(o) 
-    WHERE id(e)=` +
-          nodeIdFilter +
-          ` AND (o:Village OR o:Township OR o:County OR o:Prefecture OR o:Province)
-    WITH count(distinct p) as count, o
-    CALL apoc.path.subgraphAll(o, {
-      relationshipFilter: "INSIDE_OF>",
-        labelFilter:'/Prefecture',
-        maxLevel: 4
-    })
-    YIELD nodes, relationships
-    WITH count, 
-    CASE labels(o)[0] WHEN "Province" THEN NULL ELSE 
-      CASE labels(nodes[0])[0]  WHEN NULL THEN o.name_wes ELSE nodes[0].name_wes END
-    END AS prov,
-    CASE labels(o)[0] WHEN "Province" THEN NULL ELSE 
-      CASE labels(nodes[0])[0]  WHEN NULL THEN o.name_zh ELSE nodes[0].name_zh END
-    END AS provzh
-    WITH {Prefecture: {en: prov, zh: provzh, tw: provzh}, Activity: sum(count)} AS Lister ORDER BY Lister.Activity DESC
-    WITH [prov in COLLECT(Lister) WHERE prov.Prefecture IS NOT NULL] as filter1 UNWIND filter1 as List
-    RETURN List LIMIT 10`;
+        const query6 = `
+          MATCH (e)--(p:Person)--(i:Institution)--(o)
+          WHERE id(e) = ${nodeIdFilter}
+            AND (o:Village OR o:Township OR o:County OR o:Prefecture OR o:Province)
+          WITH DISTINCT p, o
+          WITH COUNT(DISTINCT p) AS person_count, o
+
+          CALL apoc.path.subgraphAll(o, {
+            relationshipFilter: "INSIDE_OF>",
+            labelFilter: "/Prefecture",
+            maxLevel: 4
+          })
+          YIELD nodes, relationships
+
+          WITH
+            person_count,
+            CASE
+              WHEN labels(o)[0] = "Province" THEN NULL
+              ELSE COALESCE(nodes[0].name_wes, o.name_wes)
+            END AS prov,
+            CASE
+              WHEN labels(o)[0] = "Province" THEN NULL
+              ELSE COALESCE(nodes[0].name_zh, o.name_zh)
+            END AS provzh
+
+          // 👇 This line explicitly groups by prov/provzh before aggregation
+          WITH prov, provzh, SUM(person_count) AS activity
+          WITH {Prefecture: {en: prov, zh: provzh, tw: provzh}, Activity: activity} AS Lister
+          ORDER BY Lister.Activity DESC
+
+          WITH [item IN COLLECT(Lister) WHERE item.Prefecture IS NOT NULL] AS filter1
+          UNWIND filter1 AS List
+          RETURN List
+          LIMIT 10
+        `;
 
         session6.run(query6).then((results) => {
           const prefectures1 = results.records.map((record) =>
@@ -2706,22 +2793,31 @@ export function fetchCorporateEntitiesData() {
 
         // FETCH PROVINCE ACTIVITY
         const session7 = this.driver.session();
-        const query7 =
-          `MATCH (e)--(p:Person)--(i:Institution)--(o) 
-    WHERE id(e)=` +
-          nodeIdFilter +
-          ` AND (o:Village OR o:Township OR o:County OR o:Prefecture OR o:Province)
-    WITH count(distinct p) as count, o
-    CALL apoc.path.subgraphAll(o, {
-      relationshipFilter: "INSIDE_OF>",
-        labelFilter:'/Province',
-        maxLevel: 4
-    })
-    YIELD nodes, relationships
-    WITH count, 
-    CASE labels(nodes[0])[0]  WHEN NULL THEN o.name_wes ELSE nodes[0].name_wes END as prov,
-    CASE labels(nodes[0])[0]  WHEN NULL THEN o.name_zh ELSE nodes[0].name_zh END as provzh
-    RETURN DISTINCT {Province: {en: prov, zh: provzh, tw: provzh}, Activity: sum(count)} AS List ORDER BY List.Activity DESC LIMIT 10`;
+        const query7 = `
+          MATCH (e)--(p:Person)--(i:Institution)--(o) 
+          WHERE id(e) = ${nodeIdFilter}
+            AND (o:Village OR o:Township OR o:County OR o:Prefecture OR o:Province)
+          WITH DISTINCT p, o
+          WITH COUNT(DISTINCT p) AS person_count, o
+
+          CALL apoc.path.subgraphAll(o, {
+            relationshipFilter: "INSIDE_OF>",
+            labelFilter: "/Province",
+            maxLevel: 4
+          })
+          YIELD nodes, relationships
+
+          WITH
+            person_count,
+            COALESCE(nodes[0].name_wes, o.name_wes) AS prov,
+            COALESCE(nodes[0].name_zh, o.name_zh) AS provzh
+
+          WITH prov, provzh, SUM(person_count) AS activity
+          WITH {Province: {en: prov, zh: provzh, tw: provzh}, Activity: activity} AS List
+          ORDER BY List.Activity DESC
+          RETURN List
+          LIMIT 10
+        `;
 
         session7.run(query7).then((results) => {
           const provinces1 = results.records.map((record) =>
@@ -2734,22 +2830,36 @@ export function fetchCorporateEntitiesData() {
 
         //FETCH INSTITUTIONS BY YEAR
         const session8 = this.driver.session();
-        const query8 =
-          `
-    MATCH (p) WHERE id(p)=` +
-          nodeIdFilter +
-          `
-    CALL {
-      WITH p
-      MATCH (p)--(q:Person)-[t]-(i:Institution) WHERE t.start_year IS NOT NULL
-      OPTIONAL MATCH (p)--(i:Institution)-[t]-(q:Person) WHERE t.start_year IS NOT NULL
-      OPTIONAL MATCH (p)-[t]-(i:Institution) WHERE t.start_year IS NOT NULL
-      WITH DISTINCT i, t.start_year as min, CASE WHEN t.end_year IS NOT NULL THEN t.end_year ELSE t.start_year END as max
-      RETURN i.name_western as name, range(toInteger(min), toInteger(max)) as years
-      }
-    WITH name, apoc.coll.flatten(collect(years)) as year_list
-    UNWIND year_list as all_years
-    RETURN {info: toInteger(all_years), count: toInteger(count(distinct name))} as List  ORDER BY List.info`;
+        const query8 = `
+          MATCH (p) 
+          WHERE id(p) = ${nodeIdFilter}
+
+          CALL {
+            WITH p
+            MATCH (p)--(q:Person)-[t]-(i:Institution) 
+            WHERE t.start_year IS NOT NULL
+
+            OPTIONAL MATCH (p)--(i:Institution)-[t2]-(q2:Person) 
+            WHERE t2.start_year IS NOT NULL
+
+            OPTIONAL MATCH (p)-[t3]-(i:Institution) 
+            WHERE t3.start_year IS NOT NULL
+
+            WITH DISTINCT i, 
+                t.start_year AS min1, 
+                CASE WHEN t.end_year IS NOT NULL THEN t.end_year ELSE t.start_year END AS max1
+
+            RETURN i.name_western AS name, range(toInteger(min1), toInteger(max1)) AS years
+          }
+
+          WITH name, apoc.coll.flatten(collect(years)) AS year_list
+          UNWIND year_list AS all_years
+
+          // 👇 Explicit grouping here
+          WITH toInteger(all_years) AS year, COUNT(DISTINCT name) AS name_count
+          RETURN {info: year, count: name_count} AS List
+          ORDER BY List.info
+        `;         
         session8.run(query8).then((results) => {
           const instList = results.records.map((record) =>
             record.get("List", "info")
@@ -2937,36 +3047,55 @@ export function fetchGeographyData() {
 
         // FETCH GENDER ACTIVITY
         const session2b = this.driver.session();
-        const query2b =
-          `
-    MATCH (n) WHERE id(n)=` +
-          nodeIdFilter +
-          `
-    CALL {
-      WITH n
-      MATCH (n)--(q)-[t]-(p:Person) WHERE q:Event or q:Institution AND id(n)=` +
-          nodeIdFilter +
-          ` AND p.gender IS NOT NULL AND t.start_year IS NOT NULL
-      WITH p, t.start_year as min, CASE WHEN t.end_year IS NOT NULL THEN t.end_year ELSE t.start_year END as max
-      RETURN DISTINCT p, p.gender as gender, range(toInteger(min), toInteger(max)) as range
-    }
-    WITH DISTINCT gender, apoc.coll.flatten(COLLECT(range)) as years
-    WITH gender,  apoc.coll.frequencies(years) as freq UNWIND freq as freq_occur
-    WITH apoc.map.fromValues([toLower(gender), freq_occur.count]) as gender_count, freq_occur.item as year
-    UNWIND keys(gender_count) as key 
-    WITH CASE
-      WHEN key = "male" THEN {info: year, male: gender_count[key], female: 0, unknown: 0}
-      WHEN key = "female" THEN {info: year, male: 0, female: gender_count[key], unknown: 0}
-      ELSE {info: year, male: 0, female: 0, unknown: gender_count[key]}
-      END as List
-    WITH List UNWIND List as item
-    WITH {
-      info: item.info,
-      female:apoc.coll.sumLongs(apoc.coll.toSet(apoc.coll.flatten(collect(item.female)))),
-      male:apoc.coll.sumLongs(apoc.coll.toSet(apoc.coll.flatten(collect(item.male)))),
-      unknown:apoc.coll.sumLongs(apoc.coll.toSet(apoc.coll.flatten(collect(item.unknown))))
-    } as item2 ORDER BY item2.info
-    RETURN item2 as List
+        const query2b = `
+          MATCH (n) 
+          WHERE id(n) = ${nodeIdFilter}
+
+          CALL {
+            WITH n
+            MATCH (n)--(q)-[t]-(p:Person)
+            WHERE (q:Event OR q:Institution) 
+              AND p.gender IS NOT NULL 
+              AND t.start_year IS NOT NULL
+              AND id(n) = ${nodeIdFilter}
+
+            WITH p, 
+                t.start_year AS min, 
+                CASE WHEN t.end_year IS NOT NULL THEN t.end_year ELSE t.start_year END AS max
+
+            RETURN DISTINCT p, p.gender AS gender, range(toInteger(min), toInteger(max)) AS range
+          }
+
+          WITH gender, apoc.coll.flatten(COLLECT(range)) AS years
+          WITH gender, apoc.coll.frequencies(years) AS freq 
+          UNWIND freq AS freq_occur
+
+          WITH 
+            freq_occur.item AS year,
+            toLower(gender) AS g,
+            freq_occur.count AS c
+
+          WITH year,
+              CASE g 
+                WHEN "male" THEN {male: c, female: 0, unknown: 0}
+                WHEN "female" THEN {male: 0, female: c, unknown: 0}
+                ELSE {male: 0, female: 0, unknown: c}
+              END AS row
+
+          // Group by year and sum male/female/unknown
+          WITH year, 
+              SUM(row.male) AS male, 
+              SUM(row.female) AS female, 
+              SUM(row.unknown) AS unknown
+
+          RETURN {
+            info: year,
+            male: male,
+            female: female,
+            unknown: unknown
+          } AS List
+          ORDER BY List.info
+
       `;
         session2b.run(query2b).then((results) => {
           const genderListInit = results.records.map((record) =>
@@ -3035,23 +3164,34 @@ export function fetchGeographyData() {
 
         // FETCH GEO-INSTITUTITONAL ACTIVITY
         const session7 = this.driver.session();
-        const query7 =
-          `MATCH (g) WHERE id(g)=` +
-          nodeIdFilter +
-          `
-    CALL {
-        WITH g
-        MATCH (g)--(i:Institution)-[t]-(p:Person) 
-        WITH p, COLLECT(DISTINCT t.start_year) as starts, COLLECT(DISTINCT t.end_year) as ends
-        WITH p, starts+ends as years UNWIND years as yearlist
-        RETURN p, min(yearlist) as min, max(yearlist) as max
-    }
-    WITH g, p, min, max
-    MATCH (g)--(i:Institution)-[t]-(p:Person)-[r]-(c:CorporateEntity) 
-        WHERE (t.start_year >= min AND r.start_year >= min AND t.end_year <= max AND r.end_year <= max) 
-        OR (t.start_year >= min AND r.start_year >= min AND t.end_year IS NULL AND r.end_year IS NULL)
-        RETURN DISTINCT {key : c.name_western, value: count(DISTINCT i)} AS List
-        ORDER BY List.count DESC LIMIT 25`;
+        const query7 = `
+          MATCH (g) 
+          WHERE id(g) = ${nodeIdFilter}
+
+          CALL {
+            WITH g
+            MATCH (g)--(i:Institution)-[t]-(p:Person) 
+            WITH p, 
+                COLLECT(DISTINCT t.start_year) AS starts, 
+                COLLECT(DISTINCT t.end_year) AS ends
+            WITH p, starts + ends AS years 
+            UNWIND years AS yearlist
+            RETURN p, min(yearlist) AS min, max(yearlist) AS max
+          }
+
+          WITH g, p, min, max
+          MATCH (g)--(i:Institution)-[t]-(p)-[r]-(c:CorporateEntity)
+          WHERE 
+            (t.start_year >= min AND r.start_year >= min AND t.end_year <= max AND r.end_year <= max) 
+            OR 
+            (t.start_year >= min AND r.start_year >= min AND t.end_year IS NULL AND r.end_year IS NULL)
+
+          // 👇 Explicit GROUP BY before aggregation
+          WITH c.name_western AS corp_name, COUNT(DISTINCT i) AS inst_count
+          RETURN {key: corp_name, value: inst_count} AS List
+          ORDER BY List.value DESC
+          LIMIT 25
+          `;
         session7.run(query7).then((results) => {
           const provinces = results.records.map((record) =>
             record.get("List", "count")
@@ -3062,23 +3202,34 @@ export function fetchGeographyData() {
 
         // FETCH GEO-PERSON ACTIVITY
         const session6 = this.driver.session();
-        const query6 =
-          `MATCH (g) WHERE id(g)=` +
-          nodeIdFilter +
-          `
-    CALL {
-        WITH g
-        MATCH (g)--(i:Institution)-[t]-(p:Person) 
-        WITH p, COLLECT(DISTINCT t.start_year) as starts, COLLECT(DISTINCT t.end_year) as ends
-        WITH p, starts+ends as years UNWIND years as yearlist
-        RETURN p, min(yearlist) as min, max(yearlist) as max
-    }
-    WITH g, p, min, max
-    MATCH (g)--(i:Institution)-[t]-(p:Person)-[r]-(c:CorporateEntity) 
-        WHERE (t.start_year >= min AND r.start_year >= min AND t.end_year <= max AND r.end_year <= max) 
-        OR (t.start_year >= min AND r.start_year >= min AND t.end_year IS NULL AND r.end_year IS NULL)
-        RETURN DISTINCT {key : c.name_western, value: count(DISTINCT p)} AS List
-        ORDER BY List.count DESC LIMIT 25`;
+        const query6 = `
+          MATCH (g) 
+          WHERE id(g) = ${nodeIdFilter}
+
+          CALL {
+            WITH g
+            MATCH (g)--(i:Institution)-[t]-(p:Person) 
+            WITH p, 
+                COLLECT(DISTINCT t.start_year) AS starts, 
+                COLLECT(DISTINCT t.end_year) AS ends
+            WITH p, starts + ends AS years 
+            UNWIND years AS yearlist
+            RETURN p, min(yearlist) AS min, max(yearlist) AS max
+          }
+
+          WITH g, p, min, max
+          MATCH (g)--(i:Institution)-[t]-(p)-[r]-(c:CorporateEntity) 
+          WHERE 
+            (t.start_year >= min AND r.start_year >= min AND t.end_year <= max AND r.end_year <= max) 
+            OR 
+            (t.start_year >= min AND r.start_year >= min AND t.end_year IS NULL AND r.end_year IS NULL)
+
+          // 👇 Explicit GROUP BY before aggregation
+          WITH c.name_western AS corp_name, COUNT(DISTINCT p) AS person_count
+          RETURN {key: corp_name, value: person_count} AS List
+          ORDER BY List.value DESC
+          LIMIT 25
+        `;
         session6.run(query6).then((results) => {
           const counties = results.records.map((record) =>
             record.get("List", "count")
@@ -3090,19 +3241,30 @@ export function fetchGeographyData() {
         //FETCH INSTITUTIONS BY YEAR
         const session8 = this.driver.session();
         const query8 =
-          `
-    MATCH (p) WHERE id(p)=` +
-          nodeIdFilter +
-          `
-    CALL {
-      WITH p
-      MATCH (p)--(i:Institution)-[t]-(q:Person) WHERE t.start_year IS NOT NULL
-      WITH DISTINCT i, t.start_year as min, CASE WHEN t.end_year IS NOT NULL THEN t.end_year ELSE t.start_year END as max
-      RETURN i.name_western as name, range(toInteger(min), toInteger(max)) as years
-      }
-    WITH name, apoc.coll.flatten(collect(years)) as year_list
-    UNWIND year_list as all_years
-    RETURN {info: toInteger(all_years), count: toInteger(count(name))} as List  ORDER BY List.info`;
+          `MATCH (p) 
+          WHERE id(p) = ${nodeIdFilter}
+
+          CALL {
+            WITH p
+            MATCH (p)--(i:Institution)-[t]-(q:Person) 
+            WHERE t.start_year IS NOT NULL
+            WITH DISTINCT i, 
+                t.start_year AS min, 
+                CASE WHEN t.end_year IS NOT NULL THEN t.end_year ELSE t.start_year END AS max
+            RETURN i.name_western AS name, range(toInteger(min), toInteger(max)) AS years
+          }
+
+          WITH name, apoc.coll.flatten(COLLECT(years)) AS year_list
+          UNWIND year_list AS year
+
+          // 👇 Explicit grouping to avoid aggregation error
+          WITH toInteger(year) AS year, COUNT(name) AS institution_count
+          RETURN {
+            info: year,
+            count: institution_count
+          } AS List
+          ORDER BY List.info
+    `;
         session8.run(query8).then((results) => {
           const instList = results.records.map((record) =>
             record.get("List", "info")

@@ -146,7 +146,11 @@ function LeafletMap(props) {
        <Popup className="map_popup"><Row><Col className="col-12">
         <p className="mb-2 mt-0">
           <h6 className="pop_head">{inst_name}</h6>
-          <span className="highlight">{translate[0]["religious_family"][props.language]}:</span> {family_trans[0][aff.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()][props.language]}<br/>
+          <span className="highlight">{translate[0]["religious_family"][props.language]}:</span>{' '}
+            {aff
+              ? family_trans[0][aff.replace(/\s+$/, '').replace(/\s|\//g, '_').toLowerCase()]?.[props.language] ?? 'undefined'
+              : 'undefined'}
+            <br/>
           <span className="highlight">{translate[0]["category"][props.language]}:</span> {category}<br/>
           <span className="highlight">{translate[0]["subcategory"][props.language]}:</span> {subcategory}<br/>
           <span className="highlight">{translate[0]["gender_served"][props.language]}:</span> {gender_serve}<br/>
